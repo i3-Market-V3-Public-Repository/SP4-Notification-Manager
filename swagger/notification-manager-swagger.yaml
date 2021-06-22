@@ -1,0 +1,104 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: I3-Market Notification Manager API
+# during dev, should point to your local machine
+host: localhost:10050
+# basePath prefixes all resource paths
+basePath: /api/v1/notifications
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+produces:
+  - application/json
+  - text/html
+paths:
+  /swagger:
+    x-swagger-pipe: swagger_raw
+  /health:
+    x-swagger-router-controller: health
+    get:
+      operationId: health_check
+      description: Healthcheck endpoint
+      responses:
+        "200":
+          description: Success
+
+  /notification/service:
+    post:
+      parameters:
+        - name: message
+          required: true
+          in: body
+          schema:
+            $ref: "#/definitions/ServiceTask"
+      description: Put the task in the async queue of the service
+      operationId: suervice_notification
+      responses:
+        "200":
+          description: Ok
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /notification/user:
+    post:
+      parameters:
+        - name: message
+          required: true
+          in: body
+          schema:
+            $ref: "#/definitions/NotificationTask"
+      description: Put the task in the async queue of the users to be notify
+      operationId: user_notification
+      responses:
+        "200":
+          description: Ok
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+definitions:
+  ServiceTask:
+    type: "object"
+    properties:
+      receiver_id:
+        type: "string"
+      message:
+        type: object
+
+  NotificationTask:
+    type: "object"
+    properties:
+      receiver_id:
+        type: "string"
+      type:
+        type: "string"
+      sub_type:
+        type: "string"
+      predefined:
+        type: "boolean"
+      message:
+        type: "string"
+
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
