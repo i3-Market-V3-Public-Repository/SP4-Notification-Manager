@@ -1,5 +1,4 @@
 import os
-from glob import glob
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
@@ -63,10 +62,6 @@ def version():
 
 
 # TODO: Notificaciones
-# ServiceTask = {
-#   receiver_id: string = '',
-#   message: {}
-# }
 @application.route('/notification/service', methods=['POST'])
 def notification_service():
     """
@@ -81,13 +76,6 @@ def notification_service():
     return jsonify(data), 200
 
 
-# NotificationTask = {
-#   receiver_id: string = '',
-#   _type: string = '',
-#   sub_type: string = '',
-#   predefined: boolean = True,
-#   message: string = '' <------- ¿no es un objeto como el ServiceTask?
-# }
 @application.route('/notification/user', methods=['POST'])
 def notification_user():
     """
