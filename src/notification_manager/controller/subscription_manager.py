@@ -1,7 +1,6 @@
 import uuid
 
-from src.data_structures.subscription import Subscription
-import hashlib
+from src.alert_subscription.models.subscription import Subscription
 
 user_topic_link = {"usuario1": ["Obj{id:1,querie:asd,active:true}"]}  # lista para enlazar usuarios a sus suscripciones
 
