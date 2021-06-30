@@ -29,4 +29,6 @@ def clear_database():
 @pytest.fixture(autouse=True, scope='session')
 def remove_dummy_storage():
     yield
-    os.remove(os.path.join(os.path.dirname(__file__), 'files', 'dummy_storage_tests.json'))
+    dummy_storage = os.path.join(os.path.dirname(__file__), 'files', 'dummy_storage_tests.json')
+    if os.path.exists(dummy_storage):
+        os.remove(dummy_storage)

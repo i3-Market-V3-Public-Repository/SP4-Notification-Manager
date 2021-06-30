@@ -6,7 +6,13 @@ from flask_cors import CORS
 from loguru import logger
 from uptime import uptime
 
+from src.alert_subscription.api.subscriptions_api import api as subscriptions_api
+from src.alert_subscription.api.subscriptions_api import config as subscriptions_config
+
 # El servicio puede ser configurado por Docker (environment vars) o por un fichero .env
+from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
+from src.alert_subscription.storage.dummy_subscriptions_storage import DummySubscriptionsStorage
+
 load_dotenv()
 
 # Configuración general
@@ -24,8 +30,18 @@ application.config['SECRET_KEY'] = FLASK_SECRET_KEY
 application.config['JSON_SORT_KEYS'] = False
 application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
+# Blueprints
+application.register_blueprint(subscriptions_api)
 
-# TODO: de momento tiramos de main y más delante si lo necesitamos lo sacamos a un fichero
+# Databases
+subscriptions_storage_filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                              'data', 'subscriptions_storage_database.json')
+subscriptions_storage = DummySubscriptionsStorage(subscriptions_storage_filepath)
+
+# Configuration APIs
+subscriptions_config(SubscriptionsController(subscriptions_storage))
+
+
 # API FLASK
 @application.errorhandler(400)
 def bad_request(error):
@@ -59,35 +75,6 @@ def version():
         version=VERSION,
         uptime=f'{int(days)} d, {int(hours)} h, {int(minutes)} m, {int(seconds)} s'
     ), 200
-
-
-# TODO: Notificaciones
-@application.route('/notification/service', methods=['POST'])
-def notification_service():
-    """
-    Expect a ServiceTask in json format on the body
-    :return:
-    """
-    if not request.json:
-        return jsonify({'error': 'Empty body'}), 400
-
-    data = request.json
-
-    return jsonify(data), 200
-
-
-@application.route('/notification/user', methods=['POST'])
-def notification_user():
-    """
-    Expect a NotificationTask in json format on the body
-    :return:
-    """
-    if not request.json:
-        return jsonify({'error': 'Empty body'}), 400
-
-    data = request.json
-
-    return jsonify(data), 200
 
 
 if __name__ == "__main__":

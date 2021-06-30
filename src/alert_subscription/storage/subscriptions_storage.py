@@ -4,7 +4,11 @@ import abc
 class SubscriptionsStorage(abc.ABC):
 
     @abc.abstractmethod
-    def create_user_subscription(self, *args, **kwargs):
+    def search_user_subscription(self, *args, **kwargs):
+        raise NotImplementedError('implement me, please!')
+
+    @abc.abstractmethod
+    def insert_user_subscription(self, *args, **kwargs):
         raise NotImplementedError('implement me, please!')
 
     @abc.abstractmethod
