@@ -1,7 +1,7 @@
 import abc
 
 
-class Storage(abc.ABC):
+class SubscriptionsStorage(abc.ABC):
 
     @abc.abstractmethod
     def create_user_subscription(self, *args, **kwargs):

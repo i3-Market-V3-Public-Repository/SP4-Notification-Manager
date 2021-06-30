@@ -1,6 +1,6 @@
 from typing import List
 
-from src.data_structures.queue import Queue
+from src.notification_manager.models.queue import Queue
 
 
 class Service:

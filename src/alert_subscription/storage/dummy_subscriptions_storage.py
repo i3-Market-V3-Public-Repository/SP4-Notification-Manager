@@ -3,10 +3,10 @@ import os
 
 from loguru import logger
 
-from src.storage.storage import Storage
+from src.alert_subscription.storage.subscriptions_storage import SubscriptionsStorage
 
 
-class DummyStorageSubscriptions(Storage):
+class DummySubscriptionsStorage(SubscriptionsStorage):
 
     def __init__(self, path):
         self.path = path

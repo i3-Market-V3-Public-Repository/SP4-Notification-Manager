@@ -1,6 +1,5 @@
 import os
 
-from src.data_structures.subscription import Subscription
 from src.storage.dummy_storage_subscriptions import DummyStorageSubscriptions
 
 tests_path = os.path.dirname(os.path.dirname(__file__))

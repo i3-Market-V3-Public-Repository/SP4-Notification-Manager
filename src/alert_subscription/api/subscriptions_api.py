@@ -1,14 +1,13 @@
-from flask import Blueprint, request, jsonify
-from loguru import logger
+from flask import Blueprint
 
-from src.storage.storage import Storage
+from src.alert_subscription.storage.subscriptions_storage import SubscriptionsStorage
 
 api = Blueprint('subscriptions', __name__)
 # noinspection PyTypeChecker
-__adapter: Storage = None
+__adapter: SubscriptionsStorage = None
 
 
-def config_database(adapter: Storage):
+def config_database(adapter: SubscriptionsStorage):
     global __adapter
     __adapter = adapter
 

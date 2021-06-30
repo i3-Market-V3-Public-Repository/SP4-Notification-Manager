@@ -1,6 +1,6 @@
 from typing import List
 
-from src.data_structures.subscription import Subscription
+from src.alert_subscription.models.subscription import Subscription
 
 
 class User:
