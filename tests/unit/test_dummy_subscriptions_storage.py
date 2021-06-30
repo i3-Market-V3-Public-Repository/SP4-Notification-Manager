@@ -1,10 +1,10 @@
 import os
 
-from src.storage.dummy_storage_subscriptions import DummyStorageSubscriptions
+from src.alert_subscription.storage.dummy_subscriptions_storage import DummySubscriptionsStorage
 
 tests_path = os.path.dirname(os.path.dirname(__file__))
 dummy_storage_test_path = os.path.join(tests_path, 'files', 'dummy_storage_tests.json')
-dummy_storage = DummyStorageSubscriptions(dummy_storage_test_path)
+dummy_storage = DummySubscriptionsStorage(dummy_storage_test_path)
 
 subscriptions = [
     {

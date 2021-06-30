@@ -12,7 +12,6 @@ def config_database(adapter: SubscriptionsStorage):
     __adapter = adapter
 
 
-# Expenses
 @api.route('/users/{user_id}/subscriptions', methods=['POST'])
 def post_subscriptions(user_id: str):
     pass

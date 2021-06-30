@@ -12,7 +12,6 @@ def config_database(adapter: SubscriptionsStorage):
     __adapter = adapter
 
 
-# Expenses
 @api.route('/services/{services_id}/queues', methods=['POST'])
 def post_queues(services_id: str):
     pass
