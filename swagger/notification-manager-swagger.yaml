@@ -5,18 +5,27 @@ info:
 # during dev, should point to your local machine
 host: localhost:10050
 # basePath prefixes all resource paths
-basePath: /api/v1/notifications
+basePath: /api/v1/
 #
 schemes:
   # tip: remove http to make production-grade
   - http
   - https
 # format of bodies a client can send (Content-Type)
+
 consumes:
   - application/json
+
 produces:
   - application/json
   - text/html
+
+tags:
+  - name: Subscriptions
+    description: "User Subscriptions"
+  - name: Notifications
+    description: "Service and User Notifications"
+
 paths:
   /swagger:
     x-swagger-pipe: swagger_raw
@@ -29,8 +38,171 @@ paths:
         "200":
           description: Success
 
+  #/v1/offering/notify:
+  #  post:
+  #    parameters:
+  #      - name: offering
+  #        required: true
+  #        in: body
+  #        schema:
+  #          $ref: "#/definitions/NewOffering"
+  #    description: Receive an offering to search for subscribed users to offering category and notify them
+  #    operationId: offering_notification
+  #    responses:
+  #      "200":
+  #        description: Ok
+  #      "400":
+  #        description: "Bad request"
+  #        schema:
+  #          $ref: "#/definitions/ErrorResponse"
+  #      default:
+  #        description: Error
+  #        schema:
+  #          $ref: "#/definitions/ErrorResponse"
+  /user/subscriptions:
+    get:
+      tags:
+      - Subscriptions
+      #parameters:
+      #  - name: subscription
+      #    required: true
+      #    in: body
+      #    schema:
+      #      $ref: "#/definitions/GetSubscription"
+      description: Receive all users subscriptions
+      operationId: get_subscriptions
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/GetSubscription"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /users/{user_id}/subscriptions:
+    post:
+      tags:
+        - Subscriptions
+      parameters:
+        - name: user_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: category
+          required: true
+          in: body
+          # type: "string"
+          schema:
+            $ref: "#/definitions/Category"
+      description: Create user subscription to category
+      operationId: post_subscriptions
+      responses:
+        "200":
+          description: Ok
+          #schema:
+          #  $ref: "#/definitions/Subscription"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    get:
+      tags:
+        - Subscriptions
+      parameters:
+        - name: user_id
+          required: true
+          in: path
+          type: "string"
+      description: Return user subscription
+      operationId: get_subscriptions_by_user_id
+      responses:
+        "200":
+          description: Ok
+          #schema:
+          #  $ref: "#/definitions/Subscription"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /users/{user_id}/subscriptions/{subscription_id}:
+    get:
+      tags:
+        - Subscriptions
+      parameters:
+        - name: user_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: subscription_id
+          required: true
+          in: path
+          type: "string"
+          #schema:
+          #  $ref: "#/definitions/Category"
+      description: Get one subscription using the subscription id of a user by id
+      operationId: get_subscription
+      responses:
+        "200":
+          description: Ok
+          #schema:
+          #  $ref: "#/definitions/Subscription"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      tags:
+        - Subscriptions
+      parameters:
+        - name: user_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: subscription_id
+          required: true
+          in: path
+          type: "string"
+      responses:
+        "200":
+          description: Ok
+          #schema:
+          #  $ref: "#/definitions/Subscription"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
   /notification/service:
     post:
+      tags:
+        - Notifications
       parameters:
         - name: message
           required: true
@@ -38,7 +210,7 @@ paths:
           schema:
             $ref: "#/definitions/ServiceTask"
       description: Put the task in the async queue of the service
-      operationId: suervice_notification
+      operationId: service_notification
       responses:
         "200":
           description: Ok
@@ -53,6 +225,8 @@ paths:
 
   /notification/user:
     post:
+      tags:
+        - Notifications
       parameters:
         - name: message
           required: true
@@ -74,13 +248,37 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 
 definitions:
+  NewOffering:
+    type: "object"
+    properties:
+      offering:
+        type: "object"
+
+  Category:
+    type: "string"
+    #properties:
+    #  category:
+    #    type: "string"
+
+  GetSubscription:
+    type: "object"
+    properties:
+      subscription_id:
+        type: "string"
+      user_id:
+        type: "string"
+      category:
+        type: "string"
+      active:
+        type: boolean
+
   ServiceTask:
     type: "object"
     properties:
       receiver_id:
-        type: "string"
+        type: "string"  # la cola a la que enviar la notificación/alerta
       message:
-        type: object
+        type: object  # en este caso la oferta
 
   NotificationTask:
     type: "object"
