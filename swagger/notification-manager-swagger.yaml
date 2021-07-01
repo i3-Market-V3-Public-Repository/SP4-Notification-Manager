@@ -225,10 +225,20 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /users/<user_id>/subscriptions/<subscription_id>/activate:
+  /users/{user_id}/subscriptions/{subscription_id}/activate:
     post:
       tags:
         - Subscriptions
+      parameters:
+        - name: user_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: subscription_id
+          required: true
+          in: path
+          type: "string"
       description: Activate a subscription
       operationId: activate_subscription
       responses:
@@ -243,10 +253,20 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /users/<user_id>/subscriptions/<subscription_id>/deactivate:
+  /users/{user_id}/subscriptions/{subscription_id}/deactivate:
     post:
       tags:
         - Subscriptions
+      parameters:
+        - name: user_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: subscription_id
+          required: true
+          in: path
+          type: "string"
       description: Deactivate a subscription
       operationId: deactivate_subscription
       responses:
