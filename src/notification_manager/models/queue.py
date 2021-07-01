@@ -3,7 +3,7 @@ from typing import List
 
 class Queue:
     """
-    Class defining a subscription of a user (owner) with a query and or data category of the semantic engine.
+    Class defining a Queue of service with a list of endpoints to send notifications.
     """
     def __init__(self, _id: str, name: str, endpoint: List[str] = None):
         self.id = _id
@@ -14,3 +14,9 @@ class Queue:
     def to_json(self):
         json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "active": self.active}
         return json_out
+
+
+def queue_to_object(data: dict):
+    return Queue(data.get('id'),
+                 data.get('name'),
+                 data.get('endpoint'))

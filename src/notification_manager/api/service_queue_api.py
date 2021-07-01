@@ -1,21 +1,26 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
+from loguru import logger
 
-from src.alert_subscription.storage.subscriptions_storage import SubscriptionsStorage
+from src.notification_manager.controller.queue_controller import QueueController
 
 api = Blueprint('queues', __name__)
 # noinspection PyTypeChecker
-__adapter: SubscriptionsStorage = None
+__controller: QueueController = None
 
 
-def config_database(adapter: SubscriptionsStorage):
-    global __adapter
-    __adapter = adapter
+def config(controller: QueueController):
+    global __controller
+    __controller = controller
 
 
 @api.route('/services/{services_id}/queues', methods=['POST'])
 def post_queues(services_id: str):
-    pass
+    if not request.json:
+        return jsonify({'error': 'Empty body'}), 400
 
+    queue = __controller.create_queue(request.json)
+    # queues are stored by notifications_controller (services_queue_storage)
+    return queue_to_object()
 
 @api.route('/services/{services_id}/queues', defaults={"queue_id": None}, methods=['GET'])
 @api.route('/services/{services_id}/queues/<queue_id>', methods=['GET'])

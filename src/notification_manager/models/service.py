@@ -16,3 +16,9 @@ class Service:
     def to_json(self):
         json_out = {"id": self.id, "endpoint": self.endpoint, "queues": map(Queue.to_json, self.queue)}
         return json_out
+
+
+def service_to_object(data: dict):
+    return Service(data.get('id'),
+                   data.get('endpoint'),
+                   data.get('queue'))
