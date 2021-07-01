@@ -17,7 +17,7 @@ def config(controller: SubscriptionsController):
 def get_users():
     result = __controller.retrieve_all()
 
-    return jsonify({result}), 200
+    return jsonify(result), 200
 
 
 @api.route('/users/<user_id>/subscriptions', methods=['POST'])
@@ -31,7 +31,7 @@ def post_subscriptions(user_id: str):
         return jsonify({'error': 'Incomplete body'}), 400
 
     if result is None:
-        return jsonify({'error': 'Already exists'}), 400
+        return jsonify({'error': 'Already exists subscription to category'}), 400
 
     return jsonify(result.to_json()), 200
 
@@ -43,6 +43,9 @@ def get_subscriptions(user_id: str, subscription_id: str):
 
     if result is None:
         return jsonify({'error': 'Not found'}), 404
+
+    if not subscription_id:
+        return jsonify([s.to_json() for s in result]), 200
 
     return jsonify(result.to_json()), 200
 
