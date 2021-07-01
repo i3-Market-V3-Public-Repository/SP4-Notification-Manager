@@ -8,8 +8,9 @@ class Service:
     Class defining a service with its queue.
     """
 
-    def __init__(self, _id: str, endpoint: List[str] = None, queues: List[Queue] = None):
+    def __init__(self, _id: str, name: str, endpoint: List[str] = None, queues: List[Queue] = None):
         self.id = _id
+        self.name = name
         self.endpoint = endpoint
         self.queue = queues or []
 

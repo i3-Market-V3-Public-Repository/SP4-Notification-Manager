@@ -1,15 +1,18 @@
 from flask import Blueprint, request, jsonify
 from loguru import logger
 from src.notification_manager.controller.notifications_controller import NotificationsController
+from src.notification_manager.controller.queue_controller import QueueController
 
 api = Blueprint('queues', __name__)
 # noinspection PyTypeChecker
-__controller: NotificationsController = None
+__notification_controller: NotificationsController = None
+__queue_controller: QueueController = None
 
 
-def config(controller: NotificationsController):
-    global __controller
-    __controller = controller
+def config(notification_controller: NotificationsController, queue_controller: QueueController):
+    global __notification_controller, __queue_controller
+    __notification_controller = notification_controller
+    __queue_controller = queue_controller
 
 
 @api.route('/notification/service', methods=['POST'])

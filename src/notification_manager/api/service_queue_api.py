@@ -36,3 +36,20 @@ def delete_queue(services_id: str, queue_id: str):
 @api.route('/services/{services_id}/queues/<queue_id>', methods=['PUT'])
 def put_queue(services_id: str, queue_id: str):
     pass
+
+
+
+@api.route('/services', methods=['POST'])
+# {'nombre': ''}
+
+@api.route('/services', methods=['GET'])
+# Traerlos todos
+
+@api.route('/services/{services_id}/queues', methods=['POST'])
+
+
+@api.route('/services/{services_id}/queues', defaults={"queue_id": None}, methods=['GET'])
+@api.route('/services/{services_id}/queues/<queue_id>', methods=['GET'])
+
+@api.route('/services/{services_id}/queues/<queue_id>', methods=['DELETE'])
+@api.route('/services/{services_id}/queues/<queue_id>', methods=['PUT'])
