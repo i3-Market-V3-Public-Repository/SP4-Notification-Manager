@@ -1,9 +1,11 @@
 import os
+from unittest.mock import patch
 
 import pytest
 from loguru import logger
 
-from src.main import application
+from src.alert_subscription.storage.dummy_subscriptions_storage import DummySubscriptionsStorage
+from src.main import application, subscriptions_storage_filepath
 
 
 @pytest.fixture
@@ -26,9 +28,8 @@ def clear_database():
     yield
 
 
-@pytest.fixture(autouse=True, scope='session')
-def remove_dummy_storage():
+@pytest.fixture(autouse=True, scope='function')
+def remove_json_storage():
     yield
-    dummy_storage = os.path.join(os.path.dirname(__file__), 'files', 'dummy_storage_tests.json')
-    if os.path.exists(dummy_storage):
-        os.remove(dummy_storage)
+    if os.path.exists(subscriptions_storage_filepath):
+        os.remove(subscriptions_storage_filepath)

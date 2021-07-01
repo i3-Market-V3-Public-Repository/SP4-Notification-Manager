@@ -10,7 +10,7 @@ class SubscriptionsController:
         self.storage = storage
 
     def retrieve_all(self):
-        return [subscription_to_object(s) for s in self.storage.retrieve_all()]
+        return self.storage.retrieve_all()
 
     def create_subscription(self, user_id: str, data: dict):
         if 'category' not in data.keys():
@@ -27,10 +27,16 @@ class SubscriptionsController:
     def retrieve_subscription(self, user_id: str, subscription_id: str = None):
         if subscription_id:
             retrieved_subscription = self.storage.retrieve_user_subscription(user_id, subscription_id)
-            return subscription_to_object(retrieved_subscription)
+        else:
+            retrieved_subscription = self.storage.retrieve_all_user_subscriptions(user_id)
 
-        retrieved_list_subscription = self.storage.retrieve_all_user_subscriptions(user_id)
-        return [subscription_to_object(s) for s in retrieved_list_subscription]
+        if not retrieved_subscription:
+            return None  # Not found
+
+        if isinstance(retrieved_subscription, list):
+            return [subscription_to_object(s) for s in retrieved_subscription]
+
+        return subscription_to_object(retrieved_subscription)
 
     def update_subscription(self, user_id: str, subscription_id: str, data: dict):
         if not self.storage.retrieve_user_subscription(user_id, subscription_id):

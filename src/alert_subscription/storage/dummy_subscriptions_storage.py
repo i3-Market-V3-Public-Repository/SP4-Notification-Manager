@@ -10,9 +10,10 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
 
     def __init__(self, path):
         self.path = path
+        self.storage = {}
 
         if not os.path.exists(self.path):
-            self.__write_dummy_file(data={})
+            self.__write_dummy_file()
 
         self.storage = self.__read_dummy_file()
 
@@ -26,7 +27,7 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
             return None   # User Not found
 
         for subscription in self.storage.get(user_id):
-            if subscription == data:
+            if subscription.get('category') == data.get('category'):
                 return subscription
 
         return None  # Subscription Not found
@@ -38,7 +39,7 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
 
         # the subscription is added to the user
         self.storage[user_id].append(subscription)
-        self.__write_dummy_file(self.storage)
+        self.__write_dummy_file()
 
         return subscription
 
@@ -64,7 +65,7 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
             subscription = self.storage.get(user_id)[i]
             if subscription.get('id') == subscription_id:
                 self.storage[user_id][i] = data
-                self.__write_dummy_file(self.storage)
+                self.__write_dummy_file()
                 return data
 
         return None  # Subscription Not found
@@ -80,8 +81,14 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
                 index = i
                 break
 
-        if index:
-            return self.storage[user_id].pop(index)
+        if index is not None:
+            deleted_subscription = self.storage[user_id].pop(index)
+
+            if not self.storage[user_id]:
+                del self.storage[user_id]
+
+            self.__write_dummy_file()
+            return deleted_subscription
 
         return None  # Subscription Not found
 
@@ -89,6 +96,6 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
         with open(self.path, 'r') as file:
             return json.load(file)
 
-    def __write_dummy_file(self, data: dict):
+    def __write_dummy_file(self):
         with open(self.path, 'w') as file:
-            return json.dump(data, file, indent=2)
+            return json.dump(self.storage, file, indent=2)
