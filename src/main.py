@@ -35,7 +35,7 @@ application.register_blueprint(subscriptions_api)
 
 # Databases
 subscriptions_storage_filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                              'data', 'subscriptions_storage_database.json')
+                                              'data', 'subscriptions_json_storage.json')
 subscriptions_storage = DummySubscriptionsStorage(subscriptions_storage_filepath)
 
 # Configuration APIs
