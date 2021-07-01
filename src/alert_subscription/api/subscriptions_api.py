@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from loguru import logger
 
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 
@@ -14,7 +15,9 @@ def config(controller: SubscriptionsController):
 
 @api.route('/users/subscriptions', methods=['GET'])
 def get_users():
-    pass
+    result = __controller.retrieve_all()
+
+    return jsonify({result}), 200
 
 
 @api.route('/users/<user_id>/subscriptions', methods=['POST'])
@@ -44,26 +47,39 @@ def get_subscriptions(user_id: str, subscription_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['PUT'])
-def put_subscription(user_id: str, subscription_id: str):
-    if not request.json:
-        return jsonify({'error': 'Empty body'}), 400
-
-    result = __controller.update_subscription(user_id, subscription_id, request.json)
-
-    if result is None:
-        return jsonify({'error': 'This subscription already exists, consider deleting it'}), 400
-
-    if result == -1:
-        return jsonify({'error': 'Not found'}), 400
-
-    return jsonify(result.to_json()), 200
+# @api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['PUT'])
+# def put_subscription(user_id: str, subscription_id: str):
+#     if not request.json:
+#         return jsonify({'error': 'Empty body'}), 400
+#
+#     result = __controller.update_subscription(user_id, subscription_id, request.json)
+#
+#     if result is None:
+#         return jsonify({'error': 'This subscription already exists, consider deleting it'}), 400
+#
+#     if result == -1:
+#         return jsonify({'error': 'Not found'}), 400
+#
+#     return jsonify(result.to_json()), 200
 
 
 @api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['DELETE'])
 def delete_subscription(user_id: str, subscription_id: str):
 
     result = __controller.delete_subscription(user_id, subscription_id)
+
+    if result is None:
+        return jsonify({'error': 'Not found'}), 400
+
+    return jsonify(result.to_json()), 200
+
+
+@api.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['POST'])
+@api.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['POST'])
+def status_subscription(user_id: str, subscription_id: str):
+    activated = request.path.split('/')[-1] == 'activate'
+
+    result = __controller.switch_status_subscription(user_id, subscription_id, activated)
 
     if result is None:
         return jsonify({'error': 'Not found'}), 400

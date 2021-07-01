@@ -18,6 +18,9 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
 
         logger.info('Dummy Storage enabled')
 
+    def retrieve_all(self):
+        return self.storage
+
     def search_user_subscription(self, user_id: str, data: dict):
         if user_id not in self.storage.keys():
             return None   # User Not found

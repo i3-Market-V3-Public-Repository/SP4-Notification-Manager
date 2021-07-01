@@ -9,6 +9,9 @@ class SubscriptionsController:
     def __init__(self, storage: SubscriptionsStorage):
         self.storage = storage
 
+    def retrieve_all(self):
+        return [subscription_to_object(s) for s in self.storage.retrieve_all()]
+
     def create_subscription(self, user_id: str, data: dict):
         if 'category' not in data.keys():
             return False
@@ -49,3 +52,13 @@ class SubscriptionsController:
 
         return subscription_to_object(deleted_subscription)
 
+    def switch_status_subscription(self, user_id: str, subscription_id: str, activated: bool):
+        subscription = self.storage.retrieve_user_subscription(user_id, subscription_id)
+
+        if not subscription:
+            return None  # Not found
+
+        subscription = Subscription(subscription.get('id'), subscription.get('category'), activated)
+        updated_subscription = self.storage.update_user_subscription(user_id, subscription_id, subscription.to_json())
+
+        return subscription_to_object(updated_subscription)
