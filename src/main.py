@@ -8,12 +8,17 @@ from uptime import uptime
 
 from src.alert_subscription.api.subscriptions_api import api as subscriptions_api
 from src.alert_subscription.api.subscriptions_api import config as subscriptions_config
+
 from src.notification_manager.api.service_queue_api import api as service_queue_api
 from src.notification_manager.api.service_queue_api import config as service_queue_config
+
+from src.notification_manager.api.notifications_api import api as notifications_api
+from src.notification_manager.api.notifications_api import config as notifications_config
 
 # El servicio puede ser configurado por Docker (environment vars) o por un fichero .env
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 from src.alert_subscription.storage.dummy_subscriptions_storage import DummySubscriptionsStorage
+from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
 from src.notification_manager.storage.dummy_service_queue_storage import DummyServiceQueueStorage
 
@@ -37,7 +42,7 @@ application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 # Blueprints
 application.register_blueprint(subscriptions_api)
 application.register_blueprint(service_queue_api)
-
+application.register_blueprint(notifications_api)
 # Databases
 base_storage_filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 subscriptions_storage_filepath = os.path.join(base_storage_filepath, 'subscriptions_json_storage.json')
@@ -49,6 +54,7 @@ queue_storage = DummyServiceQueueStorage(queue_storage_filepath)
 # Configuration APIs
 subscriptions_config(SubscriptionsController(subscriptions_storage))
 service_queue_config(QueueController(queue_storage))
+notifications_config(NotificationsController(), QueueController(queue_storage))
 
 
 # API FLASK
