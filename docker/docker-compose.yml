@@ -1,14 +1,21 @@
 version: "3.2"
 
 services:
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
+#  rabbitmq:
+#    image: rabbitmq:3-management-alpine
+#    ports:
+#      - 5672:5672
+#      - 15672:15672
+#    environment:
+#      RABBITMQ_DEFAULT_USER: "hopu"
+#      RABBITMQ_DEFAULT_PASS: "hopu"
+#    volumes:
+#      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+#      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+  notification-manager:
+    image: registry.hopu.eu/i3-market/notification-manager
     ports:
-      - 5672:5672
-      - 15672:15672
-    environment:
-      RABBITMQ_DEFAULT_USER: "hopu"
-      RABBITMQ_DEFAULT_PASS: "hopu"
+      - 5000:5000
     volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+      - ../data/:/app/data
