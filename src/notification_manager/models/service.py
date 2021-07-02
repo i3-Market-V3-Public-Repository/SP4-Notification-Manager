@@ -12,10 +12,11 @@ class Service:
         self.id = _id
         self.name = name
         self.endpoint = endpoint
-        self.queue = queues or []
+        self.queues = queues or []
 
     def to_json(self):
-        json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "queues": map(Queue.to_json, self.queue)}
+        queue = map(Queue.to_json, self.queues) if self.queues else []
+        json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "queues": queue}
         return json_out
 
 
@@ -23,4 +24,4 @@ def service_to_object(data: dict):
     return Service(data.get('id'),
                    data.get('name'),
                    data.get('endpoint'),
-                   data.get('queue'))
+                   data.get('queues'))

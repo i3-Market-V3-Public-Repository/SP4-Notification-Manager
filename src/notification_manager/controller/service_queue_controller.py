@@ -11,14 +11,17 @@ class QueueController:
         self.storage = storage
 
     def retrieve_all(self):
-        return [service_to_object(s) for s in self.storage.retrieve_all()]
+        return self.storage.retrieve_all()
 
     def create_service(self, data: dict):
         if 'name' not in data.keys():
             return False
+
         service = Service(uuid.uuid4().__str__(), data.get('name'), data.get('endpoint'))
         stored_service = self.storage.insert_service(service.to_json())
-        return service_to_object(stored_service)
+
+        if stored_service:
+            return service_to_object(stored_service)
 
     def retrieve_service(self, service_id: str):
         service = self.storage.retrieve_service(service_id)

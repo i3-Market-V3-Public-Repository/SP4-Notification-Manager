@@ -10,9 +10,10 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
 
     def __init__(self, path):
         self.path = path
+        self.storage = []
 
         if not os.path.exists(self.path):
-            self.__write_dummy_file(data={})
+            self.__write_dummy_file()
 
         self.storage = self.__read_dummy_file()
 
@@ -26,13 +27,14 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
     ####################################################################################################################
     def insert_service(self, service: dict):
         # if the user does not exist, it is created
-        found = next((item for item in self.storage if item["id"] == service.get('id')), None)
+        found = next((item for item in self.storage if item["name"] == service.get('name')), None)
         if found:
-            return self.update_service(service)
+            return None  # Duplicated, maybe update
+            # return self.update_service(service)
         else:
             # the service is added to the user
             self.storage.append(service)
-            self.__write_dummy_file(self.storage)
+            self.__write_dummy_file()
             return service
 
     def retrieve_service(self, service_id: dict):
@@ -42,24 +44,28 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
         return None
 
     def update_service(self, service: dict):
-        for i in list(range(0, len(self.storage))):
-            existing_service = self.storage[i]
-            if existing_service.get('id') == service.get('id'):
-                self.storage[i] = service
-                self.__write_dummy_file(self.storage)
-                return service
-        return None  # Service Not found
+        pass
+        # for i in list(range(0, len(self.storage))):
+        #     existing_service = self.storage[i]
+        #     if existing_service.get('id') == service.get('id'):
+        #         self.storage[i] = service
+        #         self.__write_dummy_file()
+        #         return service
+        # return None  # Service Not found
 
     def delete_service(self, service_id):
-        for existing_service in self.storage:
-            if existing_service.get('id') == service_id:
-                deleted = self.storage.pop(existing_service)
-                return deleted
-        return None
-        #for i in list(range(0, len(self.storage))):
-        #    existing_service = self.storage[i]
-        #    if existing_service.get('id') == service_id:
-        #        # del self.storage[i]
+        index = None
+        for i in list(range(0, len(self.storage))):
+            if self.storage[i].get('id') == service_id:
+                index = i
+                break
+
+        if index is not None:
+            deleted_service = self.storage.pop(index)
+            self.__write_dummy_file()
+            return deleted_service
+
+        return None  # Service Not found
 
     ####################################################################################################################
     # QUEUES METHODS
@@ -109,6 +115,6 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
         with open(self.path, 'r') as file:
             return json.load(file)
 
-    def __write_dummy_file(self, data: dict):
+    def __write_dummy_file(self):
         with open(self.path, 'w') as file:
-            return json.dump(data, file, indent=2)
+            return json.dump(self.storage, file, indent=2)

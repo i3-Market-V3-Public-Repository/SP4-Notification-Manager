@@ -16,16 +16,15 @@ def config(controller: QueueController):
 
 @api.route('/services', methods=['GET'])
 def get_services():
-    # Traerlos todos
     result = __controller.retrieve_all()
-    return jsonify(result, 200)
+    return jsonify(result), 200
 
 
 @api.route('/services', methods=['POST'])
 def create_service():
-    # {'nombre': ''}
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
+
     result = __controller.create_service(request.json)
 
     if result is False:
@@ -37,7 +36,7 @@ def create_service():
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/{services_id}', methods=['DELETE'])
+@api.route('/services/<services_id>', methods=['DELETE'])
 def delete_service(services_id: str):
     result = __controller.delete_service(services_id)
 
@@ -47,8 +46,8 @@ def delete_service(services_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/{services_id}/queues', defaults={"queue_id": None}, methods=['GET'])
-@api.route('/services/{services_id}/queues/<queue_id>', methods=['GET'])
+@api.route('/services/<services_id>/queues', defaults={"queue_id": None}, methods=['GET'])
+@api.route('/services/<services_id>/queues/<queue_id>', methods=['GET'])
 def get_queues(services_id: str, queue_id: str):
     result = __controller.retrieve_service_queues(services_id, queue_id)
 
@@ -61,7 +60,7 @@ def get_queues(services_id: str, queue_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/{services_id}/queues', methods=['POST'])
+@api.route('/services/<services_id>/queues', methods=['POST'])
 def post_queues(services_id: str):
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
@@ -75,7 +74,7 @@ def post_queues(services_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/{services_id}/queues/<queue_id>', methods=['DELETE'])
+@api.route('/services/<services_id>/queues/<queue_id>', methods=['DELETE'])
 def delete_queue(services_id: str, queue_id: str):
     result = __controller.delete_queue(services_id, queue_id)
 
@@ -85,7 +84,7 @@ def delete_queue(services_id: str, queue_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/{services_id}/queues/<queue_id>', methods=['PUT'])
+@api.route('/services/<services_id>/queues/<queue_id>', methods=['PUT'])
 def put_queue(services_id: str, queue_id: str):
     result = __controller.update_queue(services_id, queue_id, request.json())
     if result is None:
@@ -94,8 +93,8 @@ def put_queue(services_id: str, queue_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/{services_id}/queues/<queue_id>/activate', methods=['POST'])
-@api.route('/services/{services_id}/queues/<queue_id>/deactivate', methods=['POST'])
+@api.route('/services/<services_id>/queues/<queue_id>/activate', methods=['POST'])
+@api.route('/services/<services_id>/queues/<queue_id>/deactivate', methods=['POST'])
 def status_queue(service_id: str, queue_id: str):
     activated = request.path.split('/')[-1] == 'activate'
 
