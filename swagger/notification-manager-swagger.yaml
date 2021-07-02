@@ -279,17 +279,21 @@ paths:
       tags:
         - Queues
       parameters:
-        - name: name
+        - name: service_data
           required: true
           in: body
-          type: "string"
-          description: Name for the service, for example Agora Marketplace
+          schema:
+            type: "object"
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                description: Name for the service, for example Agora Marketplace
+              endpoint:
+                type: string
+                description: This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered.
 
-        - name: endpoint
-          required: False
-          in: body
-          type: "string"
-          description: This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered.
       operationId: create_service
       description: Registers a new target service to send notifications to with an empty queue
       responses:
@@ -326,10 +330,10 @@ paths:
           description: "Bad request"
           schema:
             $ref: "#/definitions/ErrorResponse"
-          default:
-            description: Error
-            schema:
-              $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /services/{service_id}/queues:
     get:
@@ -351,43 +355,49 @@ paths:
           description: "Bad request"
           schema:
             $ref: "#/definitions/ErrorResponse"
-          default:
-            description: Error
-            schema:
-              $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     post:
       tags:
         - Queues
-        parameters:
-          - name: service_id
-            required: true
-            in: path
-            type: "string"
-          - name: name
-            required: true
-            in: body
-            type: "string"
-            description: Name to the queue you want to receive alerts
-          - name: endpoint
-            required: false
-            in: body
-            description: Endpoint if you want to get notified in a different endpoint for this notifications
+      parameters:
+        - name: service_id
+          required: true
+          in: path
+          type: "string"
+        - name: service_data
+          required: true
+          in: body
+          schema:
+            type: "object"
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                description: Name for the service, for example Agora Marketplace
+              endpoint:
+                type: string
+                description: This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered.
 
-        description: Subscribe for a new Queue in the service
-        operationId: post_queues
-        responses:
-          "200":
-            description: Ok
-            schema:
-              $ref: "#/definitions/Queue"
-          "400":
-            description: "Bad request"
-            schema:
-              $ref: "#/definitions/ErrorResponse"
-            default:
-              description: Error
-              schema:
-                $ref: "#/definitions/ErrorResponse"
+      description: Subscribe for a new Queue in the service
+      operationId: post_queues
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/QueueList"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /services/{service_id}/queues/{queue_id}:
     get:
       tags:
@@ -397,12 +407,12 @@ paths:
           required: true
           in: path
           type: "string"
-        -name: queue_id
+        - name: queue_id
           required: true
           in: path
           type: "string"
       description: Return a specific service registered queue
-      operationId: get_queues
+      operationId: get_queue
       responses:
         "200":
           description: Ok
@@ -412,10 +422,10 @@ paths:
           description: "Bad request"
           schema:
             $ref: "#/definitions/ErrorResponse"
-          default:
-            description: Error
-            schema:
-              $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     delete:
       tags:
         - Queues
@@ -426,9 +436,9 @@ paths:
           type: "string"
 
         - name: queue_id
-            required: true
-            in: path
-            type: "string"
+          required: true
+          in: path
+          type: "string"
       description: Removes a service queue
       operationId: delete_queue
       responses:
@@ -440,11 +450,11 @@ paths:
           description: "Bad request"
           schema:
             $ref: "#/definitions/ErrorResponse"
-          default:
-            description: Error
-            schema:
-              $ref: "#/definitions/ErrorResponse"
-  /services/{services_id}/queues/{queue_id}/activate:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /services/{service_id}/queues/{queue_id}/activate:
     post:
       tags:
         - Queues
@@ -455,25 +465,26 @@ paths:
           type: "string"
 
         - name: queue_id
-            required: true
-            in: path
-            type: "string"
+          required: true
+          in: path
+          type: "string"
       description: Activate a queue to receive notifications
-        operationId: status_queue
-        responses:
-          "200":
-            description: Ok
-            schema:
-              $ref: "#/definitions/Queue"
-          "400":
-            description: "Bad request"
-            schema:
-              $ref: "#/definitions/ErrorResponse"
-            default:
-              description: Error
-              schema:
-                $ref: "#/definitions/ErrorResponse"
-  /services/{services_id}/queues/{queue_id}/deactivate:
+      operationId: status_queue_activate
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/Queue"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /services/{service_id}/queues/{queue_id}/deactivate:
     post:
       tags:
         - Queues
@@ -484,24 +495,24 @@ paths:
           type: "string"
 
         - name: queue_id
-            required: true
-            in: path
-            type: "string"
+          required: true
+          in: path
+          type: "string"
       description: Deactivate a queue to not receive notifications
-        operationId: status_queue
-        responses:
-          "200":
-            description: Ok
-            schema:
-              $ref: "#/definitions/Queue"
-          "400":
-            description: "Bad request"
-            schema:
-              $ref: "#/definitions/ErrorResponse"
-            default:
-              description: Error
-              schema:
-                $ref: "#/definitions/ErrorResponse"
+      operationId: status_queue_deactivate
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/Queue"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   ####################### NOTIFICATIONS #######################
   /notification/service:
@@ -553,6 +564,15 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 ####################### DEFINITIONS #######################
 definitions:
+  ServiceData:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name for the service, for example Agora Marketplace
+      endpoint:
+        type: string
+        description: This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered.
 
   Subscription:
     type: "object"
@@ -574,6 +594,7 @@ definitions:
           type: array
           items:
             $ref: "#/definitions/Subscription"
+
   Queue:
     type: "object"
     properties:
@@ -585,6 +606,11 @@ definitions:
         type: "string"
       active:
         type: boolean
+
+  QueueList:
+    type: array
+    items:
+      $ref: "#/definitions/Queue"
 
   Service:
     type: "object"

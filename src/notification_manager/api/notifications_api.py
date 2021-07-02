@@ -17,11 +17,13 @@ def config(notification_controller: NotificationsController, queue_controller: Q
 
 @api.route('/notification/service', methods=['POST'])
 def notification_service():
+    # {"receiver_id": "offering.new", "message": loquesea}
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
-    # TODO needed check if queue exist and if not is created/return error?
-    __queue_controller.search_services_by_queue(request.json.get('receiver_id'))
-    __notification_controller.send_notification_service(request.json)
+    # extract receiver_id to get to which queue send the notification
+    queues_endpoints = __queue_controller.search_services_by_queue(request.json.get('receiver_id'))
+    # create the notification and send to them
+    __notification_controller.send_notification_service(queues_endpoints, request.json)
 
 
 @api.route('/notification/user', methods=['POST'])
@@ -29,4 +31,4 @@ def notification_user():
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
     # TODO implement THIS! release v2
-    pass
+    return jsonify({'error': 'Method not implemented yet'}), 501
