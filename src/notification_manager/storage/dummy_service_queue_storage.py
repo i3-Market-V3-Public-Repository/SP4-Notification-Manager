@@ -53,9 +53,9 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
     def delete_service(self, service_id):
         for existing_service in self.storage:
             if existing_service.get('id') == service_id:
-                self.storage.remove(existing_service)
-                return True
-        return False
+                deleted = self.storage.pop(existing_service)
+                return deleted
+        return None
         #for i in list(range(0, len(self.storage))):
         #    existing_service = self.storage[i]
         #    if existing_service.get('id') == service_id:
@@ -68,6 +68,7 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
         for existing_service in self.storage:
             if existing_service.get('id') == service_id:
                 return existing_service.queues
+        return None  # Not queues for that service
 
     def retrieve_service_queue(self, service_id: str, queue_id: str):
         for existing_service in self.storage:
@@ -91,6 +92,8 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
                 for i in list(range(0, len(existing_queue))):
                     if queue.get('id') == existing_queue[i].get('id'):
                         existing_queue[i] = queue
+                        return queue
+        return None
 
     def delete_service_queue(self, service_id: str, queue_id: str):
         for existing_services in self.storage:
@@ -98,8 +101,8 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
                 queue = existing_services.get('queue')
                 for existing_queue in queue:
                     if existing_queue.get('id') == queue_id:
-                        queue.remove()
-                        return True
+                        q = queue.pop()
+                        return q
         return None  # queue not found
 
     def __read_dummy_file(self):
