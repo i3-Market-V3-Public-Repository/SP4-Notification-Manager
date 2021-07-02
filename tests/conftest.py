@@ -1,10 +1,9 @@
+import json
 import os
-from unittest.mock import patch
 
 import pytest
 from loguru import logger
 
-from src.alert_subscription.storage.dummy_subscriptions_storage import DummySubscriptionsStorage
 from src.main import application, subscriptions_storage_filepath
 
 
@@ -24,12 +23,10 @@ def disable_logger():
 
 
 @pytest.fixture(autouse=True, scope='function')
-def clear_database():
-    yield
-
-
-@pytest.fixture(autouse=True, scope='function')
 def remove_json_storage():
-    yield
+    if not os.path.exists(subscriptions_storage_filepath):
+        with open(subscriptions_storage_filepath, 'w') as file:
+            json.dump({}, file, indent=2)
+    yield None
     if os.path.exists(subscriptions_storage_filepath):
         os.remove(subscriptions_storage_filepath)
