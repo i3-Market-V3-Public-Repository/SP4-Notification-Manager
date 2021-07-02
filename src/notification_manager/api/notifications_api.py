@@ -22,7 +22,9 @@ def notification_service():
 
         return jsonify({'error': 'Empty body'}), 400
 
-    # TODO añadir comprobacion campos
+    if not request.json.get("receiver_id") or not request.json.get("message"):
+        return jsonify({"error": "Body has to contain receiver_id and message"}), 400
+
     # extract receiver_id to get to which queue send the notification
     queue_name = request.json.get('receiver_id')
     message = request.json.get('message')
