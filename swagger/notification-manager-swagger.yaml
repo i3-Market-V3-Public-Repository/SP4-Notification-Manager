@@ -25,6 +25,8 @@ tags:
     description: "User Subscriptions"
   - name: Notifications
     description: "Service and User Notifications"
+  - name: Queues
+    description: "Queues management"
 
 ######################### METHODS #########################
 
@@ -61,6 +63,7 @@ paths:
   #        description: Error
   #        schema:
   #          $ref: "#/definitions/ErrorResponse"
+####################### SUBSCRIPTIONS #######################
   /user/subscriptions:
     get:
       tags:
@@ -280,7 +283,248 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+########################## QUEUES ###########################
+  /services:
+    get:
+      tags:
+        - Queues
+      #parameters:
+      description: Returns all registered services, their endpoints and queues.
+      operationId: get_services
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/ServiceList"
+    post:
+      tags:
+        - Queues
+      parameters:
+        - name: name
+          required: true
+          in: body
+          type: "string"
+          description: Name for the service, for example Agora Marketplace
 
+        - name: endpoint
+          required: False
+          in: body
+          type: "string"
+          description: This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered.
+      operationId: create_service
+      description: Registers a new target service to send notifications to with an empty queue
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/Service"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /services/{service_id}:
+    delete:
+      tags:
+        - Queues
+      parameters:
+        - name: service_id
+          required: true
+          in: path
+          type: "string"
+      description: Removes the service and its queues
+      operationId: delete_service
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/Service"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+
+  /services/{service_id}/queues:
+    get:
+      tags:
+        - Queues
+      parameters:
+        - name: service_id
+          required: true
+          in: path
+          type: "string"
+      description: Return the service registered queues
+      operationId: get_queues
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/Queue"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+    post:
+      tags:
+        - Queues
+        parameters:
+          - name: service_id
+            required: true
+            in: path
+            type: "string"
+          - name: name
+            required: true
+            in: body
+            type: "string"
+            description: Name to the queue you want to receive alerts
+          - name: endpoint
+            required: false
+            in: body
+            description: Endpoint if you want to get notified in a different endpoint for this notifications
+
+        description: Subscribe for a new Queue in the service
+        operationId: post_queues
+        responses:
+          "200":
+            description: Ok
+            schema:
+              $ref: "#/definitions/Queue"
+          "400":
+            description: "Bad request"
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+            default:
+              description: Error
+              schema:
+                $ref: "#/definitions/ErrorResponse"
+  /services/{service_id}/queues/{queue_id}:
+    get:
+      tags:
+        - Queues
+      parameters:
+        - name: service_id
+          required: true
+          in: path
+          type: "string"
+        -name: queue_id
+          required: true
+          in: path
+          type: "string"
+      description: Return a specific service registered queue
+      operationId: get_queues
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/Queue"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+    delete:
+      tags:
+        - Queues
+      parameters:
+        - name: service_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: queue_id
+            required: true
+            in: path
+            type: "string"
+      description: Removes a service queue
+      operationId: delete_queue
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: "#/definitions/Queue"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /services/{services_id}/queues/{queue_id}/activate:
+    post:
+      tags:
+        - Queues
+      parameters:
+        - name: service_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: queue_id
+            required: true
+            in: path
+            type: "string"
+      description: Activate a queue to receive notifications
+        operationId: status_queue
+        responses:
+          "200":
+            description: Ok
+            schema:
+              $ref: "#/definitions/Queue"
+          "400":
+            description: "Bad request"
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+            default:
+              description: Error
+              schema:
+                $ref: "#/definitions/ErrorResponse"
+  /services/{services_id}/queues/{queue_id}/deactivate:
+    post:
+      tags:
+        - Queues
+      parameters:
+        - name: service_id
+          required: true
+          in: path
+          type: "string"
+
+        - name: queue_id
+            required: true
+            in: path
+            type: "string"
+      description: Deactivate a queue to not receive notifications
+        operationId: status_queue
+        responses:
+          "200":
+            description: Ok
+            schema:
+              $ref: "#/definitions/Queue"
+          "400":
+            description: "Bad request"
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+            default:
+              description: Error
+              schema:
+                $ref: "#/definitions/ErrorResponse"
+
+  ####################### NOTIFICATIONS #######################
   /notification/service:
     post:
       tags:
@@ -351,7 +595,34 @@ definitions:
           type: array
           items:
             $ref: "#/definitions/Subscription"
+  Queue:
+    type: "object"
+    properties:
+      queue_id:
+        type: "string"
+      name:
+        type: "string"
+      endpoint:
+        type: "string"
+      active:
+        type: boolean
 
+  Service:
+    type: "object"
+    properties:
+      service_id:
+        type: "string"
+      endpoint:
+        type: "string"
+      queues:
+        type: array
+        items:
+          $ref: "#/definitions/Queue"
+
+  ServiceList:
+    type: array
+    items:
+      $ref: "#/definitions/Service"
 
   ServiceTask:
     type: "object"
