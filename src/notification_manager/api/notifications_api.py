@@ -3,7 +3,7 @@ from loguru import logger
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
 
-api = Blueprint('queues', __name__)
+api = Blueprint('notifications', __name__)
 # noinspection PyTypeChecker
 __notification_controller: NotificationsController = None
 __queue_controller: QueueController = None
