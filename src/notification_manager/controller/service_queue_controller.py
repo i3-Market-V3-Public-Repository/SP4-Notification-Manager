@@ -102,4 +102,4 @@ class QueueController:
         return queue_to_object(updated_queue)
 
     def search_services_by_queue(self, queue_name: str):
-        pass
+        return self.storage.search_services_by_queue(queue_name)

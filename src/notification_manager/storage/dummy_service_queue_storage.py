@@ -128,6 +128,16 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
 
         return None  # queue not found
 
+    def search_services_by_queue(self, queue_name: str):
+        found = {}
+
+        for service in self.storage:
+            for queue in service.get('queues'):
+                if queue.get('name') == queue_name:
+                    found[service.get('name')] = queue.get('endpoint') or service.get('endpoint')
+
+        return found
+
     def __read_dummy_file(self):
         with open(self.path, 'r') as file:
             return json.load(file)
