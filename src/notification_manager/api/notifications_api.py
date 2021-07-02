@@ -25,9 +25,12 @@ def notification_service():
     # TODO añadir comprobacion campos
     # extract receiver_id to get to which queue send the notification
     queue_name = request.json.get('receiver_id')
+    message = request.json.get('message')
+
     queues_endpoints = __queue_controller.search_services_by_queue(queue_name)
     # create the notification and send to them
-    __notification_controller.send_notification_service(queue_name, queues_endpoints, request.json)
+    __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
+    return jsonify(), 200
 
 
 @api.route('/notification/user', methods=['POST'])
