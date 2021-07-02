@@ -18,3 +18,9 @@ class Notification:
         self.origin = origin
         self.receptor = receptor
         self.data = data
+
+    def to_json(self):
+        json_out = {"action": self.action, "status": self.status, "origin": self.origin, "receptor": self.receptor}
+        if hasattr(self, 'data'):
+            json_out['data'] = self.data
+        return json_out
