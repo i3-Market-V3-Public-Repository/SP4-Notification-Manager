@@ -20,7 +20,8 @@ def notification_service():
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
     # TODO needed check if queue exist and if not is created/return error?
-    pass
+    __queue_controller.search_services_by_queue(request.json.get('receiver_id'))
+    __notification_controller.send_notification_service(request.json)
 
 
 @api.route('/notification/user', methods=['POST'])
