@@ -11,5 +11,18 @@
         "active": true
       }
     ]
+  },
+  {
+    "id": "7255664b-9b24-433f-ab3f-46f7a1272cde",
+    "name": "eli-endpoint",
+    "endpoint": "http://localhost:3000/notify",
+    "queues": [
+      {
+        "id": "a66442ca-156a-4b2e-9ad1-700d6772067b",
+        "name": "offering.new",
+        "endpoint": null,
+        "active": true
+      }
+    ]
   }
 ]

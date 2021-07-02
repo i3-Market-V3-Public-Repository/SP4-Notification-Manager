@@ -1,1 +1,9 @@
-{}
+{
+  "asd1": [
+    {
+      "id": "e5fd30d1-ead5-42ea-b245-3aef762651ed",
+      "category": "category1",
+      "active": true
+    }
+  ]
+}
