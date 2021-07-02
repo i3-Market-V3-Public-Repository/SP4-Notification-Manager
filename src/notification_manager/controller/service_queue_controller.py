@@ -72,6 +72,12 @@ class QueueController:
             return queue_to_object(queue)
         return None
 
+    def delete_queue(self, service_id: str, queue_id:str):
+        if not self.storage.retrieve_service_queue(service_id, queue_id):
+            return None  # Not found
+        deleted_queue = self.storage.delete_service_queue(service_id,queue_id)
+        return queue_to_object(deleted_queue)
+
     def switch_status_queue(self, service_id: str, queue_id: str, activated: bool):
         queue = self.storage.retrieve_service_queue(service_id, queue_id)
         if not queue:
