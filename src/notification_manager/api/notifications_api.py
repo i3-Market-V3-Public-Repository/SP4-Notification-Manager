@@ -32,6 +32,8 @@ def notification_service():
     queues_endpoints = __queue_controller.search_services_by_queue(queue_name)
     # create the notification and send to them
     __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
+
+    # TODO: Añadir comunicación con el servicio de subscripciones de usuario
     return jsonify(), 200
 
 
