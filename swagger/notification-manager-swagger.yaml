@@ -47,12 +47,6 @@ paths:
     get:
       tags:
       - Subscriptions
-      #parameters:
-      #  - name: subscription
-      #    required: true
-      #    in: body
-      #    schema:
-      #      $ref: "#/definitions/GetSubscription"
       description: Receive all users subscriptions
       operationId: get_subscriptions
       responses:
