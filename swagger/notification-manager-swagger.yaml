@@ -42,27 +42,6 @@ paths:
         "200":
           description: Success
 
-  #/v1/offering/notify:
-  #  post:
-  #    parameters:
-  #      - name: offering
-  #        required: true
-  #        in: body
-  #        schema:
-  #          $ref: "#/definitions/NewOffering"
-  #    description: Receive an offering to search for subscribed users to offering category and notify them
-  #    operationId: offering_notification
-  #    responses:
-  #      "200":
-  #        description: Ok
-  #      "400":
-  #        description: "Bad request"
-  #        schema:
-  #          $ref: "#/definitions/ErrorResponse"
-  #      default:
-  #        description: Error
-  #        schema:
-  #          $ref: "#/definitions/ErrorResponse"
 ####################### SUBSCRIPTIONS #######################
   /user/subscriptions:
     get:
