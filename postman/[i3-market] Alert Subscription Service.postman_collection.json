@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "9ee3ef1f-b135-4ee1-9d6c-93c011ac97d2",
+		"name": "[i3-market] Alert Subscription Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET all subscriptions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/subscriptions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"subscriptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET user subscriptions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{user_id}}",
+						"subscriptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET user subscription by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{user_id}}",
+						"subscriptions",
+						"{{subscription_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE user subscription",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"category\": \"category1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{user_id}}",
+						"subscriptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE user subscription by id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{user_id}}",
+						"subscriptions",
+						"{{subscription_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ACTIVATE user subscription by id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}/activate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{user_id}}",
+						"subscriptions",
+						"{{subscription_id}}",
+						"activate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DEACTIVATE user subscription by id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}/deactivate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{user_id}}",
+						"subscriptions",
+						"{{subscription_id}}",
+						"deactivate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
