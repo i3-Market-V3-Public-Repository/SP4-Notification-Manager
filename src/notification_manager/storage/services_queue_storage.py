@@ -48,3 +48,7 @@ class ServicesQueueStorage(abc.ABC):
     @abc.abstractmethod
     def delete_service_queue(self, service_id: str, queue_id: str):
         raise NotImplementedError('implement me, please!')
+
+    @abc.abstractmethod
+    def search_services_by_queue(self, queue_name: str):
+        raise NotImplementedError('implement me, please!')
