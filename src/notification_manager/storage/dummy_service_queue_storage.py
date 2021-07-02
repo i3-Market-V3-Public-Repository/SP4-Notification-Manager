@@ -73,13 +73,13 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
     def retrieve_all_service_queues(self, service_id: str):
         for existing_service in self.storage:
             if existing_service.get('id') == service_id:
-                return existing_service.queues
+                return existing_service.get('queues')
         return None  # Not queues for that service
 
     def retrieve_service_queue(self, service_id: str, queue_id: str):
         for existing_service in self.storage:
             if existing_service.get('id') == service_id:
-                for queue in existing_service.get('queue'):
+                for queue in existing_service.get('queues'):
                     if queue.get('id') == queue_id:
                         return queue
         return None  # queue Not found
@@ -87,28 +87,45 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
     def insert_service_queue(self, service_id: str, queue: dict):
         for existing_service in self.storage:
             if existing_service.get('id') == service_id:
-                list(existing_service.get('queue')).append(queue)
-                return queue
+                found = False
+                for q in existing_service.get('queues'):
+                    if q.get('name') == queue.get('name'):
+                        found = True
+                if not found:
+                    existing_service['queues'].append(queue)
+                    self.__write_dummy_file()
+                    return queue
         return None
 
     def update_service_queue(self, service_id: str, queue: dict):
-        for existing_service in self.storage:
-            if existing_service.get('id') == service_id:
-                existing_queue = existing_service.get('queue')
-                for i in list(range(0, len(existing_queue))):
-                    if queue.get('id') == existing_queue[i].get('id'):
-                        existing_queue[i] = queue
+        for existing_services in self.storage:
+            if existing_services.get('id') == service_id:
+
+                for i in list(range(0, len(existing_services.get('queues')))):
+                    q = existing_services['queues'][i]
+                    if q.get('id') == queue.get('id'):
+                        existing_services['queues'][i] = queue
+                        self.__write_dummy_file()
                         return queue
-        return None
+
+        return None  # queue not found
 
     def delete_service_queue(self, service_id: str, queue_id: str):
         for existing_services in self.storage:
             if existing_services.get('id') == service_id:
-                queue = existing_services.get('queue')
-                for existing_queue in queue:
-                    if existing_queue.get('id') == queue_id:
-                        q = queue.pop()
-                        return q
+
+                index = None
+                for i in list(range(0, len(existing_services.get('queues')))):
+                    queue = existing_services.get('queues')[i]
+                    if queue.get('id') == queue_id:
+                        index = i
+                        break
+
+                if index is not None:
+                    queue = existing_services['queues'].pop(index)
+                    self.__write_dummy_file()
+                    return queue
+
         return None  # queue not found
 
     def __read_dummy_file(self):

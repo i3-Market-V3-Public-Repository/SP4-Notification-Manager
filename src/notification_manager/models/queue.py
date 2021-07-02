@@ -5,7 +5,7 @@ class Queue:
     """
     Class defining a Queue of service with a list of endpoints to send notifications.
     """
-    def __init__(self, _id: str, name: str, endpoint: List[str] = None, active: bool = None):
+    def __init__(self, _id: str, name: str, endpoint: List[str] = None, active: bool = True):
         self.id = _id
         self.name = name
         self.endpoint = endpoint
@@ -19,4 +19,5 @@ class Queue:
 def queue_to_object(data: dict):
     return Queue(data.get('id'),
                  data.get('name'),
-                 data.get('endpoint'))
+                 data.get('endpoint'),
+                 data.get('active'))

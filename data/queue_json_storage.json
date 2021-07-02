@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "6051bc2c-6a21-4441-acdf-51ac68f019b6",
+    "name": "i3-market-test",
+    "endpoint": "i3-market-test.com/notify",
+    "queues": [
+      {
+        "id": "b69f8e5f-7d1a-4969-8e73-3f63f2db0c9d",
+        "name": "new_offering",
+        "endpoint": "i3-market-test.com/new_offering",
+        "active": true
+      }
+    ]
+  }
+]
