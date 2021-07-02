@@ -18,7 +18,7 @@
     "endpoint": "http://localhost:3000/notify",
     "queues": [
       {
-        "id": "a66442ca-156a-4b2e-9ad1-700d6772067b",
+        "id": "acaff999-4359-4ae1-9f67-fd4e84310978",
         "name": "offering.new",
         "endpoint": null,
         "active": true

@@ -1,5 +1,6 @@
 import uuid
 
+from src.notification_manager.models.queue_types import QueueType
 from src.notification_manager.storage.services_queue_storage import ServicesQueueStorage
 from src.notification_manager.models.service import Service, service_to_object
 from src.notification_manager.models.queue import Queue, queue_to_object
@@ -57,11 +58,16 @@ class QueueController:
     def create_queue(self, service_id: str, data: dict):
         if 'name' not in data.keys():
             return False
+        queue_name = data.get('name')
 
-        queue = Queue(uuid.uuid4().__str__(), data.get('name'), data.get('endpoint'))
-        stored_queue = self.storage.insert_service_queue(service_id, queue.to_json())
-        if stored_queue:
-            return queue_to_object(stored_queue)
+        if QueueType.is_valid(queue_name):
+            queue = Queue(uuid.uuid4().__str__(), queue_name, data.get('endpoint'))
+            stored_queue = self.storage.insert_service_queue(service_id, queue.to_json())
+            if stored_queue:
+                return queue_to_object(stored_queue)
+            else:
+                return None
+        return -1
 
     def retrieve_service_queues(self, service_id: str, queue_id: str = None):
         if queue_id:

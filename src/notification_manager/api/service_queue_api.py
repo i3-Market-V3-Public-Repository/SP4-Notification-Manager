@@ -77,6 +77,8 @@ def post_queues(service_id: str):
         return jsonify({'error': 'Incomplete body'}), 400
     if result is None:
         return jsonify({'error': 'Already exists service queue'}), 400
+    if result == -1:
+        return jsonify({'error': 'Queue Type doesn`t exist'}), 400
     return jsonify(result.to_json()), 200
 
 
