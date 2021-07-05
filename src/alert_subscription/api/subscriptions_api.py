@@ -13,6 +13,18 @@ def config(controller: SubscriptionsController):
     __controller = controller
 
 
+@api.route('/notify', methods=['POST'])
+def notify():
+    if not request.json:
+        return jsonify({'error': 'Empty body'}), 400
+
+    category = request.json.get('category')
+
+    __controller.search_users_by_subscription(category, message=request.json)
+
+    return jsonify(), 200
+
+
 @api.route('/users/subscriptions', methods=['GET'])
 def get_users():
     result = __controller.retrieve_all()

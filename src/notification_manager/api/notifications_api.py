@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from loguru import logger
+
+from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
 
@@ -7,12 +9,16 @@ api = Blueprint('notifications', __name__)
 # noinspection PyTypeChecker
 __notification_controller: NotificationsController = None
 __queue_controller: QueueController = None
+__subscription_controller: SubscriptionsController = None
 
 
-def config(notification_controller: NotificationsController, queue_controller: QueueController):
-    global __notification_controller, __queue_controller
+def config(notification_controller: NotificationsController,
+           queue_controller: QueueController,
+           subscription_controller: SubscriptionsController):
+    global __notification_controller, __queue_controller, __subscription_controller
     __notification_controller = notification_controller
     __queue_controller = queue_controller
+    __subscription_controller = subscription_controller
 
 
 @api.route('/notification/service', methods=['POST'])
@@ -32,8 +38,10 @@ def notification_service():
     queues_endpoints = __queue_controller.search_services_by_queue(queue_name)
     # create the notification and send to them
     __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
+    # TODO: Eliminar esta linea cuando se separen los servicios
+    category = message.get('category')
+    __subscription_controller.search_users_by_subscription(category, message=request.json)
 
-    # TODO: Añadir comunicación con el servicio de subscripciones de usuario
     return jsonify(), 200
 
 
