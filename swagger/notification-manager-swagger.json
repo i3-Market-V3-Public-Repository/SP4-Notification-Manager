@@ -1,0 +1,930 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "I3-Market Notification Manager API"
+  },
+  "host": "localhost:10050",
+  "basePath": "/api/v1/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json",
+    "text/html"
+  ],
+  "tags": [
+    {
+      "name": "Subscriptions",
+      "description": "User Subscriptions"
+    },
+    {
+      "name": "Notifications",
+      "description": "Service and User Notifications"
+    },
+    {
+      "name": "Queues",
+      "description": "Queues management"
+    }
+  ],
+  "paths": {
+    "/swagger": {
+      "x-swagger-pipe": "swagger_raw"
+    },
+    "/health": {
+      "x-swagger-router-controller": "health",
+      "get": {
+        "operationId": "health_check",
+        "description": "Healthcheck endpoint",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/user/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "description": "Receive all users subscriptions",
+        "operationId": "get_subscriptions",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionList"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/subscriptions": {
+      "post": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Create user subscription to category",
+        "operationId": "post_subscriptions",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Return user subscription",
+        "operationId": "get_subscriptions_by_user_id",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Subscription"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/subscriptions/{subscription_id}": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "subscription_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Get one subscription using the subscription id of a user by id",
+        "operationId": "get_subscription",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Subscription"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "subscription_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Delete one subscription using the subscription id by user id",
+        "operationId": "delete_subscription",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "subscription_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Modify one subscription using the subscription id by user id",
+        "operationId": "modify_subscription",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/subscriptions/{subscription_id}/activate": {
+      "post": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "subscription_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Activate a subscription",
+        "operationId": "activate_subscription",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/subscriptions/{subscription_id}/deactivate": {
+      "post": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "subscription_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Deactivate a subscription",
+        "operationId": "deactivate_subscription",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "description": "Returns all registered services, their endpoints and queues.",
+        "operationId": "get_services",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/ServiceList"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_data",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name for the service, for example Agora Marketplace"
+                },
+                "endpoint": {
+                  "type": "string",
+                  "description": "This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered."
+                }
+              }
+            }
+          }
+        ],
+        "operationId": "create_service",
+        "description": "Registers a new target service to send notifications to with an empty queue",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/services/{service_id}": {
+      "delete": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Removes the service and its queues",
+        "operationId": "delete_service",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/services/{service_id}/queues": {
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Return the service registered queues",
+        "operationId": "get_queues",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Queue"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "service_data",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name for the service, for example Agora Marketplace"
+                },
+                "endpoint": {
+                  "type": "string",
+                  "description": "This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered."
+                }
+              }
+            }
+          }
+        ],
+        "description": "Subscribe for a new Queue in the service",
+        "operationId": "post_queues",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/QueueList"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/services/{service_id}/queues/{queue_id}": {
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "queue_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Return a specific service registered queue",
+        "operationId": "get_queue",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Queue"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "queue_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Removes a service queue",
+        "operationId": "delete_queue",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Queue"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/services/{service_id}/queues/{queue_id}/activate": {
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "queue_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Activate a queue to receive notifications",
+        "operationId": "status_queue_activate",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Queue"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/services/{service_id}/queues/{queue_id}/deactivate": {
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "queue_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "description": "Deactivate a queue to not receive notifications",
+        "operationId": "status_queue_deactivate",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Queue"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notification/service": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "message",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ServiceTask"
+            }
+          }
+        ],
+        "description": "Put the task in the async queue of the service",
+        "operationId": "service_notification",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notification/user": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "message",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/NotificationTask"
+            }
+          }
+        ],
+        "description": "Put the task in the async queue of the users to be notify",
+        "operationId": "user_notification",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ServiceData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name for the service, for example Agora Marketplace"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered."
+        }
+      }
+    },
+    "Subscription": {
+      "type": "object",
+      "properties": {
+        "subscription_id": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "SubscriptionList": {
+      "type": "array",
+      "items": {
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Subscription"
+            }
+          }
+        }
+      }
+    },
+    "QueueType": {
+      "type": "object"
+    },
+    "Queue": {
+      "type": "object",
+      "properties": {
+        "queue_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "QueueList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Queue"
+      }
+    },
+    "Service": {
+      "type": "object",
+      "properties": {
+        "service_id": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "queues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Queue"
+          }
+        }
+      }
+    },
+    "ServiceList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Service"
+      }
+    },
+    "ServiceTask": {
+      "type": "object",
+      "properties": {
+        "receiver_id": {
+          "type": "string"
+        },
+        "message": {
+          "type": "object"
+        }
+      }
+    },
+    "NotificationTask": {
+      "type": "object",
+      "properties": {
+        "receiver_id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "sub_type": {
+          "type": "string"
+        },
+        "predefined": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
