@@ -14,8 +14,10 @@ services:
 #      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
 
   notification-manager:
-    image: registry.hopu.eu/i3-market/notification-manager
+    image: registry.hopu.eu/i3-market/notification-manager:v0.2
     ports:
       - 5000:5000
+    environment:
+      - WEB_UI=http://192.168.18.123:3000
     volumes:
       - ../data/:/app/data

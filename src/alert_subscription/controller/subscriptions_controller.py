@@ -1,13 +1,16 @@
 import uuid
 
+import requests
+
 from src.alert_subscription.models.subscription import Subscription, subscription_to_object
 from src.alert_subscription.storage.subscriptions_storage import SubscriptionsStorage
 
 
 class SubscriptionsController:
 
-    def __init__(self, storage: SubscriptionsStorage):
+    def __init__(self, storage: SubscriptionsStorage, web_ui: str):
         self.storage = storage
+        self.web_ui = web_ui
 
     def retrieve_all(self):
         return self.storage.retrieve_all()
@@ -68,3 +71,11 @@ class SubscriptionsController:
         updated_subscription = self.storage.update_user_subscription(user_id, subscription_id, subscription.to_json())
 
         return subscription_to_object(updated_subscription)
+
+    def search_users_by_subscription(self, category: str, message: str):
+        users = self.storage.search_users_by_subscription(category)
+
+        if users:
+            requests.post(url=self.web_ui, json={'userlist': users, 'message': message})
+
+        return None

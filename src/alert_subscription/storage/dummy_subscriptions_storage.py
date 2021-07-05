@@ -92,6 +92,16 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
 
         return None  # Subscription Not found
 
+    def search_users_by_subscription(self, category: str):
+        users = []
+        for key, value in self.storage.items():
+            for subscription in value:
+                if subscription.get('category') == category:
+                    users.append(key)
+                    break
+
+        return users
+
     def __read_dummy_file(self):
         with open(self.path, 'r') as file:
             return json.load(file)

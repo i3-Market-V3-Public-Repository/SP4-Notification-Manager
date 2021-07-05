@@ -5,5 +5,17 @@
       "category": "category1",
       "active": true
     }
+  ],
+  "user001": [
+    {
+      "id": "9c551aec-0049-41c0-b4d3-1065cad985bb",
+      "category": "category1",
+      "active": true
+    },
+    {
+      "id": "3a275fc8-b231-4c42-ae34-8f90db8e6a12",
+      "category": "category2",
+      "active": true
+    }
   ]
 }

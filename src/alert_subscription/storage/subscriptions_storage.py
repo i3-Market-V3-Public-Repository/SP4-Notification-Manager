@@ -31,3 +31,7 @@ class SubscriptionsStorage(abc.ABC):
     def delete_user_subscription(self, *args, **kwargs):
         raise NotImplementedError('implement me, please!')
 
+    @abc.abstractmethod
+    def search_users_by_subscription(self, *args, **kwargs):
+        raise NotImplementedError('implement me, please!')
+

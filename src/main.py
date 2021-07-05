@@ -26,9 +26,10 @@ load_dotenv()
 
 # Configuración general
 ENVIRONMENT_MODE = os.getenv('ENVIRONMENT_MODE', 'production')
-VERSION = os.getenv('VERSION', 'undefined')
+VERSION = os.getenv('VERSION', 'v0.2')
 FLASK_SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'SUPER-SECRET')
 FLASK_PORT = os.getenv('FLASK_PORT', 5000)
+WEB_UI = os.getenv('WEB_UI', 'http://localhost:3000')
 
 # Flask application
 application = Flask(__name__)
@@ -52,9 +53,10 @@ subscriptions_storage = DummySubscriptionsStorage(subscriptions_storage_filepath
 queue_storage = DummyServiceQueueStorage(queue_storage_filepath)
 
 # Configuration APIs
-subscriptions_config(SubscriptionsController(subscriptions_storage))
+subs_controller = SubscriptionsController(subscriptions_storage, WEB_UI)
+subscriptions_config(subs_controller)
 service_queue_config(QueueController(queue_storage))
-notifications_config(NotificationsController(), QueueController(queue_storage))
+notifications_config(NotificationsController(), QueueController(queue_storage), subs_controller)
 
 
 # API FLASK
