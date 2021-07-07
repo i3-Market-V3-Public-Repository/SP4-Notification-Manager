@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "title": "I3-Market Notification Manager API"
   },
-  "host": "localhost:10050",
+  "host": "localhost:10010",
   "basePath": "/api/v1/",
   "schemes": [
     "http",
