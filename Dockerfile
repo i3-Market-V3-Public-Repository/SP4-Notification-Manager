@@ -7,7 +7,6 @@ RUN pip install --no-cache-dir --trusted-host=pypi.python.org -r /app/requiremen
 RUN pip install --no-cache-dir --trusted-host=pypi.python.org gunicorn
 
 COPY ./src /app/src
-COPY ./static /app/static
 
 ENV PYTHONPATH /app
 WORKDIR "/app"
