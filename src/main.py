@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
 from loguru import logger
@@ -46,9 +46,11 @@ application.register_blueprint(subscriptions_api)
 application.register_blueprint(service_queue_api)
 application.register_blueprint(notifications_api)
 
+logger.info("Working Directory: {}".format(os.getcwd()))
+
 ### static specific ###
 SWAGGER_URL = '/swagger'
-API_URL = '../static/swagger.json'
+API_URL = '/static/swagger.json'
 SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
@@ -92,7 +94,10 @@ def bad_request(error):
 # @application.route('/swagger', methods=['GET'])
 # def swagger():
 #     pass
-
+# @application.route('/static/<path:path>')
+# def send_static(path):
+#     return send_from_directory('static', path)
+#
 
 # TODO: Version and Health
 @application.route('/version', methods=['GET'])
