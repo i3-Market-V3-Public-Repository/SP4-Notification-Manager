@@ -4,7 +4,7 @@ from loguru import logger
 from src.notification_manager.controller.service_queue_controller import QueueController
 from src.notification_manager.models.queue import queue_to_object
 
-api = Blueprint('queues', __name__)
+api = Blueprint('queues', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
 __controller: QueueController = None
 

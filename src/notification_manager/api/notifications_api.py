@@ -5,7 +5,7 @@ from src.alert_subscription.controller.subscriptions_controller import Subscript
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
 
-api = Blueprint('notifications', __name__)
+api = Blueprint('notifications', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
 __notification_controller: NotificationsController = None
 __queue_controller: QueueController = None

@@ -3,7 +3,7 @@ from loguru import logger
 
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 
-api = Blueprint('subscriptions', __name__)
+api = Blueprint('subscriptions', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
 __controller: SubscriptionsController = None
 
