@@ -836,8 +836,11 @@
         }
       }
     },
-    "QueueType": {
-      "type": "object"
+    "QueueName": {
+      "type": "string",
+      "enum": [
+        "offering.new"
+      ]
     },
     "Queue": {
       "type": "object",
@@ -846,7 +849,7 @@
           "type": "string"
         },
         "name": {
-          "type": "string"
+          "$ref": "#/definitions/QueueName"
         },
         "endpoint": {
           "type": "string"
@@ -889,10 +892,12 @@
       "type": "object",
       "properties": {
         "receiver_id": {
-          "type": "string"
+          "$ref": "#/definitions/QueueName",
+          "description": "Target queue to send a notification to"
         },
         "message": {
-          "type": "object"
+          "type": "object",
+          "description": "Message to send to that queue"
         }
       }
     },

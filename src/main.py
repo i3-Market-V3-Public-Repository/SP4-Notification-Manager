@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
+from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
 from loguru import logger
 from uptime import uptime
@@ -44,6 +45,20 @@ application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 application.register_blueprint(subscriptions_api)
 application.register_blueprint(service_queue_api)
 application.register_blueprint(notifications_api)
+
+### static specific ###
+SWAGGER_URL = '/swagger'
+API_URL = '../static/swagger.json'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Notification Manager API"
+    }
+)
+application.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+### end static specific ###
+
 # Databases
 base_storage_filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 subscriptions_storage_filepath = os.path.join(base_storage_filepath, 'subscriptions_json_storage.json')
@@ -73,10 +88,10 @@ def bad_request(error):
     return jsonify({'error': error.description}), 400
 
 
-# TODO: SWAGGER
-@application.route('/swagger', methods=['GET'])
-def swagger():
-    pass
+# # TODO: SWAGGER
+# @application.route('/swagger', methods=['GET'])
+# def swagger():
+#     pass
 
 
 # TODO: Version and Health
