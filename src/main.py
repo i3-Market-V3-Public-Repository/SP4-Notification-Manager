@@ -27,7 +27,7 @@ load_dotenv()
 
 # Configuración general
 ENVIRONMENT_MODE = os.getenv('ENVIRONMENT_MODE', 'production')
-VERSION = os.getenv('VERSION', 'v0.2')
+VERSION = os.getenv('VERSION', 'v0.3')
 FLASK_SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'SUPER-SECRET')
 FLASK_PORT = os.getenv('FLASK_PORT', 5000)
 WEB_UI = os.getenv('WEB_UI', 'http://localhost:3000')
