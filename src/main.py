@@ -90,18 +90,9 @@ def bad_request(error):
     return jsonify({'error': error.description}), 400
 
 
-# # TODO: SWAGGER
-# @application.route('/swagger', methods=['GET'])
-# def swagger():
-#     pass
-# @application.route('/static/<path:path>')
-# def send_static(path):
-#     return send_from_directory('static', path)
-#
-
-# TODO: Version and Health
-@application.route('/version', methods=['GET'])
-@application.route('/health', methods=['GET'])
+# TODO: Version and Health not working properly
+@application.route('/api/v1/version', methods=['GET'])
+@application.route('/api/v1/health', methods=['GET'])
 def version():
     up_time = uptime()
     hours, remainder = divmod(up_time, 3600)

@@ -1,8 +1,8 @@
 {
   "asd1": [
     {
-      "id": "e5fd30d1-ead5-42ea-b245-3aef762651ed",
-      "category": "category1",
+      "id": "52343a91-a190-4ec1-81ac-cf6d774f7ed6",
+      "category": "category2",
       "active": true
     }
   ],
@@ -14,6 +14,13 @@
     },
     {
       "id": "3a275fc8-b231-4c42-ae34-8f90db8e6a12",
+      "category": "category2",
+      "active": true
+    }
+  ],
+  "asd2": [
+    {
+      "id": "d9ead632-fce5-443c-afe8-46f470f1a74f",
       "category": "category2",
       "active": true
     }
