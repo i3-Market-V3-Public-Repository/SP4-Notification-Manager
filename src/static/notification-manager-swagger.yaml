@@ -2,7 +2,6 @@ swagger: '2.0'
 info:
   version: 0.0.1
   title: I3-Market Notification Manager API
-host: 'localhost:5000'
 basePath: /api/v1/
 schemes:
   - http
@@ -320,11 +319,10 @@ paths:
               name:
                 type: string
                 description: 'Name for the Queue, for example "offering.new"'
-                #schema:
-                $ref: "#/definitions/QueueName"
+                $ref: '#/definitions/QueueName'
               endpoint:
                 type: string
-                description: 'This endpoint can be defined as a different endpoint for this queue.'
+                description: This endpoint can be defined as a different endpoint for this queue.
       description: Subscribe for a new Queue in the service
       operationId: post_queues
       responses:
@@ -340,7 +338,6 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/ErrorResponse'
-
   '/services/{service_id}/queues/{queue_id}':
     get:
       tags:
@@ -499,7 +496,6 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
 definitions:
-
   ServiceData:
     type: object
     properties:
@@ -509,7 +505,6 @@ definitions:
       endpoint:
         type: string
         description: 'This endpoint can be defined as a generic endpoint for sending all notifications, however it is possible to define a different endpoint for each of the queues to which the service is registered.'
-
   Subscription:
     type: object
     properties:
