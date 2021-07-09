@@ -11,5 +11,5 @@ COPY ./src /app/src
 ENV PYTHONPATH /app
 WORKDIR "/app"
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "--preload", "src.main"]
+CMD ["gunicorn", "-b", "0.0.0.0:10010", "--preload", "src.main"]
 #, "--logger_class", "loguru.logger.Logger"]
