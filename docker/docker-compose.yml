@@ -16,8 +16,9 @@ services:
   notification-manager:
     image: registry.hopu.eu/i3-market/notification-manager:v0.3
     ports:
-      - 5000:5000
+      - 10010:10010
     environment:
       - WEB_UI=http://192.168.18.123:3000
+      - FLASK_PORT=10010
     volumes:
       - ../data/:/app/data
