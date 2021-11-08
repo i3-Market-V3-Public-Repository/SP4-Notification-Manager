@@ -809,7 +809,8 @@
     "QueueName": {
       "type": "string",
       "enum": [
-        "offering.new"
+        "offering.new",
+        "offering.update"
       ]
     },
     "Queue": {

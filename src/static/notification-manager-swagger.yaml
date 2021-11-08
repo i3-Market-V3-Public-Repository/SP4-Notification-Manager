@@ -528,6 +528,7 @@ definitions:
     type: string
     enum:
       - offering.new
+      - offering.update
   Queue:
     type: object
     properties:
