@@ -21,6 +21,7 @@ from src.alert_subscription.controller.subscriptions_controller import Subscript
 from src.alert_subscription.storage.dummy_subscriptions_storage import DummySubscriptionsStorage
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
+from src.notification_manager.storage.dummy_notifications_storage import DummyNotificationsStorage
 from src.notification_manager.storage.dummy_service_queue_storage import DummyServiceQueueStorage
 
 load_dotenv()
@@ -65,15 +66,17 @@ application.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 base_storage_filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 subscriptions_storage_filepath = os.path.join(base_storage_filepath, 'subscriptions_json_storage.json')
 queue_storage_filepath = os.path.join(base_storage_filepath, 'queue_json_storage.json')
+notifications_storage_filepath = os.path.join(base_storage_filepath, "notifications_storage.json")
 
 subscriptions_storage = DummySubscriptionsStorage(subscriptions_storage_filepath)
 queue_storage = DummyServiceQueueStorage(queue_storage_filepath)
+notifications_storage = DummyNotificationsStorage(notifications_storage_filepath)
 
 # Configuration APIs
 subs_controller = SubscriptionsController(subscriptions_storage, WEB_UI)
 subscriptions_config(subs_controller)
 service_queue_config(QueueController(queue_storage))
-notifications_config(NotificationsController(), QueueController(queue_storage), subs_controller)
+notifications_config(NotificationsController(notifications_storage, WEB_UI), QueueController(queue_storage), subs_controller)
 
 
 # API FLASK
