@@ -12,15 +12,18 @@ sendNotification(action, status, origin, receptor, data)
 
 
 class Notification:
-    def __init__(self, action, status, origin, receptor, data=None):
+    def __init__(self, id, action, status, origin, receptor, data=None, unread=True):
+        self.id = id
         self.action = action
         self.status = status
         self.origin = origin
         self.receptor = receptor
         self.data = data
+        self.unread = unread
 
     def to_json(self):
-        json_out = {"action": self.action, "status": self.status, "origin": self.origin, "receptor": self.receptor}
+        json_out = {"id": self.id, "action": self.action, "status": self.status, "origin": self.origin,
+                    "receptor": self.receptor, "unread": self.unread}
         if hasattr(self, 'data'):
             json_out['data'] = self.data
         return json_out

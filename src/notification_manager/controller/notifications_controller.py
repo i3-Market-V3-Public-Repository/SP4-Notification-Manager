@@ -1,17 +1,26 @@
+import json
+import uuid
+
 import requests
 
 from src.notification_manager.models.notification import Notification
 from src.notification_manager.models.queue_types import QueueType
+from src.notification_manager.storage.notifications_storage import NotificationsStorage
 
 
 class NotificationsController:
+
+    def __init__(self, storage: NotificationsStorage, web_ui: str):
+        self.storage = storage
+        self.web_ui = web_ui
 
     def send_notification_service(self, queue_name, destiny: dict, data: dict = None):
         # se crea una notification por cada destino con ¿origen?
 
         if queue_name == QueueType.NEWOFFERING.value:
             for receptor_name, endpoint in destiny.items():
-                notification = Notification(action="New Search Hits",
+                notification = Notification(id=uuid.uuid4().__str__(),
+                                            action="New Search Hits",
                                             status="Ok",
                                             origin="i3-market",
                                             receptor=receptor_name,
@@ -19,3 +28,91 @@ class NotificationsController:
                 requests.post(url=endpoint, json=notification.to_json())
         else:
             return None
+
+    def send_notification_user(self, destiny_user_id: str, _type: str, _sub_type: str, predefined: bool,
+                               message: dict = None):
+        notification = Notification(id=uuid.uuid4().__str__(),
+                                    action=_type + " " + _sub_type,
+                                    status="Ok",
+                                    origin="i3-market",
+                                    receptor=destiny_user_id,
+                                    data=message)
+        return self.storage.insert_notification(notification.to_json())
+
+    def get_user_notification(self, user_id):
+        return json.dumps(self.storage.retrieve_notification_by_user(user_id), indent=2)
+
+    def get_all_notifications(self):
+        return json.dumps(self.storage.retrieve_all(), indent=2)
+
+# sent example:
+# {
+#     "action":"New search hits",
+#     "status": "Ok",
+#     "origin": "i3-market",
+#     "receptor": "Agora marketplace",
+#     "data": {
+#     "active": "yes",
+#     "category": "Manufacturing",
+#     "dataOffering": "MyOffering01",
+#     "description": "MyFirstOffering",
+#     "hasDataset": [
+#       {
+#         "accrualPeriodicity": "once per minute",
+#         "creator": "Me",
+#         "dataset": "01001010101001010101010",
+#         "description": "Os and 1x",
+#         "distribution": [
+#           {
+#             "accessService": [
+#               {
+#                 "conformsTo": "string",
+#                 "endpointDescription": "string",
+#                 "endpointURL": "string",
+#                 "servesDataset": "string",
+#                 "serviceSpecs": "string"
+#               }
+#             ],
+#             "conformsTo": "string",
+#             "description": "string",
+#             "distribution": "string",
+#             "license": "string",
+#             "mediaType": "string",
+#             "packageFormat": "string",
+#             "title": "string"
+#           }
+#         ],
+#         "issued": "2021-06-17T12:02:09.885Z",
+#         "language": "DE",
+#         "modified": "2021-06-17T12:02:09.885Z",
+#         "spatial": "string",
+#         "temporal": "string",
+#         "temporalResolution": "1min",
+#         "theme": [
+#           "string"
+#         ],
+#         "title": "MyMinuteData"
+#       }
+#     ],
+#     "hasPricingModel": [
+#       {
+#         "basicPrice": "string",
+#         "currency": "string",
+#         "hasPaymentType": [
+#           {
+#             "fromValue": "2021-06-17T12:02:09.885Z",
+#             "hasSubscriptionPrice": "string",
+#             "paymentType": "string",
+#             "repeat": "string",
+#             "timeDuration": "string",
+#             "toValue": "2021-06-17T12:02:09.885Z"
+#           }
+#         ]
+#       }
+#     ],
+#     "isProvidedBy": "Siemens01",
+#     "label": "SiemensData",
+#     "license": "Open for all",
+#     "title": "Open Siemens Data"
+#   }
+# }
