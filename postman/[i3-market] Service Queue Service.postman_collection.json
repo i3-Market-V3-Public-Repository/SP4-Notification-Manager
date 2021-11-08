@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "c80e281e-067f-4441-9275-1b7790bcf141",
+		"_postman_id": "351bcaad-3792-4d59-84ca-f7f7055c590a",
 		"name": "[i3-market] Service Queue Service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,13 +11,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services",
+					"raw": "http://{{url}}:{{port}}/api/v1/services",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services"
 					]
 				}
@@ -39,13 +41,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/services",
+					"raw": "http://{{url}}:{{port}}/api/v1/services",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services"
 					]
 				}
@@ -53,7 +57,7 @@
 			"response": []
 		},
 		{
-			"name": "POST send Notifications",
+			"name": "POST create Notifications to service",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -67,15 +71,71 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/notification/service",
+					"raw": "http://{{url}}:{{port}}/api/v1/notification/service",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"notification",
 						"service"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST create Notifications to user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"receiver_id\": \"user123\",\n    \"type\": \"OFFERING\",\n    \"sub_type\": \"UPDATE\",\n    \"predefined\": true,\n    \"message\": {\n  \"active\": \"yes\",\n  \"category\": \"Manufacturing\",\n  \"dataOffering\": \"MyOffering01\",\n  \"description\": \"MyFirstOffering\",\n  \"hasDataset\": [\n    {\n      \"accrualPeriodicity\": \"once per minute\",\n      \"creator\": \"Me\",\n      \"dataset\": \"01001010101001010101010\",\n      \"description\": \"Os and 1x\",\n      \"distribution\": [\n        {\n          \"accessService\": [\n            {\n              \"conformsTo\": \"string\",\n              \"endpointDescription\": \"string\",\n              \"endpointURL\": \"string\",\n              \"servesDataset\": \"string\",\n              \"serviceSpecs\": \"string\"\n            }\n          ],\n          \"conformsTo\": \"string\",\n          \"description\": \"string\",\n          \"distribution\": \"string\",\n          \"license\": \"string\",\n          \"mediaType\": \"string\",\n          \"packageFormat\": \"string\",\n          \"title\": \"string\"\n        }\n      ],\n      \"issued\": \"2021-06-17T12:02:09.885Z\",\n      \"language\": \"DE\",\n      \"modified\": \"2021-06-17T12:02:09.885Z\",\n      \"spatial\": \"string\",\n      \"temporal\": \"string\",\n      \"temporalResolution\": \"1min\",\n      \"theme\": [\n        \"string\"\n      ],\n      \"title\": \"MyMinuteData\"\n    }\n  ],\n  \"hasPricingModel\": [\n    {\n      \"basicPrice\": \"string\",\n      \"currency\": \"string\",\n      \"hasPaymentType\": [\n        {\n          \"fromValue\": \"2021-06-17T12:02:09.885Z\",\n          \"hasSubscriptionPrice\": \"string\",\n          \"paymentType\": \"string\",\n          \"repeat\": \"string\",\n          \"timeDuration\": \"string\",\n          \"toValue\": \"2021-06-17T12:02:09.885Z\"\n        }\n      ]\n    }\n  ],\n  \"isProvidedBy\": \"Siemens01\",\n  \"label\": \"SiemensData\",\n  \"license\": \"Open for all\",\n  \"title\": \"Open Siemens Data\"\n}\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{url}}:{{port}}/api/v1/notification/user",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"notification",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all notifications",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{url}}:{{port}}/api/v1/notification/user/user123",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"notification",
+						"user",
+						"user123"
 					]
 				}
 			},
@@ -87,13 +147,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}"
 					]
@@ -107,13 +169,15 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}"
 					]
@@ -127,13 +191,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}/queues",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}/queues",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}",
 						"queues"
@@ -157,13 +223,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}/queues",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}/queues",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}",
 						"queues"
@@ -178,13 +246,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}/queues/{{queue_id}}",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}/queues/{{queue_id}}",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}",
 						"queues",
@@ -200,13 +270,15 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}/queues/{{queue_id}}",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}/queues/{{queue_id}}",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}",
 						"queues",
@@ -222,13 +294,15 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}/queues/{{queue_id}}/activate",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}/queues/{{queue_id}}/activate",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}",
 						"queues",
@@ -245,13 +319,15 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/services/{{service_id}}/queues/{{queue_id}}/deactivate",
+					"raw": "http://{{url}}:{{port}}/api/v1/services/{{service_id}}/queues/{{queue_id}}/deactivate",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"services",
 						"{{service_id}}",
 						"queues",

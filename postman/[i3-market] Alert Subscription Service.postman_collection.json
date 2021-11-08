@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "26773d1f-df02-456a-9e93-1d805b77b41d",
+		"_postman_id": "0815236c-54d2-4985-87f8-af3208a36622",
 		"name": "[i3-market] Alert Subscription Service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,13 +11,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/subscriptions",
+					"raw": "http://{{url}}:{{port}}/api/v1/users/subscriptions",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"users",
 						"subscriptions"
 					]
@@ -31,13 +33,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions",
+					"raw": "http://{{url}}:{{port}}/api/v1/users/{{user_id}}/subscriptions",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"users",
 						"{{user_id}}",
 						"subscriptions"
@@ -52,13 +56,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}",
+					"raw": "http://{{url}}:{{port}}/api/v1/users/{{user_id}}/subscriptions/{{subscription_id}}",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"users",
 						"{{user_id}}",
 						"subscriptions",
@@ -83,13 +89,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions",
+					"raw": "http://{{url}}:{{port}}/api/v1/users/{{user_id}}/subscriptions",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"users",
 						"{{user_id}}",
 						"subscriptions"
@@ -104,13 +112,15 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}",
+					"raw": "http://{{url}}:{{port}}/api/v1/users/{{user_id}}/subscriptions/{{subscription_id}}",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"users",
 						"{{user_id}}",
 						"subscriptions",
@@ -126,13 +136,15 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}/activate",
+					"raw": "http://{{url}}:{{port}}/api/v1/users/{{user_id}}/subscriptions/{{subscription_id}}/activate",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"users",
 						"{{user_id}}",
 						"subscriptions",
@@ -149,13 +161,15 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/{{user_id}}/subscriptions/{{subscription_id}}/deactivate",
+					"raw": "http://{{url}}:{{port}}/api/v1/users/{{user_id}}/subscriptions/{{subscription_id}}/deactivate",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"users",
 						"{{user_id}}",
 						"subscriptions",
@@ -173,7 +187,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"active\": \"yes\",\n  \"category\": \"category2\",\n  \"dataOffering\": \"MyOffering01\",\n  \"description\": \"MyFirstOffering\",\n  \"hasDataset\": [\n    {\n      \"accrualPeriodicity\": \"once per minute\",\n      \"creator\": \"Me\",\n      \"dataset\": \"01001010101001010101010\",\n      \"description\": \"Os and 1x\",\n      \"distribution\": [\n        {\n          \"accessService\": [\n            {\n              \"conformsTo\": \"string\",\n              \"endpointDescription\": \"string\",\n              \"endpointURL\": \"string\",\n              \"servesDataset\": \"string\",\n              \"serviceSpecs\": \"string\"\n            }\n          ],\n          \"conformsTo\": \"string\",\n          \"description\": \"string\",\n          \"distribution\": \"string\",\n          \"license\": \"string\",\n          \"mediaType\": \"string\",\n          \"packageFormat\": \"string\",\n          \"title\": \"string\"\n        }\n      ],\n      \"issued\": \"2021-06-17T12:02:09.885Z\",\n      \"language\": \"DE\",\n      \"modified\": \"2021-06-17T12:02:09.885Z\",\n      \"spatial\": \"string\",\n      \"temporal\": \"string\",\n      \"temporalResolution\": \"1min\",\n      \"theme\": [\n        \"string\"\n      ],\n      \"title\": \"MyMinuteData\"\n    }\n  ],\n  \"hasPricingModel\": [\n    {\n      \"basicPrice\": \"string\",\n      \"currency\": \"string\",\n      \"hasPaymentType\": [\n        {\n          \"fromValue\": \"2021-06-17T12:02:09.885Z\",\n          \"hasSubscriptionPrice\": \"string\",\n          \"paymentType\": \"string\",\n          \"repeat\": \"string\",\n          \"timeDuration\": \"string\",\n          \"toValue\": \"2021-06-17T12:02:09.885Z\"\n        }\n      ]\n    }\n  ],\n  \"isProvidedBy\": \"Siemens01\",\n  \"label\": \"SiemensData\",\n  \"license\": \"Open for all\",\n  \"title\": \"Open Siemens Data\"\n}",
+					"raw": "{\n    \"action\": \"New Search Hits\",\n    \"status\": \"ok\",\n    \"origin\": \"notification-manager-test\",\n    \"receptor\": \"i3market-users\",\n    \"data\": {\n        \"active\": \"yes\",\n        \"category\": \"category2\",\n        \"dataOffering\": \"MyOffering01\",\n        \"description\": \"MyFirstOffering\",\n        \"hasDataset\": [\n            {\n                \"accrualPeriodicity\": \"once per minute\",\n                \"creator\": \"Me\",\n                \"dataset\": \"01001010101001010101010\",\n                \"description\": \"Os and 1x\",\n                \"distribution\": [\n                    {\n                        \"accessService\": [\n                            {\n                                \"conformsTo\": \"string\",\n                                \"endpointDescription\": \"string\",\n                                \"endpointURL\": \"string\",\n                                \"servesDataset\": \"string\",\n                                \"serviceSpecs\": \"string\"\n                            }\n                        ],\n                        \"conformsTo\": \"string\",\n                        \"description\": \"string\",\n                        \"distribution\": \"string\",\n                        \"license\": \"string\",\n                        \"mediaType\": \"string\",\n                        \"packageFormat\": \"string\",\n                        \"title\": \"string\"\n                    }\n                ],\n                \"issued\": \"2021-06-17T12:02:09.885Z\",\n                \"language\": \"DE\",\n                \"modified\": \"2021-06-17T12:02:09.885Z\",\n                \"spatial\": \"string\",\n                \"temporal\": \"string\",\n                \"temporalResolution\": \"1min\",\n                \"theme\": [\n                    \"string\"\n                ],\n                \"title\": \"MyMinuteData\"\n            }\n        ],\n        \"hasPricingModel\": [\n            {\n                \"basicPrice\": \"string\",\n                \"currency\": \"string\",\n                \"hasPaymentType\": [\n                    {\n                        \"fromValue\": \"2021-06-17T12:02:09.885Z\",\n                        \"hasSubscriptionPrice\": \"string\",\n                        \"paymentType\": \"string\",\n                        \"repeat\": \"string\",\n                        \"timeDuration\": \"string\",\n                        \"toValue\": \"2021-06-17T12:02:09.885Z\"\n                    }\n                ]\n            }\n        ],\n        \"isProvidedBy\": \"Siemens01\",\n        \"label\": \"SiemensData\",\n        \"license\": \"Open for all\",\n        \"title\": \"Open Siemens Data\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -181,13 +195,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/notify",
+					"raw": "http://{{url}}:{{port}}/api/v1/notify",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
+						"api",
+						"v1",
 						"notify"
 					]
 				}
