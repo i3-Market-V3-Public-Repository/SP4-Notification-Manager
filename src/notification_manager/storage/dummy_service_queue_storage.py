@@ -135,7 +135,7 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
 
         for service in self.storage:
             for queue in service.get('queues'):
-                if queue.get('name') == queue_name:
+                if queue.get('name') == queue_name and queue.get("active"):
                     found[service.get('name')] = queue.get('endpoint') or service.get('endpoint')
 
         return found
