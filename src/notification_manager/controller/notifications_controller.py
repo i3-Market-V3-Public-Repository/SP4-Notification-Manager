@@ -34,7 +34,7 @@ class NotificationsController:
     def send_notification_user(self, destiny_user_id: str, _type: str, _sub_type: str, predefined: bool,
                                message: dict = None):
         notification = Notification(id=uuid.uuid4().__str__(),
-                                    action=_type + " " + _sub_type,
+                                    action=_type + "." + _sub_type,
                                     status="Ok",
                                     origin="i3-market",
                                     receptor=destiny_user_id,
