@@ -36,7 +36,7 @@ def notification_service():
     message = request.json.get('message')
     logger.info("Received a notification to service: \n"
                 "queue_name: {}, message: {}".format(queue_name, message))
-    queues_endpoints = __queue_controller.search_services_by_queue(queue_name)
+    queues_endpoints = __queue_controller.search_services_by_queue_if_active(queue_name)
     # create the notification and send to them
     __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
 
