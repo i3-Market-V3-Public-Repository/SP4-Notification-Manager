@@ -108,4 +108,4 @@ class QueueController:
         return queue_to_object(updated_queue)
 
     def search_services_by_queue_if_active(self, queue_name: str):
-        return self.storage.search_services_by_queue(queue_name)
+        return self.storage.get_service_endpoint_by_queue_name_if_active(queue_name)
