@@ -55,7 +55,7 @@ def notification_user():
         "type": "string",           # [OFFERING, CONTRACT MANAGER, etc]
         "sub_type": "string",       # [UPDATE, REJECT, etc]
         "predefined": true,         # always true?
-        "message": "string"         # DATA OF THE MESSAGE
+        "message": {}               # DATA OF THE MESSAGE
     }
     """
     if not request.json:
@@ -71,7 +71,8 @@ def notification_user():
     predefined = data.get("predefined")
     message = data.get('message')
     logger.info("Received a request to notify user {}".format(destiny_user_id))
-    stored_notification = __notification_controller.send_notification_user(destiny_user_id,_type,_sub_type,predefined,message)
+    stored_notification = __notification_controller.send_notification_user(destiny_user_id, _type, _sub_type,
+                                                                           predefined, message)
     logger.info("Stored Notification: {}".format(stored_notification))
 
     return jsonify(), 200
