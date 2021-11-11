@@ -1,6 +1,6 @@
 from typing import List
 
-from src.notification_manager.models.queue import Queue
+from src.notification_manager.models.queue import Queue, queue_to_object
 
 
 class Service:
@@ -15,8 +15,13 @@ class Service:
         self.queues = queues or []
 
     def to_json(self):
-        queue = map(Queue.to_json, self.queues) if self.queues else []
-        json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "queues": queue}
+        queues=[]
+        for queue in self.queues:
+            cola = queue_to_object(queue).to_json()
+            queues.append(cola)
+        # queue = list(map(Queue.to_json, self.queues)) if self.queues else []
+        # json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "queues": queue}
+        json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "queues": queues}
         return json_out
 
 
