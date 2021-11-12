@@ -88,10 +88,10 @@ def notification_user():
     return jsonify(stored_notification), 200
 
 
-@api.route('/notification', methods=['GET'])
 @api.route('/notification/', methods=['GET'])
-@api.route('/notification/user/<user_id>', methods=['GET'])
+@api.route('/notification', methods=['GET'])
 @api.route('/notification/user/<user_id>/', methods=['GET'])
+@api.route('/notification/user/<user_id>', methods=['GET'])
 def get_notifications(user_id=None):
     if user_id:
         return jsonify(__notification_controller.get_user_notification(user_id)), 200
@@ -99,10 +99,10 @@ def get_notifications(user_id=None):
         return jsonify(__notification_controller.get_all_notifications()), 200
 
 
-@api.route('/notification/unread', methods=['GET'])
 @api.route('/notification/unread/', methods=['GET'])
-@api.route('/notification/user/<user_id>/unread', methods=['GET'])
+@api.route('/notification/unread', methods=['GET'])
 @api.route('/notification/user/<user_id>/unread/', methods=['GET'])
+@api.route('/notification/user/<user_id>/unread', methods=['GET'])
 def get_unread_notifications(user_id=None):
     if user_id:
         return jsonify(__notification_controller.get_unread_user_notification(user_id)), 200
@@ -110,6 +110,7 @@ def get_unread_notifications(user_id=None):
         return jsonify(__notification_controller.get_all_unread_notifications()), 200
 
 
+@api.route('/notification/<notification_id>/', methods=['GET'])
 @api.route('/notification/<notification_id>', methods=['GET'])
 def get_notification(notification_id: str):
     result = __notification_controller.get_notification(notification_id)
@@ -130,6 +131,7 @@ def modify_notification(notification_id: str):
     return jsonify(), 404
 
 
+@api.route('/notification/<notification_id>/', methods=['DELETE'])
 @api.route('/notification/<notification_id>', methods=['DELETE'])
 def delete_notification(notification_id: str):
     result = __notification_controller.delete_notification(notification_id)
