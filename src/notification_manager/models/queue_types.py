@@ -3,6 +3,7 @@ from enum import Enum
 
 class QueueType(Enum):
     NEWOFFERING = 'offering.new'
+    UPDATEOFFERING = 'offering.update'
 
     @classmethod
     def is_valid(cls, name):
