@@ -22,6 +22,14 @@ class DummyNotificationsStorage(NotificationsStorage):
     def retrieve_all(self):
         return self.storage
 
+    def retrieve_all_unread(self):
+        unread_notifications = []
+        all_notifications = self.retrieve_all()
+        for notification in all_notifications:
+            if notification.get('unread'):
+                unread_notifications.append(notification)
+        return unread_notifications
+
     ####################################################################################################################
     # NOTIFICATIONS METHODS
     ####################################################################################################################
@@ -43,23 +51,21 @@ class DummyNotificationsStorage(NotificationsStorage):
                 return_notifications.append(notification)
         return return_notifications
 
-    def mark_as_read_notification(self, notification_id: str):
-        for i in list(range(0, len(self.storage))):
-            existing_service = self.storage[i]
-            if existing_service.get('id') == notification_id:
-                existing_service["unread"] = False
-                self.__write_dummy_file()
-                return existing_service
-        return None  # Service Not found
+    def retrieve_unread_notification_by_user(self, user_id: str):
+        unread_notifications = []
+        for notification in self.retrieve_unread_notification_by_user(user_id):
+            if notification.get('unread'):
+                unread_notifications.append(notification)
+        return unread_notifications
 
-    def mark_as_unread_notification(self, notification_id: str):
+    def read_notification(self, notification_id, read: bool):
         for i in list(range(0, len(self.storage))):
             existing_service = self.storage[i]
             if existing_service.get('id') == notification_id:
-                existing_service["unread"] = True
+                existing_service["unread"] = not read
                 self.__write_dummy_file()
                 return existing_service
-        return None  # Service Not found
+            return None  # Service Not found
 
     def delete_notification(self, notification_id):
         index = None
