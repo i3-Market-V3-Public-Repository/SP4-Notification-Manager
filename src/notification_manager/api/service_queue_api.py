@@ -1,4 +1,3 @@
-from apiflask import APIBlueprint
 from flask import Blueprint, request, jsonify
 from loguru import logger
 
@@ -15,10 +14,17 @@ def config(controller: QueueController):
     __controller = controller
 
 
-@blueprint.route('/services', methods=['GET'])
-def get_services():
-    result = __controller.retrieve_all()
-    return jsonify(result), 200
+@api.route('/services/<service_id>', methods=['GET'])
+@api.route('/services', defaults={"service_id": None}, methods=['GET'])
+def get_services(service_id: str):
+    if not service_id:
+        result = __controller.retrieve_all()
+        return jsonify(result), 200
+    else:
+        result = __controller.retrieve_service(service_id)
+        if result:
+            return jsonify(result.to_json()), 200
+        return jsonify(), 404
 
 
 ########################################################################################################################

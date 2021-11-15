@@ -32,7 +32,7 @@ class QueueController:
         if not service:
             return None
         if isinstance(service, dict):
-            service_to_object(service)
+            return service_to_object(service)
 
     def update_service(self, service_id: str, data: dict):
         # TODO i dont like this method change it
@@ -107,5 +107,5 @@ class QueueController:
         updated_queue = self.storage.update_service_queue(service_id, queue.to_json())
         return queue_to_object(updated_queue)
 
-    def search_services_by_queue(self, queue_name: str):
-        return self.storage.search_services_by_queue(queue_name)
+    def search_services_by_queue_if_active(self, queue_name: str):
+        return self.storage.get_service_endpoint_by_queue_name_if_active(queue_name)

@@ -130,12 +130,12 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
 
         return None  # queue not found
 
-    def search_services_by_queue(self, queue_name: str):
+    def get_service_endpoint_by_queue_name_if_active(self, queue_name: str):
         found = {}
 
         for service in self.storage:
             for queue in service.get('queues'):
-                if queue.get('name') == queue_name:
+                if queue.get('name') == queue_name and queue.get("active"):
                     found[service.get('name')] = queue.get('endpoint') or service.get('endpoint')
 
         return found

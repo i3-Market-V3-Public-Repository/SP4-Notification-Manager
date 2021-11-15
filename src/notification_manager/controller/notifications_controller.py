@@ -6,7 +6,7 @@ import requests
 from src.notification_manager.models.notification import Notification
 from src.notification_manager.models.queue_types import QueueType
 from src.notification_manager.storage.notifications_storage import NotificationsStorage
-
+from loguru import logger
 
 class NotificationsController:
 
@@ -19,20 +19,22 @@ class NotificationsController:
 
         if queue_name == QueueType.NEWOFFERING.value:
             for receptor_name, endpoint in destiny.items():
+                logger.info("Creating a notification to {} endpoint {}".format(receptor_name, endpoint))
                 notification = Notification(id=uuid.uuid4().__str__(),
                                             action="New Search Hits",
                                             status="Ok",
                                             origin="i3-market",
                                             receptor=receptor_name,
                                             data=data)
-                requests.post(url=endpoint, json=notification.to_json())
+                resp = requests.post(url=endpoint, json=notification.to_json())
+                logger.info("Notification service response: {}".format(resp))
         else:
             return None
 
     def send_notification_user(self, destiny_user_id: str, _type: str, _sub_type: str, predefined: bool,
                                message: dict = None):
         notification = Notification(id=uuid.uuid4().__str__(),
-                                    action=_type + " " + _sub_type,
+                                    action=_type + "." + _sub_type,
                                     status="Ok",
                                     origin="i3-market",
                                     receptor=destiny_user_id,

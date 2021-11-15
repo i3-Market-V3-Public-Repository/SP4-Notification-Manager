@@ -22,5 +22,4 @@ coverage.xml
 *.idea
 *.gitignore
 *.DS_Store
-venv/
-src/data/*.json
+data/*.json
