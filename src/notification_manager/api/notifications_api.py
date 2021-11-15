@@ -1,11 +1,13 @@
+from apiflask import APIBlueprint, output, input
 from flask import Blueprint, request, jsonify
 from loguru import logger
 
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
+from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceNotification, UserNotification
 
-api = Blueprint('notifications', __name__, url_prefix='/api/v1/')
+blueprint = APIBlueprint('notifications', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
 __notification_controller: NotificationsController = None
 __queue_controller: QueueController = None
@@ -21,7 +23,8 @@ def config(notification_controller: NotificationsController,
     __subscription_controller = subscription_controller
 
 
-@api.route('/notification/service', methods=['POST'])
+@blueprint.route('/notification/service', methods=['POST'])
+@input(ServiceNotification)
 def notification_service():
     # {"receiver_id": "offering.new", "message": loquesea}
     if not request.json:
@@ -47,17 +50,9 @@ def notification_service():
     return jsonify(), 200
 
 
-@api.route('/notification/user', methods=['POST'])
+@input(UserNotification)
+@blueprint.route('/notification/user', methods=['POST'])
 def notification_user():
-    """
-    {
-        "receiver_id": "string",    # DESTINY USER ID TO SEND NOTIFICATION
-        "type": "string",           # [OFFERING, CONTRACT MANAGER, etc]
-        "sub_type": "string",       # [UPDATE, REJECT, etc]
-        "predefined": true,         # always true?
-        "message": "string"         # DATA OF THE MESSAGE
-    }
-    """
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
 
@@ -77,9 +72,9 @@ def notification_user():
     return jsonify(), 200
 
 
-@api.route('/notification/user', methods=['GET'])
-@api.route('/notification/user/', methods=['GET'])
-@api.route('/notification/user/<user_id>', methods=['GET'])
+@blueprint.route('/notification/user', methods=['GET'])
+@blueprint.route('/notification/user/', methods=['GET'])
+@blueprint.route('/notification/user/<user_id>', methods=['GET'])
 def get_notifications(user_id=None):
     if user_id:
         return __notification_controller.get_user_notification(user_id)

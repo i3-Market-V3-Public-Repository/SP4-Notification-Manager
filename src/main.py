@@ -1,19 +1,23 @@
 import os
 
+import flask_apispec
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
-from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
+
+from apiflask import APIFlask
+
+
 from loguru import logger
 from uptime import uptime
 
-from src.alert_subscription.api.subscriptions_api import api as subscriptions_api
+from src.alert_subscription.api.subscriptions_api import blueprint as subscriptions_api
 from src.alert_subscription.api.subscriptions_api import config as subscriptions_config
 
-from src.notification_manager.api.service_queue_api import api as service_queue_api
+from src.notification_manager.api.service_queue_api import blueprint as service_queue_api
 from src.notification_manager.api.service_queue_api import config as service_queue_config
 
-from src.notification_manager.api.notifications_api import api as notifications_api
+from src.notification_manager.api.notifications_api import blueprint as notifications_api, notification_service
 from src.notification_manager.api.notifications_api import config as notifications_config
 
 # El servicio puede ser configurado por Docker (environment vars) o por un fichero .env
@@ -34,33 +38,55 @@ FLASK_PORT = os.getenv('FLASK_PORT', 5000)
 WEB_UI = os.getenv('WEB_UI', 'http://localhost:3000')
 
 # Flask application
-application = Flask(__name__)
+# application = Flask(__name__)
+application = APIFlask(__name__,
+                       docs_path='/swagger/',
+                       title='Notification Manager',
+                       version='1.0'
+                       )
+
 cors = CORS(application, resources={r"*": {"origins": "*"}})
 # Flask configuration
 application.config['ENV'] = ENVIRONMENT_MODE
 application.config['SECRET_KEY'] = FLASK_SECRET_KEY
 application.config['JSON_SORT_KEYS'] = False
 application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-
-# Blueprints
-application.register_blueprint(subscriptions_api)
-application.register_blueprint(service_queue_api)
-application.register_blueprint(notifications_api)
+application.config['OPENAPI_VERSION'] = '3.0.0'
 
 logger.info("Working Directory: {}".format(os.getcwd()))
 
+# SWAGGER GENERATION USING flask_restx
+# api = Api(application, doc='/docs', version='1.0', title='Notification Manager', description='Testing flask-restx')
+# namespace = api.namespace('Notification Manager', description='NM Service Operations')
+
+# SWAGGER GENERATION USING APISPEC
+# spec = APISpec(
+#         title='Notification Manager',
+#         version='v1',
+#         openapi_version='2.0.0',
+#         plugins=[MarshmallowPlugin()],
+#         # plugins=[FlaskPlugin(),MarshmallowPlugin()],
+#         # plugins=[apispec.ext.marshmallow],
+#     )
+#
+# application.config.update({
+#     'APISPEC_SPEC': spec,
+#     'APISPEC_SWAGGER_URL': '/swagger/',
+# })
+
 ### static specific ###
-SWAGGER_URL = '/swagger'
-API_URL = '/static/swagger.json'
-SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
-    SWAGGER_URL,
-    API_URL,
-    config={
-        'app_name': "Notification Manager API"
-    }
-)
-application.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+# SWAGGER_URL = '/swagger'
+# API_URL = '/static/swagger.json'
+# SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+#     SWAGGER_URL,
+#     API_URL,
+#     config={
+#         'app_name': "Notification Manager API"
+#     }
+# )
+# application.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 ### end static specific ###
+
 
 # Databases
 base_storage_filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
@@ -68,9 +94,11 @@ subscriptions_storage_filepath = os.path.join(base_storage_filepath, 'subscripti
 queue_storage_filepath = os.path.join(base_storage_filepath, 'queue_json_storage.json')
 notifications_storage_filepath = os.path.join(base_storage_filepath, "notifications_storage.json")
 
+
 subscriptions_storage = DummySubscriptionsStorage(subscriptions_storage_filepath)
 queue_storage = DummyServiceQueueStorage(queue_storage_filepath)
 notifications_storage = DummyNotificationsStorage(notifications_storage_filepath)
+
 
 # Configuration APIs
 subs_controller = SubscriptionsController(subscriptions_storage, WEB_UI)
@@ -94,6 +122,7 @@ def bad_request(error):
 
 
 # TODO: Version and Health not working properly
+#@application.get('/api/v1/version')
 @application.route('/api/v1/version', methods=['GET'])
 @application.route('/api/v1/health', methods=['GET'])
 def version():
@@ -110,4 +139,10 @@ def version():
 
 if __name__ == "__main__":
     logger.debug('Starting application...')
+
+    # Blueprints
+    application.register_blueprint(subscriptions_api)
+    application.register_blueprint(service_queue_api)
+    application.register_blueprint(notifications_api)
+
     application.run('0.0.0.0', FLASK_PORT)

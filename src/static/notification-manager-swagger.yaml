@@ -559,6 +559,7 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/Service'
+
   ServiceTask:
     type: object
     properties:
@@ -568,6 +569,7 @@ definitions:
       message:
         type: object
         description: Message to send to that queue
+
   NotificationTask:
     type: object
     properties:
@@ -581,6 +583,7 @@ definitions:
         type: boolean
       message:
         type: string
+
   ErrorResponse:
     required:
       - message
