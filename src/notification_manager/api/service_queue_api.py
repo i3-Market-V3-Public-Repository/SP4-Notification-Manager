@@ -4,7 +4,7 @@ from loguru import logger
 from src.notification_manager.controller.service_queue_controller import QueueController
 from src.notification_manager.models.queue import queue_to_object
 
-api = Blueprint('queues', __name__, url_prefix='/api/v1/')
+blueprint = APIBlueprint('queues', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
 __controller: QueueController = None
 
@@ -30,7 +30,7 @@ def get_services(service_id: str):
 ########################################################################################################################
 # SERVICES API
 ########################################################################################################################
-@api.route('/services', methods=['POST'])
+@blueprint.route('/services', methods=['POST'])
 def create_service():
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
@@ -46,7 +46,7 @@ def create_service():
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/<service_id>', methods=['DELETE'])
+@blueprint.route('/services/<service_id>', methods=['DELETE'])
 def delete_service(service_id: str):
     result = __controller.delete_service(service_id)
 
@@ -59,8 +59,8 @@ def delete_service(service_id: str):
 ########################################################################################################################
 # QUEUES API
 ########################################################################################################################
-@api.route('/services/<service_id>/queues', defaults={"queue_id": None}, methods=['GET'])
-@api.route('/services/<service_id>/queues/<queue_id>', methods=['GET'])
+@blueprint.route('/services/<service_id>/queues', defaults={"queue_id": None}, methods=['GET'])
+@blueprint.route('/services/<service_id>/queues/<queue_id>', methods=['GET'])
 def get_queues(service_id: str, queue_id: str):
     result = __controller.retrieve_service_queues(service_id, queue_id)
 
@@ -73,7 +73,7 @@ def get_queues(service_id: str, queue_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/<service_id>/queues', methods=['POST'])
+@blueprint.route('/services/<service_id>/queues', methods=['POST'])
 def post_queues(service_id: str):
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
@@ -89,7 +89,7 @@ def post_queues(service_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/<service_id>/queues/<queue_id>', methods=['DELETE'])
+@blueprint.route('/services/<service_id>/queues/<queue_id>', methods=['DELETE'])
 def delete_queue(service_id: str, queue_id: str):
     result = __controller.delete_queue(service_id, queue_id)
 
@@ -108,8 +108,8 @@ def delete_queue(service_id: str, queue_id: str):
 #     return jsonify(result.to_json()), 200
 
 
-@api.route('/services/<service_id>/queues/<queue_id>/activate', methods=['POST'])
-@api.route('/services/<service_id>/queues/<queue_id>/deactivate', methods=['POST'])
+@blueprint.route('/services/<service_id>/queues/<queue_id>/activate', methods=['POST'])
+@blueprint.route('/services/<service_id>/queues/<queue_id>/deactivate', methods=['POST'])
 def status_queue(service_id: str, queue_id: str):
     activated = request.path.split('/')[-1] == 'activate'
 

@@ -7,3 +7,5 @@ python-dotenv==0.18.0
 requests==2.25.1
 uptime==3.0.1
 flask_swagger_ui
+#Flask~=2.0.1
+APIFlask~=0.10.0

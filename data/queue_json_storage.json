@@ -1,27 +1,14 @@
 [
   {
-    "id": "6051bc2c-6a21-4441-acdf-51ac68f019b6",
+    "id": "84744b8b-fb2d-4a16-9d86-6b1a2cd34c62",
     "name": "i3-market-test",
-    "endpoint": "i3-market-test.com/notify",
+    "endpoint": "https://webhook.site/11798498-a25a-429c-ac11-8d2d9aa26e83",
     "queues": [
       {
-        "id": "b7b774ac-7167-4ae4-a77e-1db62e195193",
+        "id": "b11807ce-17ad-416f-9bd1-bdf9dd049dcf",
         "name": "offering.new",
         "endpoint": null,
-        "active": true
-      }
-    ]
-  },
-  {
-    "id": "7255664b-9b24-433f-ab3f-46f7a1272cde",
-    "name": "eli-endpoint",
-    "endpoint": "http://localhost:3000/notify",
-    "queues": [
-      {
-        "id": "acaff999-4359-4ae1-9f67-fd4e84310978",
-        "name": "offering.new",
-        "endpoint": null,
-        "active": true
+        "active": false
       }
     ]
   }

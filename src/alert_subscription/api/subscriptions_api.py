@@ -1,9 +1,11 @@
+from apiflask import output, APIBlueprint
 from flask import Blueprint, request, jsonify
 from loguru import logger
 
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
+from src.alert_subscription.models.AlertsSwaggerModelScheme import SubscriptionList, Subscription
 
-api = Blueprint('subscriptions', __name__, url_prefix='/api/v1/')
+blueprint = APIBlueprint('subscriptions', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
 __controller: SubscriptionsController = None
 
@@ -13,7 +15,7 @@ def config(controller: SubscriptionsController):
     __controller = controller
 
 
-@api.route('/notify', methods=['POST'])
+@blueprint.route('/notify', methods=['POST'])
 def notify():
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
@@ -25,14 +27,18 @@ def notify():
     return jsonify(), 200
 
 
-@api.route('/users/subscriptions', methods=['GET'])
+@output(SubscriptionList)
+@blueprint.route('/users/subscriptions', methods=['GET'])
 def get_users():
     result = __controller.retrieve_all()
 
     return jsonify(result), 200
 
 
-@api.route('/users/<user_id>/subscriptions', methods=['POST'])
+#TODO Keep Going here
+@output(Subscription)
+@input()
+@blueprint.route('/users/<user_id>/subscriptions', methods=['POST'])
 def post_subscriptions(user_id: str):
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
@@ -48,8 +54,9 @@ def post_subscriptions(user_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/users/<user_id>/subscriptions', defaults={"subscription_id": None}, methods=['GET'])
-@api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['GET'])
+@output(Subscription)
+@blueprint.route('/users/<user_id>/subscriptions', defaults={"subscription_id": None}, methods=['GET'])
+@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['GET'])
 def get_subscriptions(user_id: str, subscription_id: str):
     result = __controller.retrieve_subscription(user_id, subscription_id)
 
@@ -77,8 +84,8 @@ def get_subscriptions(user_id: str, subscription_id: str):
 #
 #     return jsonify(result.to_json()), 200
 
-
-@api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['DELETE'])
+@output(Subscription)
+@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['DELETE'])
 def delete_subscription(user_id: str, subscription_id: str):
 
     result = __controller.delete_subscription(user_id, subscription_id)
@@ -89,8 +96,9 @@ def delete_subscription(user_id: str, subscription_id: str):
     return jsonify(result.to_json()), 200
 
 
-@api.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['POST'])
-@api.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['POST'])
+@output(Subscription)
+@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['POST'])
+@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['POST'])
 def status_subscription(user_id: str, subscription_id: str):
     activated = request.path.split('/')[-1] == 'activate'
 
