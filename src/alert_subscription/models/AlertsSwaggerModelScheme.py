@@ -4,7 +4,6 @@ from loguru import logger
 from apiflask import Schema, fields
 from apiflask.fields import String, Integer, List, Dict, Boolean, Raw
 from apiflask.validators import Length, OneOf
-# from marshmallow_toplevel import TopLevelSchema
 
 
 class CreateSubscription(Schema):
