@@ -1,4 +1,4 @@
-from apiflask import APIBlueprint, input, output
+from apiflask import APIBlueprint, input, output, doc
 from flask import request, jsonify
 from loguru import logger
 
@@ -17,7 +17,8 @@ def config(controller: SubscriptionsController):
 
 
 # Just for testing, hide request
-# @blueprint.route('/notify', methods=['POST'])
+@blueprint.route('/notify', methods=['POST'])
+@doc(hide=True)
 def notify():
     if not request.json:
         return jsonify({'error': 'Empty body'}), 400
