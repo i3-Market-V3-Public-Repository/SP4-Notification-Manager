@@ -52,27 +52,30 @@ application.config['SECRET_KEY'] = FLASK_SECRET_KEY
 application.config['JSON_SORT_KEYS'] = False
 application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 application.config['OPENAPI_VERSION'] = '3.0.0'
-
+application.config['SERVERS'] = [
+    {
+        'name': 'Production Server',
+        'url': 'http://95.211.3.249:10010'
+    },
+    {
+        'name': 'Development Server',
+        'url': 'http://localhost:' + FLASK_PORT
+    }
+]
+application.config['INFO'] = {
+    'description': 'i3-Market Notification Manager',
+    # 'termsOfService': 'http://example.com',
+    'contact': {
+        'name': 'HOPU API Support',
+        # 'url': 'http://www.example.com/support',
+        'email': 'eleazar@hopu.eu'
+    },
+    'license': {
+        'name': 'Apache 2.0',
+        'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    }
+}
 logger.info("Working Directory: {}".format(os.getcwd()))
-
-# SWAGGER GENERATION USING flask_restx
-# api = Api(application, doc='/docs', version='1.0', title='Notification Manager', description='Testing flask-restx')
-# namespace = api.namespace('Notification Manager', description='NM Service Operations')
-
-# SWAGGER GENERATION USING APISPEC
-# spec = APISpec(
-#         title='Notification Manager',
-#         version='v1',
-#         openapi_version='2.0.0',
-#         plugins=[MarshmallowPlugin()],
-#         # plugins=[FlaskPlugin(),MarshmallowPlugin()],
-#         # plugins=[apispec.ext.marshmallow],
-#     )
-#
-# application.config.update({
-#     'APISPEC_SPEC': spec,
-#     'APISPEC_SWAGGER_URL': '/swagger/',
-# })
 
 ### static specific ###
 # SWAGGER_URL = '/swagger'
