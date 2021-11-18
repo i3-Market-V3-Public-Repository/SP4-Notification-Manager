@@ -54,11 +54,11 @@ application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 application.config['OPENAPI_VERSION'] = '3.0.0'
 application.config['SERVERS'] = [
     {
-        'name': 'Production Server',
+        'description': 'Production Server',
         'url': 'http://95.211.3.249:10010'
     },
     {
-        'name': 'Development Server',
+        'description': 'Development Server',
         'url': 'http://localhost:' + str(FLASK_PORT)
     }
 ]
