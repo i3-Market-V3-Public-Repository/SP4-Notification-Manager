@@ -59,7 +59,7 @@ application.config['SERVERS'] = [
     },
     {
         'name': 'Development Server',
-        'url': 'http://localhost:' + FLASK_PORT
+        'url': 'http://localhost:' + str(FLASK_PORT)
     }
 ]
 application.config['INFO'] = {
