@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
 from loguru import logger
-
+from apiflask import APIBlueprint, output, input
 from src.notification_manager.controller.service_queue_controller import QueueController
+from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceList, Service, ServiceInput, \
+    QueueInput, Queue, QueueList
 from src.notification_manager.models.queue import queue_to_object
 
 blueprint = APIBlueprint('queues', __name__, url_prefix='/api/v1/')
@@ -14,22 +16,46 @@ def config(controller: QueueController):
     __controller = controller
 
 
-@api.route('/services/<service_id>', methods=['GET'])
-@api.route('/services', defaults={"service_id": None}, methods=['GET'])
-def get_services(service_id: str):
-    if not service_id:
-        result = __controller.retrieve_all()
-        return jsonify(result), 200
-    else:
-        result = __controller.retrieve_service(service_id)
-        if result:
-            return jsonify(result.to_json()), 200
-        return jsonify(), 404
+@output(Service)
+@blueprint.route('/services/<service_id>', methods=['GET'])
+def get_services_by_id(service_id: str):
+    result = __controller.retrieve_service(service_id)
+    if result:
+        return jsonify(result.to_json()), 200
+    return jsonify(), 404
+
+
+@output(ServiceList, example=[
+  {
+    "id": "84744b8b-fb2d-4a16-9d86-6b1a2cd34c62",
+    "name": "i3-market-test",
+    "endpoint": "https://webhook.site/11798498-a25a-429c-ac11-8d2d9aa26e83",
+    "queues": [
+      {
+        "id": "b11807ce-17ad-416f-9bd1-bdf9dd049dcf",
+        "name": "offering.new",
+        "endpoint": None,
+        "active": False
+      }
+    ]
+  }
+])
+@blueprint.route('/services', methods=['GET'])
+def get_services():
+    result = __controller.retrieve_all()
+    return jsonify(result), 200
 
 
 ########################################################################################################################
 # SERVICES API
 ########################################################################################################################
+@input(ServiceInput)
+@output(Service, example={
+  "id": "123445-123-1245-12345-12354566773",
+  "name": "service-test-2",
+  "endpoint": "https://test-server:1234/endpoint",
+  "queues": []
+})
 @blueprint.route('/services', methods=['POST'])
 def create_service():
     if not request.json:
@@ -46,6 +72,7 @@ def create_service():
     return jsonify(result.to_json()), 200
 
 
+@output(Service)
 @blueprint.route('/services/<service_id>', methods=['DELETE'])
 def delete_service(service_id: str):
     result = __controller.delete_service(service_id)
@@ -59,9 +86,26 @@ def delete_service(service_id: str):
 ########################################################################################################################
 # QUEUES API
 ########################################################################################################################
-@blueprint.route('/services/<service_id>/queues', defaults={"queue_id": None}, methods=['GET'])
+@output(QueueList, example=[
+  {
+    "id": "b11807ce-17ad-416f-9bd1-bdf9dd049dcf",
+    "name": "offering.new",
+    "endpoint": None,
+    "active": False
+  }
+])
+@blueprint.route('/services/<service_id>/queues', methods=['GET'])
+def get_queues(service_id: str):
+    result = __controller.retrieve_service_queues(service_id)
+    if result is None:
+        return jsonify({'error': 'Not found'}), 404
+    else:
+        return jsonify([s.to_json() for s in result]), 200
+
+
+@output(Queue)
 @blueprint.route('/services/<service_id>/queues/<queue_id>', methods=['GET'])
-def get_queues(service_id: str, queue_id: str):
+def get_queues_by_id(service_id: str, queue_id: str):
     result = __controller.retrieve_service_queues(service_id, queue_id)
 
     if result is None:
@@ -73,6 +117,13 @@ def get_queues(service_id: str, queue_id: str):
     return jsonify(result.to_json()), 200
 
 
+@input(QueueInput)
+@output(Queue, example={
+  "id": "asd124-ergh1-5673-456345-sdf879efw78",
+  "name": "offering.update",
+  "endpoint": "https://webhook.site/11798498-a25a-429c-ac11-8d2d9aa26e83",
+  "active": True
+})
 @blueprint.route('/services/<service_id>/queues', methods=['POST'])
 def post_queues(service_id: str):
     if not request.json:
@@ -89,6 +140,7 @@ def post_queues(service_id: str):
     return jsonify(result.to_json()), 200
 
 
+@output(Queue)
 @blueprint.route('/services/<service_id>/queues/<queue_id>', methods=['DELETE'])
 def delete_queue(service_id: str, queue_id: str):
     result = __controller.delete_queue(service_id, queue_id)
@@ -99,6 +151,7 @@ def delete_queue(service_id: str, queue_id: str):
     return jsonify(result.to_json()), 200
 
 
+# TODO Implement the update of a service and queue
 # @api.route('/services/<service_id>/queues/<queue_id>', methods=['PUT'])
 # def put_queue(service_id: str, queue_id: str):
 #     result = __controller.update_queue(service_id, queue_id, request.json())
@@ -108,6 +161,7 @@ def delete_queue(service_id: str, queue_id: str):
 #     return jsonify(result.to_json()), 200
 
 
+@output(Queue)
 @blueprint.route('/services/<service_id>/queues/<queue_id>/activate', methods=['POST'])
 @blueprint.route('/services/<service_id>/queues/<queue_id>/deactivate', methods=['POST'])
 def status_queue(service_id: str, queue_id: str):

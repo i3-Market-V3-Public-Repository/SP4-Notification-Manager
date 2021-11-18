@@ -34,16 +34,16 @@ class QueueController:
         if isinstance(service, dict):
             return service_to_object(service)
 
-    def update_service(self, service_id: str, data: dict):
-        # TODO i dont like this method change it
-        if not self.storage.retrieve_service(service_id):
-            return -1  # not found
-        else:
-            updated_service = self.storage.update_service(data)
-            if not updated_service:
-                return None  # service not found
-            else:
-                return service_to_object(updated_service)
+    # def update_service(self, service_id: str, data: dict):
+    #
+    #     if not self.storage.retrieve_service(service_id):
+    #         return -1  # not found
+    #     else:
+    #         updated_service = self.storage.update_service(data)
+    #         if not updated_service:
+    #             return None  # service not found
+    #         else:
+    #             return service_to_object(updated_service)
 
     def delete_service(self, service_id):
         deleted_service = self.storage.delete_service(service_id)

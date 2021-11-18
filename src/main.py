@@ -1,6 +1,6 @@
 import os
 
-import flask_apispec
+# import flask_apispec
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
@@ -32,7 +32,7 @@ load_dotenv()
 
 # Configuración general
 ENVIRONMENT_MODE = os.getenv('ENVIRONMENT_MODE', 'production')
-VERSION = os.getenv('VERSION', 'v0.3')
+VERSION = os.getenv('VERSION', 'v2.0')
 FLASK_SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'SUPER-SECRET')
 FLASK_PORT = os.getenv('FLASK_PORT', 5000)
 WEB_UI = os.getenv('WEB_UI', 'http://localhost:3000')
@@ -42,7 +42,7 @@ WEB_UI = os.getenv('WEB_UI', 'http://localhost:3000')
 application = APIFlask(__name__,
                        docs_path='/swagger/',
                        title='Notification Manager',
-                       version='1.0'
+                       version=VERSION
                        )
 
 cors = CORS(application, resources={r"*": {"origins": "*"}})
@@ -122,7 +122,6 @@ def bad_request(error):
 
 
 # TODO: Version and Health not working properly
-#@application.get('/api/v1/version')
 @application.route('/api/v1/version', methods=['GET'])
 @application.route('/api/v1/health', methods=['GET'])
 def version():
@@ -137,12 +136,15 @@ def version():
     ), 200
 
 
+application.register_blueprint(subscriptions_api)
+application.register_blueprint(service_queue_api)
+application.register_blueprint(notifications_api)
+
 if __name__ == "__main__":
     logger.debug('Starting application...')
 
     # Blueprints
-    application.register_blueprint(subscriptions_api)
-    application.register_blueprint(service_queue_api)
-    application.register_blueprint(notifications_api)
 
+    logger.info("Logging...")
+    logger.info("Blueprints: {}".format(application.blueprints.items()))
     application.run('0.0.0.0', FLASK_PORT)

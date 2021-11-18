@@ -5,7 +5,8 @@ from loguru import logger
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
-from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceNotification, UserNotification
+from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceNotification, UserNotification, \
+    NotificationList, Notification
 
 blueprint = APIBlueprint('notifications', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
@@ -23,6 +24,7 @@ def config(notification_controller: NotificationsController,
     __notification_controller = notification_controller
     __queue_controller = queue_controller
     __subscription_controller = subscription_controller
+
 
 # ----------------------------SERVICE NOTIFICATIONS----------------------------------------
 @blueprint.route('/notification/service', methods=['POST'])
@@ -54,9 +56,9 @@ def notification_service():
     return jsonify(), 200
 
 
-@input(UserNotification)
-@blueprint.route('/notification/user', methods=['POST'])
 # ----------------------------USER NOTIFICATIONS----------------------------------------
+# @blueprint.route('/notification/user', methods=['POST'])
+@input(UserNotification)
 @blueprint.route('/notification', methods=['POST'])
 def notification_user():
     if not request.json:
@@ -79,29 +81,39 @@ def notification_user():
     return jsonify(), 200
 
 
-@blueprint.route('/notification/', methods=['GET'])
+# @blueprint.route('/notification/', methods=['GET'])
+@output(NotificationList)
 @blueprint.route('/notification', methods=['GET'])
-@blueprint.route('/notification/user/<user_id>/', methods=['GET'])
+def get_notifications():
+    return jsonify(__notification_controller.get_all_notifications()), 200
+
+
+@output(NotificationList)
 @blueprint.route('/notification/user/<user_id>', methods=['GET'])
-def get_notifications(user_id=None):
-    if user_id:
+def get_notification_by_userid(user_id: str):
+    result = __notification_controller.get_user_notification(user_id)
+    if result:
         return jsonify(__notification_controller.get_user_notification(user_id)), 200
     else:
-        return jsonify(__notification_controller.get_all_notifications()), 200
+        return jsonify(), 404
 
 
-@blueprint.route('/notification/unread/', methods=['GET'])
+# @blueprint.route('/notification/unread/', methods=['GET'])
+@output(NotificationList)
 @blueprint.route('/notification/unread', methods=['GET'])
-@blueprint.route('/notification/user/<user_id>/unread/', methods=['GET'])
+def get_unread_notifications():
+    return jsonify(__notification_controller.get_all_unread_notifications()), 200
+
+
+# @blueprint.route('/notification/user/<user_id>/unread/', methods=['GET'])
+@output(NotificationList)
 @blueprint.route('/notification/user/<user_id>/unread', methods=['GET'])
-def get_unread_notifications(user_id=None):
-    if user_id:
-        return jsonify(__notification_controller.get_unread_user_notification(user_id)), 200
-    else:
-        return jsonify(__notification_controller.get_all_unread_notifications()), 200
+def get_unread_notifications_by_id(user_id: str):
+    return jsonify(__notification_controller.get_unread_user_notification(user_id)), 200
 
 
-@blueprint.route('/notification/<notification_id>/', methods=['GET'])
+# @blueprint.route('/notification/<notification_id>/', methods=['GET'])
+@output(Notification)
 @blueprint.route('/notification/<notification_id>', methods=['GET'])
 def get_notification(notification_id: str):
     result = __notification_controller.get_notification(notification_id)
@@ -110,9 +122,10 @@ def get_notification(notification_id: str):
     return jsonify(), 404
 
 
-@blueprint.route('/notification/<notification_id>/read/', methods=['PATCH'])
+@output(Notification)
+# @blueprint.route('/notification/<notification_id>/read/', methods=['PATCH'])
 @blueprint.route('/notification/<notification_id>/read', methods=['PATCH'])
-@blueprint.route('/notification/<notification_id>/unread/', methods=['PATCH'])
+# @blueprint.route('/notification/<notification_id>/unread/', methods=['PATCH'])
 @blueprint.route('/notification/<notification_id>/unread', methods=['PATCH'])
 def modify_notification(notification_id: str):
     read = request.path.split('/')[-1] == 'read'
@@ -122,7 +135,8 @@ def modify_notification(notification_id: str):
     return jsonify(), 404
 
 
-@blueprint.route('/notification/<notification_id>/', methods=['DELETE'])
+# @blueprint.route('/notification/<notification_id>/', methods=['DELETE'])
+@output(Notification)
 @blueprint.route('/notification/<notification_id>', methods=['DELETE'])
 def delete_notification(notification_id: str):
     result = __notification_controller.delete_notification(notification_id)
