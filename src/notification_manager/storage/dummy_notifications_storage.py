@@ -53,7 +53,7 @@ class DummyNotificationsStorage(NotificationsStorage):
 
     def retrieve_unread_notification_by_user(self, user_id: str):
         unread_notifications = []
-        for notification in self.retrieve_unread_notification_by_user(user_id):
+        for notification in self.retrieve_notification_by_user(user_id):
             if notification.get('unread'):
                 unread_notifications.append(notification)
         return unread_notifications
