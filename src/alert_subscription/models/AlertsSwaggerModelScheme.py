@@ -21,28 +21,4 @@ class UserSubscriptionList(Schema):
     user_id = List(fields.Nested(Subscription))
 
 
-# TODO Fix this and replace below SubscriptionList Schema
-# class SubscriptionList(TopLevelSchema):
-#     _toplevel = fields.Nested(
-#         Subscription,
-#         required=True,
-#         many=True
-#     )
-# schema = SubscriptionList()
-# errors = schema.validate([{"id": "82bb0248-6ce3-4fe4-9e68-6c30fe0ef41b","category": "Agriculture","active": True}])
-# assert not errors
-
-
-class SubscriptionList(Schema):
-    # _toplevel_field = fields.List(fields.Nested(Subscription), many=True)
-    # subs = Subscription(many=True)
-    fields.List(fields.Nested(Subscription), many=True,
-                example=[
-        {
-            "id": "82bb0248-6ce3-4fe4-9e68-6c30fe0ef41b",
-            "category": "Agriculture",
-            "active": True
-        }
-    ])
-
 

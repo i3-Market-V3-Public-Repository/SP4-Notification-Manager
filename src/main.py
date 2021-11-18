@@ -136,15 +136,12 @@ def version():
     ), 200
 
 
+# Blueprints
 application.register_blueprint(subscriptions_api)
 application.register_blueprint(service_queue_api)
 application.register_blueprint(notifications_api)
 
 if __name__ == "__main__":
     logger.debug('Starting application...')
-
-    # Blueprints
-
-    logger.info("Logging...")
     logger.info("Blueprints: {}".format(application.blueprints.items()))
     application.run('0.0.0.0', FLASK_PORT)

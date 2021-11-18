@@ -3,7 +3,7 @@ from loguru import logger
 from apiflask import APIBlueprint, output, input
 from src.notification_manager.controller.service_queue_controller import QueueController
 from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceList, Service, ServiceInput, \
-    QueueInput, Queue, QueueList
+    QueueInput, Queue
 from src.notification_manager.models.queue import queue_to_object
 
 blueprint = APIBlueprint('queues', __name__, url_prefix='/api/v1/')
@@ -25,7 +25,7 @@ def get_services_by_id(service_id: str):
     return jsonify(), 404
 
 
-@output(ServiceList, example=[
+@output(Service(many=True), example=[
   {
     "id": "84744b8b-fb2d-4a16-9d86-6b1a2cd34c62",
     "name": "i3-market-test",
@@ -86,7 +86,7 @@ def delete_service(service_id: str):
 ########################################################################################################################
 # QUEUES API
 ########################################################################################################################
-@output(QueueList, example=[
+@output(Queue(many=True), example=[
   {
     "id": "b11807ce-17ad-416f-9bd1-bdf9dd049dcf",
     "name": "offering.new",

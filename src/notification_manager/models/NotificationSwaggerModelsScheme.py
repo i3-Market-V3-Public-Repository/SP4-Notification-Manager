@@ -19,6 +19,8 @@ class ServiceNotification(Schema):
 
 class UserNotification(Schema):
     receiver_id = String(required=True, description='User ID for notify a user', example='UserID123')
+    origin = String(required=True, description='Origin of the notification')
+    status = String(required=True, description='Status of the notification')
     type = queue_enum
     predefined = Boolean(required=False, example='true', description='')
     message = message_field
@@ -32,10 +34,6 @@ class Notification(Schema):
     receptor = String(required=True, description='Destination of the notification')
     data = Dict(description='Contains the data of the notification')
     unread = Boolean(description='True if the notification has not been read, otherwise false')
-
-
-class NotificationList(Schema):
-    notifications = List(fields.Nested(Notification))
 
 
 # ---------------------------------------------QUEUES MODELS-----------------------------------------
@@ -53,8 +51,8 @@ class Queue(QueueInput):
     active = Boolean(required=True, description='Describes if the queue is active to send notifications')
 
 
-class QueueList(Schema):
-    fields.Nested(Queue, many=True)
+#class QueueList(Schema):
+#    fields.Nested(Queue, many=True)
 
 
 class ServiceInput(Schema):

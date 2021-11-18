@@ -6,7 +6,7 @@ from src.alert_subscription.controller.subscriptions_controller import Subscript
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
 from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceNotification, UserNotification, \
-    NotificationList, Notification
+    Notification
 
 blueprint = APIBlueprint('notifications', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
@@ -32,7 +32,6 @@ def config(notification_controller: NotificationsController,
 def notification_service():
     # {"receiver_id": "offering.new", "message": loquesea}
     if not request.json:
-
         return jsonify({'error': 'Empty body'}), 400
 
     if not request.json.get("receiver_id") or not request.json.get("message"):
@@ -59,6 +58,7 @@ def notification_service():
 # ----------------------------USER NOTIFICATIONS----------------------------------------
 # @blueprint.route('/notification/user', methods=['POST'])
 @input(UserNotification)
+@output(Notification)
 @blueprint.route('/notification', methods=['POST'])
 def notification_user():
     if not request.json:
@@ -69,26 +69,28 @@ def notification_user():
 
     data = request.json
     destiny_user_id = data.get("receiver_id")
+    origin = data.get("origin")
+    status = data.get('status')
     _type = data.get('type')
-    _sub_type = data.get('sub_type')
+    # _sub_type = data.get('sub_type')
     predefined = data.get("predefined")
     message = data.get('message')
     logger.info("Received a request to notify user {}".format(destiny_user_id))
-    stored_notification = __notification_controller.send_notification_user(destiny_user_id, _type, _sub_type,
+    stored_notification = __notification_controller.send_notification_user(destiny_user_id, origin, status, _type,
                                                                            predefined, message)
     # logger.info("Stored Notification: {}".format(stored_notification))
 
-    return jsonify(), 200
+    return jsonify(stored_notification), 200
 
 
 # @blueprint.route('/notification/', methods=['GET'])
-@output(NotificationList)
+@output(Notification(many=True))
 @blueprint.route('/notification', methods=['GET'])
 def get_notifications():
     return jsonify(__notification_controller.get_all_notifications()), 200
 
 
-@output(NotificationList)
+@output(Notification(many=True))
 @blueprint.route('/notification/user/<user_id>', methods=['GET'])
 def get_notification_by_userid(user_id: str):
     result = __notification_controller.get_user_notification(user_id)
@@ -99,14 +101,14 @@ def get_notification_by_userid(user_id: str):
 
 
 # @blueprint.route('/notification/unread/', methods=['GET'])
-@output(NotificationList)
+@output(Notification(many=True))
 @blueprint.route('/notification/unread', methods=['GET'])
 def get_unread_notifications():
     return jsonify(__notification_controller.get_all_unread_notifications()), 200
 
 
 # @blueprint.route('/notification/user/<user_id>/unread/', methods=['GET'])
-@output(NotificationList)
+@output(Notification(many=True))
 @blueprint.route('/notification/user/<user_id>/unread', methods=['GET'])
 def get_unread_notifications_by_id(user_id: str):
     return jsonify(__notification_controller.get_unread_user_notification(user_id)), 200

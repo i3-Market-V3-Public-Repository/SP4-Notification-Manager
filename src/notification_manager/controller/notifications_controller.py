@@ -105,12 +105,12 @@ class NotificationsController:
         else:
             return None
 
-    def send_notification_user(self, destiny_user_id: str, _type: str, _sub_type: str, predefined: bool,
+    def send_notification_user(self, destiny_user_id: str, origin: str, status: str, _type: str, predefined: bool,
                                message: dict = None):
         notification = Notification(id=uuid.uuid4().__str__(),
-                                    action=_type + "." + _sub_type,
-                                    status="Ok",
-                                    origin="i3-market",
+                                    action=_type,
+                                    status=status,
+                                    origin=origin,
                                     receptor=destiny_user_id,
                                     data=message)
         return self.storage.insert_notification(notification.to_json())

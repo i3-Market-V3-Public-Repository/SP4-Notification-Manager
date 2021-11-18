@@ -1,9 +1,9 @@
-from apiflask import output, APIBlueprint, input, output
-from flask import Blueprint, request, jsonify
+from apiflask import APIBlueprint, input, output
+from flask import request, jsonify
 from loguru import logger
 
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
-from src.alert_subscription.models.AlertsSwaggerModelScheme import SubscriptionList, Subscription, CreateSubscription, \
+from src.alert_subscription.models.AlertsSwaggerModelScheme import Subscription, CreateSubscription, \
     UserSubscriptionList
 
 blueprint = APIBlueprint('subscriptions', __name__, url_prefix='/api/v1/')
@@ -29,27 +29,30 @@ def notify():
     return jsonify(), 200
 
 
-@output(UserSubscriptionList, example={
-  "user001": [
-    {
-      "id": "9c551aec-0049-41c0-b4d3-1065cad985bb",
-      "category": "category1",
-      "active": True
-    },
-    {
-      "id": "3a275fc8-b231-4c42-ae34-8f90db8e6a12",
-      "category": "category2",
-      "active": True
-    }
-  ],
-  "asd2": [
-    {
-      "id": "d9ead632-fce5-443c-afe8-46f470f1a74f",
-      "category": "category2",
-      "active": False
-    }
-  ]
-})
+# @output(UserSubscriptionList, example={
+#   "user001": [
+#     {
+#       "id": "9c551aec-0049-41c0-b4d3-1065cad985bb",
+#       "category": "category1",
+#       "active": True
+#     },
+#     {
+#       "id": "3a275fc8-b231-4c42-ae34-8f90db8e6a12",
+#       "category": "category2",
+#       "active": True
+#     }
+#   ],
+#   "asd2": [
+#     {
+#       "id": "d9ead632-fce5-443c-afe8-46f470f1a74f",
+#       "category": "category2",
+#       "active": False
+#     }
+#   ]
+# })
+
+# @output(Subscription(many=True))
+@output(UserSubscriptionList)
 @blueprint.route('/users/subscriptions', methods=['GET'])
 def get_users():
     """
@@ -57,7 +60,6 @@ def get_users():
     :return:
     """
     result = __controller.retrieve_all()
-
     return jsonify(result), 200
 
 
@@ -84,7 +86,7 @@ def post_subscriptions(user_id: str):
     return jsonify(result.to_json()), 200
 
 
-@output(SubscriptionList, example=[
+@output(Subscription(many=True), example=[
     {
         "id": "82bb0248-6ce3-4fe4-9e68-6c30fe0ef41b",
         "category": "Agriculture",

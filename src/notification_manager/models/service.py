@@ -15,7 +15,7 @@ class Service:
         self.queues = queues or []
 
     def to_json(self):
-        queues=[]
+        queues = []
         for queue in self.queues:
             cola = queue_to_object(queue).to_json()
             queues.append(cola)
