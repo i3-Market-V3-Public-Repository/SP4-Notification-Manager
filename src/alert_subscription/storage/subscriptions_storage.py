@@ -32,6 +32,6 @@ class SubscriptionsStorage(abc.ABC):
         raise NotImplementedError('implement me, please!')
 
     @abc.abstractmethod
-    def search_users_by_subscription(self, *args, **kwargs):
+    def search_users_by_category(self, *args, **kwargs):
         raise NotImplementedError('implement me, please!')
 
