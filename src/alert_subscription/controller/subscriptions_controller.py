@@ -72,10 +72,6 @@ class SubscriptionsController:
 
         return subscription_to_object(updated_subscription)
 
-    def search_users_by_subscription(self, category: str, message: str):
-        users = self.storage.search_users_by_subscription(category)
+    def search_users_by_category(self, category: str):
+        return {"users": self.storage.search_users_by_category(category)}
 
-        if users:
-            requests.post(url=self.web_ui, json={'userlist': users, 'message': message})
-
-        return None
