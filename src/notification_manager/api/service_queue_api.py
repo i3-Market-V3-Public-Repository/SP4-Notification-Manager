@@ -2,9 +2,8 @@ from flask import Blueprint, request, jsonify
 from loguru import logger
 from apiflask import APIBlueprint, output, input
 from src.notification_manager.controller.service_queue_controller import QueueController
-from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceList, Service, ServiceInput, \
+from src.notification_manager.models.NotificationSwaggerModelsScheme import Service, ServiceInput, \
     QueueInput, Queue
-from src.notification_manager.models.queue import queue_to_object
 
 blueprint = APIBlueprint('queues', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
