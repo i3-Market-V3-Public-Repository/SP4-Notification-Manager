@@ -2,7 +2,7 @@ import os
 
 # import flask_apispec
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 
 from apiflask import APIFlask
@@ -66,7 +66,7 @@ application.config['INFO'] = {
     'description': 'i3-Market Notification Manager',
     # 'termsOfService': 'http://example.com',
     'contact': {
-        'name': 'HOPU API Support',
+        'name': 'HOPU NM API Support',
         # 'url': 'http://www.example.com/support',
         'email': 'eleazar@hopu.eu'
     },
@@ -122,6 +122,11 @@ def bad_request(error):
 
     logger.error(f'ERROR: {error.description}')
     return jsonify({'error': error.description}), 400
+
+
+@application.route('/', methods=['GET'])
+def go_to_swagger():
+    return redirect('./swagger')
 
 
 # TODO: Version and Health not working properly
