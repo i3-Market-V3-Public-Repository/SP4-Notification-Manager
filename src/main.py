@@ -30,7 +30,7 @@ from src.notification_manager.storage.dummy_service_queue_storage import DummySe
 
 load_dotenv()
 
-# Configuración general
+# Configuracion general
 ENVIRONMENT_MODE = os.getenv('ENVIRONMENT_MODE', 'production')
 VERSION = os.getenv('VERSION', 'v2.0')
 FLASK_SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'SUPER-SECRET')
@@ -111,8 +111,8 @@ notifications_config(NotificationsController(notifications_storage, WEB_UI), Que
 
 
 # API FLASK
-@application.errorhandler(400)
-def bad_request(error):
+#@application.errorhandler(400)
+#def bad_request(error):
     # original_error = error.description
 
     # if isinstance(original_error, ValidationError):
@@ -120,8 +120,8 @@ def bad_request(error):
     #     logger.error(f'ERROR: {original_error.message}')
     #     return jsonify({'error': original_error.message}), 400
 
-    logger.error(f'ERROR: {error.description}')
-    return jsonify({'error': error.description}), 400
+#    logger.error(f'ERROR: {error.description}')
+#    return jsonify({'error': error.description}), 400
 
 
 @application.route('/', methods=['GET'])
