@@ -51,10 +51,6 @@ class Queue(QueueInput):
     active = Boolean(required=True, description='Describes if the queue is active to send notifications')
 
 
-#class QueueList(Schema):
-#    fields.Nested(Queue, many=True)
-
-
 class ServiceInput(Schema):
     name = String(required=True, description='Name for the service', example='service-test')
     endpoint = String(required=True,
@@ -67,6 +63,3 @@ class Service(ServiceInput):
     # queues = QueueList
     queues = List(fields.Nested(Queue))
 
-
-class ServiceList(Schema):
-    fields.List(fields.Nested(Service))
