@@ -49,7 +49,7 @@ def notification_service():
     # TODO: Modificar hacia abajo cuando se separen los servicios, sustituir por requests.
     category = message.get('category')
     if category:
-        __subscription_controller.search_users_by_subscription(category, message=request.json)
+        __subscription_controller.search_users_by_category(category, message=request.json)
         # get users subscribed to that category
         # create a user notification to that category
     return jsonify(), 200
