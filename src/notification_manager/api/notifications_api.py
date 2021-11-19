@@ -1,4 +1,4 @@
-from apiflask import APIBlueprint, output, input
+from apiflask import APIBlueprint, output, input, abort
 from flask import Blueprint, request, jsonify
 from loguru import logger
 
@@ -29,27 +29,37 @@ def config(notification_controller: NotificationsController,
 # ----------------------------SERVICE NOTIFICATIONS----------------------------------------
 @blueprint.route('/notification/service', methods=['POST'])
 @input(ServiceNotification)
-def notification_service():
-    # {"receiver_id": "offering.new", "message": loquesea}
-    if not request.json:
-        return jsonify({'error': 'Empty body'}), 400
+def notification_service(self):
+    data = request.json
+    # {"receiver_id": "offering.new", "message": {"whatever"}"}
+    if not data:
+        # return jsonify({'error': 'Empty body'}), 400
+        abort(400, "Empty body")
 
-    if not request.json.get("receiver_id") or not request.json.get("message"):
-        return jsonify({"error": "Body has to contain receiver_id and message"}), 400
+    if not data.get("receiver_id") or not isinstance(data.get("message"), dict):
+        # return jsonify({"error": "Body has to contain receiver_id and message"}), 400
+        abort(400, "Body has to container receiver_id and message {} with content")
 
     # extract receiver_id to get to which queue send the notification
-    queue_name = request.json.get('receiver_id')
-    message = request.json.get('message')
+    queue_name = data.get('receiver_id')
+    message = data.get('message')
     logger.info("Received a notification to service: \n"
                 "queue_name: {}, message: {}".format(queue_name, message))
+
     queues_endpoints = __queue_controller.search_services_by_queue_if_active(queue_name)
     # create the notification and send to them
     __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
 
     # TODO: Modificar hacia abajo cuando se separen los servicios, sustituir por requests.
-    category = message.get('category')
-    if category:
-        __subscription_controller.search_users_by_category(category, message=request.json)
+    from notification_manager.models.queue_types import QueueType
+    if queue_name == QueueType.NEWOFFERING.value:
+        category = message.get('category')
+        if category:
+            users = __subscription_controller.search_users_by_category(category)
+            users = users.get('users')
+            for user in users:
+                __notification_controller.send_notification_user(user, 'i3-market', 'Ok', QueueType.NEWOFFERING.value,
+                                                                 True, message)
         # get users subscribed to that category
         # create a user notification to that category
     return jsonify(), 200
@@ -62,10 +72,12 @@ def notification_service():
 @blueprint.route('/notification', methods=['POST'])
 def notification_user():
     if not request.json:
-        return jsonify({'error': 'Empty body'}), 400
+        # return jsonify({'error': 'Empty body'}), 400
+        abort(400, 'Empty body')
 
     if not request.json.get('receiver_id') or not request.json.get("message"):
-        return jsonify({"error": "Body has to contain receiver_id and message"}), 400
+        # return jsonify({"error": "Body has to contain receiver_id and message"}), 400
+        abort(400, 'Body has to contain data')
 
     data = request.json
     destiny_user_id = data.get("receiver_id")
