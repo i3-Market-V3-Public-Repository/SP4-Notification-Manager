@@ -7,7 +7,7 @@ from apiflask.validators import Length, OneOf
 
 from src.notification_manager.models.queue_types import QueueType
 
-message_field = fields.Dict(required=True, description='Data to send')
+message_field = fields.Dict(required=False, description='Data to send', example={'category': 'Agriculture'})
 queue_enum = String(required=True, validate=OneOf([q.value for q in QueueType.__members__.values()]),
                     example='offering.new', description="Queue name to send the notification")
 
