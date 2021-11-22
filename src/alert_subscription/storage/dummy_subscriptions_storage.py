@@ -101,7 +101,7 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
         users = []
         for user, subscriptions in self.storage.items():
             for subscription in subscriptions:
-                if subscription.get('category') == category:
+                if subscription.get('category') == category and subscription.get('active'):
                     users.append(user)
         return users
 
