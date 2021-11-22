@@ -161,8 +161,8 @@ def delete_queue(service_id: str, queue_id: str):
 
 
 @output(Queue)
-@blueprint.route('/services/<service_id>/queues/<queue_id>/activate', methods=['POST'])
-@blueprint.route('/services/<service_id>/queues/<queue_id>/deactivate', methods=['POST'])
+@blueprint.route('/services/<service_id>/queues/<queue_id>/activate', methods=['PATCH'])
+@blueprint.route('/services/<service_id>/queues/<queue_id>/deactivate', methods=['PATCH'])
 def status_queue(service_id: str, queue_id: str):
     activated = request.path.split('/')[-1] == 'activate'
 
