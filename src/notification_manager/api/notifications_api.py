@@ -50,18 +50,18 @@ def notification_service(self):
     # create the notification and send to them
     __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
 
-    # TODO: Modificar hacia abajo cuando se separen los servicios, sustituir por requests.
+    # TODO: Modify downwards when services are separated, replace with requests.
     from notification_manager.models.queue_types import QueueType
     if queue_name == QueueType.NEWOFFERING.value:
         category = message.get('category')
         if category:
-            users = __subscription_controller.search_users_by_category(category)
-            users = users.get('users')
+            # get users subscribed to that category
+            users = __subscription_controller.search_users_by_category(category)  # { users: ["user1","user2"] }
+            users = users.get('users')  # ["user1","user2"]
             for user in users:
+                # create a user notification to that category
                 __notification_controller.send_notification_user(user, 'i3-market', 'Ok', QueueType.NEWOFFERING.value,
                                                                  True, message)
-        # get users subscribed to that category
-        # create a user notification to that category
     return jsonify(), 200
 
 
