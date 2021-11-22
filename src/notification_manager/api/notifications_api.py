@@ -62,6 +62,8 @@ def notification_service(self):
                 # create a user notification to that category
                 __notification_controller.send_notification_user(user, 'i3-market', 'Ok', QueueType.NEWOFFERING.value,
                                                                  True, message)
+        else:
+            logger.warning('Notification about new offering but no category in message!')
     return jsonify(), 200
 
 
