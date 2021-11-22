@@ -121,7 +121,6 @@ def delete_subscription(user_id: str, subscription_id: str):
     return jsonify(result.to_json()), 200
 
 
-# TODO Change to PATCH instead of POST, update Postman collections and Documentation.
 @output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['PATCH'])
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['PATCH'])
