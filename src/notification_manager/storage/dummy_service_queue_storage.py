@@ -85,8 +85,6 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
         return None  # queue Not found
 
     def insert_service_queue(self, service_id: str, queue: dict):
-        # TODO: comprobar esta, y otras funciones para que no sea necesario buscar si existe o no, y que lo haga el
-        # TODO: controlador
         for existing_service in self.storage:
             if existing_service.get('id') == service_id:
                 found = False
