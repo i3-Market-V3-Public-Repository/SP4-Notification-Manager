@@ -5,9 +5,11 @@ from loguru import logger
 
 from utils.rabbit.async_rabbit_publisher import AsyncRabbitMQClientManager
 
-# TODO: (source) https://gitlab.fokus.fraunhofer.de/WP4-fortika-modules-components/marketplace-device-manager/-/blob/v0.3.6g/devices_communication_manager/devices_event_listener/executors/async/helpers/notification_sevice_client.py
-# TODO: Entiendo que hay que descargarse https://gitlab.fokus.fraunhofer.de/WP4-fortika-modules-components/marketplace-device-manager/-/tree/v0.3.6g/utils/rabbit
-# TODO: y el paquete de fortika_lib_rabbit
+# TO DO: (source)
+#  https://gitlab.fokus.fraunhofer.de/WP4-fortika-modules-components/marketplace-device-manager/-/blob/v0.3.6g/devices_communication_manager/devices_event_listener/executors/async/helpers/notification_sevice_client.py
+# TO DO: I understand that it is necessary to download
+#  https://gitlab.fokus.fraunhofer.de/WP4-fortika-modules-components/marketplace-device-manager/-/tree/v0.3.6g/utils/rabbit
+# TO DO: and fortika_lib_rabbit package
 
 
 class AsyncNotificationServiceClient:
