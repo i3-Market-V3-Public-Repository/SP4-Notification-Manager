@@ -7,6 +7,7 @@ from src.notification_manager.controller.notifications_controller import Notific
 from src.notification_manager.controller.service_queue_controller import QueueController
 from src.notification_manager.models.NotificationSwaggerModelsScheme import ServiceNotification, UserNotification, \
     Notification
+from src.notification_manager.models.queue_types import QueueType
 
 blueprint = APIBlueprint('notifications', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
@@ -51,7 +52,7 @@ def notification_service(self):
     __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
 
     # TODO: Modify downwards when services are separated, replace with requests.
-    from notification_manager.models.queue_types import QueueType
+
     if queue_name == QueueType.NEWOFFERING.value:
         category = message.get('category')
         if category:
