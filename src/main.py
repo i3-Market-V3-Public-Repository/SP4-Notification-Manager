@@ -79,7 +79,7 @@ logger.info("Working Directory: {}".format(os.getcwd()))
 
 ### static specific ###
 # SWAGGER_URL = '/swagger'
-# API_URL = '/static/swagger.json'
+# API_URL = '/static/OLD_swagger.json'
 # SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
 #     SWAGGER_URL,
 #     API_URL,
