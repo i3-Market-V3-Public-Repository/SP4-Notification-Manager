@@ -20,7 +20,12 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
         logger.info('Dummy Storage enabled')
 
     def retrieve_all(self):
-        return self.storage
+        # return self.storage
+        result = []
+        for user, subscriptions in self.storage.items():
+            add = {"user_id": user, "subscriptions": subscriptions}
+            result.append(add)
+        return result
 
     def search_user_subscription(self, user_id: str, data: dict):
         if user_id not in self.storage.keys():
@@ -92,14 +97,12 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
 
         return None  # Subscription Not found
 
-    def search_users_by_subscription(self, category: str):
+    def search_users_by_category(self, category: str):
         users = []
-        for key, value in self.storage.items():
-            for subscription in value:
-                if subscription.get('category') == category:
-                    users.append(key)
-                    break
-
+        for user, subscriptions in self.storage.items():
+            for subscription in subscriptions:
+                if subscription.get('category') == category and subscription.get('active'):
+                    users.append(user)
         return users
 
     def __read_dummy_file(self):

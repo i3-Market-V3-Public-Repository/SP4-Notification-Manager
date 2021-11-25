@@ -1,10 +1,10 @@
-from apiflask import APIBlueprint, input, output, doc
+from apiflask import APIBlueprint, input, output, doc, abort, fields
 from flask import request, jsonify
 from loguru import logger
 
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 from src.alert_subscription.models.AlertsSwaggerModelScheme import Subscription, CreateSubscription, \
-    UserSubscriptionList
+    UserSubscriptionList, UsersList
 
 blueprint = APIBlueprint('subscriptions', __name__, url_prefix='/api/v1/')
 # noinspection PyTypeChecker
@@ -16,44 +16,8 @@ def config(controller: SubscriptionsController):
     __controller = controller
 
 
-# Just for testing, hide request
-@blueprint.route('/notify', methods=['POST'])
-@doc(hide=True)
-def notify():
-    if not request.json:
-        return jsonify({'error': 'Empty body'}), 400
-
-    category = request.json.get('category')
-
-    __controller.search_users_by_subscription(category, message=request.json)
-
-    return jsonify(), 200
-
-
-# @output(UserSubscriptionList, example={
-#   "user001": [
-#     {
-#       "id": "9c551aec-0049-41c0-b4d3-1065cad985bb",
-#       "category": "category1",
-#       "active": True
-#     },
-#     {
-#       "id": "3a275fc8-b231-4c42-ae34-8f90db8e6a12",
-#       "category": "category2",
-#       "active": True
-#     }
-#   ],
-#   "asd2": [
-#     {
-#       "id": "d9ead632-fce5-443c-afe8-46f470f1a74f",
-#       "category": "category2",
-#       "active": False
-#     }
-#   ]
-# })
-
 # @output(Subscription(many=True))
-@output(UserSubscriptionList)
+@output(UserSubscriptionList(many=True))
 @blueprint.route('/users/subscriptions', methods=['GET'])
 def get_users():
     """
@@ -124,7 +88,7 @@ def get_subscriptions(user_id: str, subscription_id: str):
     return jsonify(result.to_json()), 200
 
 
-# @api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['PUT'])
+# @api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['PATCH'])
 # def put_subscription(user_id: str, subscription_id: str):
 #     if not request.json:
 #         return jsonify({'error': 'Empty body'}), 400
@@ -144,9 +108,9 @@ def get_subscriptions(user_id: str, subscription_id: str):
 def delete_subscription(user_id: str, subscription_id: str):
     """
     Delete subscription by user_id and subscription_id
-    :param user_id:
-    :param subscription_id:
-    :return:
+    :param user_id: User id of the user
+    :param subscription_id: Subscription id
+    :return: Subscription
     """
 
     result = __controller.delete_subscription(user_id, subscription_id)
@@ -158,8 +122,8 @@ def delete_subscription(user_id: str, subscription_id: str):
 
 
 @output(Subscription)
-@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['POST'])
-@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['POST'])
+@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['PATCH'])
+@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['PATCH'])
 def status_subscription(user_id: str, subscription_id: str):
     """
     Activate or deactivate user subscription
@@ -175,3 +139,14 @@ def status_subscription(user_id: str, subscription_id: str):
         return jsonify({'error': 'Not found'}), 400
 
     return jsonify(result.to_json()), 200
+
+
+# @output(fields.String(many=True))
+@output(UsersList)
+@blueprint.route('/users/subscriptions/<category>', methods=['GET'])
+def get_users_list_category(category: str):
+    result = __controller.search_users_by_category(category)
+    if result:
+        return jsonify(result), 200
+    else:
+        abort(status_code=400, message="Bad Request")

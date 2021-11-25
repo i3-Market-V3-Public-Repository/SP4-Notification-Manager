@@ -7,7 +7,7 @@ from apiflask.validators import Length, OneOf
 
 from src.notification_manager.models.queue_types import QueueType
 
-message_field = fields.Dict(required=True, description='Data to send')
+message_field = fields.Dict(required=False, description='Data to send', example={'category': 'Agriculture'})
 queue_enum = String(required=True, validate=OneOf([q.value for q in QueueType.__members__.values()]),
                     example='offering.new', description="Queue name to send the notification")
 
@@ -51,10 +51,6 @@ class Queue(QueueInput):
     active = Boolean(required=True, description='Describes if the queue is active to send notifications')
 
 
-#class QueueList(Schema):
-#    fields.Nested(Queue, many=True)
-
-
 class ServiceInput(Schema):
     name = String(required=True, description='Name for the service', example='service-test')
     endpoint = String(required=True,
@@ -67,6 +63,3 @@ class Service(ServiceInput):
     # queues = QueueList
     queues = List(fields.Nested(Queue))
 
-
-class ServiceList(Schema):
-    fields.List(fields.Nested(Service))

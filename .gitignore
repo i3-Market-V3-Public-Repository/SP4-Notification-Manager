@@ -2,6 +2,9 @@
 docker/data/
 tests/files/invoices_by_year
 src/data/*.json
+/data/subscriptions_json_storage.json
+/data/queue_json_storage.json
+/data/notifications_storage.json
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
@@ -158,5 +161,4 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-/data/notifications_storage.json
-!/data/subscriptions_json_storage.json
+
