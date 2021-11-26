@@ -139,19 +139,17 @@ def get_notification(notification_id: str):
 
 
 @output(Notification)
-# @blueprint.route('/notification/<notification_id>/read/', methods=['PATCH'])
 @blueprint.route('/notification/<notification_id>/read', methods=['PATCH'])
-# @blueprint.route('/notification/<notification_id>/unread/', methods=['PATCH'])
 @blueprint.route('/notification/<notification_id>/unread', methods=['PATCH'])
 def modify_notification(notification_id: str):
     read = request.path.split('/')[-1] == 'read'
     result = __notification_controller.modify_notification(notification_id, read)
     if result:
         return jsonify(result), 200
-    return jsonify(), 404
+    # return jsonify(), 404
+    abort(404, "Notification not found")
 
 
-# @blueprint.route('/notification/<notification_id>/', methods=['DELETE'])
 @output(Notification)
 @blueprint.route('/notification/<notification_id>', methods=['DELETE'])
 def delete_notification(notification_id: str):

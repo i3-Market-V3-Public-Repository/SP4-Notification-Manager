@@ -59,13 +59,20 @@ class DummyNotificationsStorage(NotificationsStorage):
         return unread_notifications
 
     def read_notification(self, notification_id, read: bool):
-        for i in list(range(0, len(self.storage))):
-            existing_service = self.storage[i]
-            if existing_service.get('id') == notification_id:
-                existing_service["unread"] = not read
-                self.__write_dummy_file()
-                return existing_service
-            return None  # Service Not found
+        notif = self.retrieve_notification(notification_id)
+        if notif:
+            notif["unread"] = not read
+            self.__write_dummy_file()
+            return notif
+        else:
+            return None
+        # for i in list(range(0, len(self.storage))):
+        #     existing_service = self.storage[i]
+        #     if existing_service.get('id') == notification_id:
+        #         existing_service["unread"] = not read
+        #         self.__write_dummy_file()
+        #         return existing_service
+        #     return None  # Service Not found
 
     def delete_notification(self, notification_id):
         index = None
