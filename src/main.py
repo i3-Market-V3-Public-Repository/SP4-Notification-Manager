@@ -54,8 +54,16 @@ application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 application.config['OPENAPI_VERSION'] = '3.0.0'
 application.config['SERVERS'] = [
     {
-        'description': 'Production Server',
+        'description': 'Production Server Node 2',
         'url': 'http://95.211.3.249:10010'
+    },
+    {
+        'description': 'Production Server Node 1',
+        'url': 'http://95.211.3.244:10010'
+    },
+    {
+        'description': 'Production Server Node 3',
+        'url': 'http://95.211.3.250:10010'
     },
     {
         'description': 'Development Server',
