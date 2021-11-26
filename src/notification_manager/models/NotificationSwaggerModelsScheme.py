@@ -1,13 +1,11 @@
-import apiflask.fields
-from loguru import logger
-
 from apiflask import Schema, fields
 from apiflask.fields import String, Integer, List, Dict, Boolean
 from apiflask.validators import Length, OneOf
 
 from src.notification_manager.models.queue_types import QueueType
 
-message_field = fields.Dict(required=False, description='Data to send', example={'category': 'Agriculture'})
+message_field = fields.Dict(required=False, description="Data to send, example={'category': 'Agriculture'}")
+
 queue_enum = String(required=True, validate=OneOf([q.value for q in QueueType.__members__.values()]),
                     example='offering.new', description="Queue name to send the notification")
 
