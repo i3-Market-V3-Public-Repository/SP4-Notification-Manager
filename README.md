@@ -1,16 +1,68 @@
 # [i3-market] Notification Manager & Alert Subscription
-[Development Documentation](https://docs.google.com/document/d/1cSjnfM6Kq8wKRYvF4mKKo0BakI0yyPaZubcKbsLgH8w/edit?usp=sharing)
 
-[Postman collections](./postman/)
+This service integrates both the service of subscribing users to categories to receive alerts (notifications) when an 
+offer to which they are subscribed is created, as well as the creation, storage, modification and deletion of notifications.
+
+More info about API here:
+
+* [Development Documentation](https://docs.google.com/document/d/1cSjnfM6Kq8wKRYvF4mKKo0BakI0yyPaZubcKbsLgH8w/edit?usp=sharing)
+
+* [Postman collections](./postman)
+
+## Getting stated / Use
+This service is developed in python using the [Apiflask library](https://apiflask.com/) to automatically generate the documentation for the API methods.
+
+The docker deployment is done using [gunicorn](https://gunicorn.org/). The docker deployment is done using gunicorn. For 
+more information on how to create the image [see dockerfile](./Dockerfile)
+
+To use this service, clone the repository, run the **main.py** file inside the **src** folder or deploy it using docker as 
+explained in the following section and access the Swagger interface via web browser: http://localhost:10010
+
+## Environment variables
+**FLASK_PORT**: This port is specified to test methods locally.
+
+## How to deploy it
+
+To deploy the service we can do it using the previously created image (*registry.hopu.eu/i3-market/notification-manager*) 
+or create our own. 
+
+To build a new image we use the docker command `docker build`.
+```bash
+docker build -t test_repository:notification_manager:0.1 .
+```
+Once the image is built we can deploy it simply by using the `docker run` command or by using docker-compose, there is an 
+[example of a docker-compose.yml file](./docker/docker-compose.yml)
+
+```yml
+version: "3.2"
+services:
+  notification-manager:
+    image: registry.hopu.eu/i3-market/notification-manager:v1.0
+    ports:
+      - 10010:10010
+    environment:
+      - WEB_UI=http://192.168.18.123:3000
+      - FLASK_PORT=10010
+    volumes:
+      - ./data/:/app/data
+```
+
+## Testing
+
+Tests are not available yet
+
+## Tutorial
 
 
-## UML
 
-![UML1](docs/uml_1.png)
-![UML2](docs/uml_2.png)
-![UML3](docs/uml_3.png)
-
-## Maintainers
+## Credits
 
 - [eleazar](mailto:eleazar@hopu.eu) - Software engineer
 - [diego.s](mailto:diego.s@hopu.org) - Software engineer and Data scientist
+
+## Contributing
+
+Pull requests are always appreciated.
+
+## License
+You can find the licence [here](./licence.txt)
