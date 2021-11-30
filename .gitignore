@@ -1,7 +1,7 @@
 # custom
 docker/data/
 tests/files/invoices_by_year
-src/data/*.json
+/data/*.json
 /data/subscriptions_json_storage.json
 /data/queue_json_storage.json
 /data/notifications_storage.json
