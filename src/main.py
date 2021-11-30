@@ -1,8 +1,7 @@
 import os
 
-# import flask_apispec
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, send_from_directory, redirect
+from flask import jsonify, redirect
 from flask_cors import CORS
 
 from apiflask import APIFlask
