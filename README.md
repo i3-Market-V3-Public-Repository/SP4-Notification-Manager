@@ -12,24 +12,25 @@ More info about API here:
 ## Getting stated / Use
 This service is developed in python using the [Apiflask library](https://apiflask.com/) to automatically generate the documentation for the API methods.
 
-The docker deployment is done using [gunicorn](https://gunicorn.org/). The docker deployment is done using gunicorn. For 
-more information on how to create the image [see dockerfile](./Dockerfile)
+The docker deployment is done using [gunicorn](https://gunicorn.org/). For more information on how to create the image [see dockerfile](./Dockerfile)
 
 To use this service, clone the repository, run the **main.py** file inside the **src** folder or deploy it using docker as 
 explained in the following section and access the Swagger interface via web browser: http://localhost:10010
 
 ## Environment variables
-**FLASK_PORT**: This port is specified to test methods locally.
+**FLASK_PORT**: This port is specified to test methods locally through Swagger.
 
 ## How to deploy it
 
 To deploy the service we can do it using the previously created image (*registry.hopu.eu/i3-market/notification-manager*) 
 or create our own. 
 
-To build a new image we use the docker command `docker build`.
+To build a new image we use the docker `docker build` command from the root of this repository where the Dockerfile is located.
+
 ```bash
 docker build -t test_repository:notification_manager:0.1 .
 ```
+
 Once the image is built we can deploy it simply by using the `docker run` command or by using docker-compose, there is an 
 [example of a docker-compose.yml file](./docker/docker-compose.yml)
 
