@@ -1,0 +1,6 @@
+# ENVIRONMENT VARIABLES
+FLASK_PORT=10010
+NM_NODE1=http://localhost:10010
+NM_NODE2=http://localhost:10010
+NM_NODE3=http://localhost:10010
+.env
