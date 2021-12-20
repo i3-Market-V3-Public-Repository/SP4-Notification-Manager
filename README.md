@@ -14,11 +14,26 @@ This service is developed in python using the [Apiflask library](https://apiflas
 
 The docker deployment is done using [gunicorn](https://gunicorn.org/). For more information on how to create the image [see dockerfile](./Dockerfile)
 
-To use this service, clone the repository, run the **main.py** file inside the **src** folder or deploy it using docker as 
+To use this service, clone the repository, edit de env variables:
+```bash
+cp env-example .env
+nano .env
+```
+It is also possible to run the service by setting environment variables within the docker-compose file.
+
+After that, then run the **main.py** file inside the **src** folder or deploy it using docker as 
 explained in the following section and access the Swagger interface via web browser: http://localhost:10010
+
+
 
 ## Environment variables
 **FLASK_PORT**: This port is specified to test methods locally through Swagger.
+
+**NM_NODE1**: Node 1 where the service is deployed, example:http://localhost:10010
+
+**NM_NODE2**: Node 2 where the service is deployed
+
+**NM_NODE3**: Node 3 where the service is deployed
 
 ## How to deploy it
 
@@ -42,8 +57,11 @@ services:
     ports:
       - 10010:10010
     environment:
-      - WEB_UI=http://192.168.18.123:3000
+      - WEB_UI=http://192.168.1.48:10010
       - FLASK_PORT=10010
+      - NM_NODE1=http://localhost:10010
+      - NM_NODE2=http://localhost:10010
+      - NM_NODE3=http://localhost:10010
     volumes:
       - ./data/:/app/data
 ```
