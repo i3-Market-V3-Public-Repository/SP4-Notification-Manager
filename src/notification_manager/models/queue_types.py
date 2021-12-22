@@ -4,6 +4,7 @@ from apiflask import Schema
 from apiflask.fields import String, Integer, List
 from apiflask.validators import Length, OneOf
 
+# This is just for clarification
 channels = {
     "offering": {
         "new",
