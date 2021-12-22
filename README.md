@@ -5,8 +5,6 @@ offer to which they are subscribed is created, as well as the creation, storage,
 
 More info about API here:
 
-* [Development Documentation](https://docs.google.com/document/d/1cSjnfM6Kq8wKRYvF4mKKo0BakI0yyPaZubcKbsLgH8w/edit?usp=sharing)
-
 * [Postman collections](./postman)
 
 ## Getting stated / Use
