@@ -5,7 +5,9 @@ offer to which they are subscribed is created, as well as the creation, storage,
 
 More info about API here:
 
+* [Documentation](https://docs.google.com/document/d/1hapgflZiycthM6MkEBFO4YTYeJwdYXTfXQ6QmDUkmZw/edit?usp=sharing)
 * [Postman collections](./postman)
+
 
 ## Getting stated / Use
 This service is developed in python using the [Apiflask library](https://apiflask.com/) to automatically generate the documentation for the API methods.
