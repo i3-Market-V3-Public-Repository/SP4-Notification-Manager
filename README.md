@@ -7,6 +7,8 @@ More info about API here:
 
 * [Development Documentation](https://docs.google.com/document/d/1cSjnfM6Kq8wKRYvF4mKKo0BakI0yyPaZubcKbsLgH8w/edit?usp=sharing)
 
+* [Mkdocs documentation](https://i3-market.gitlab.io/code/backplane/backplane-api-gateway/backplane-api-specification/)
+
 * [Postman collections](./postman)
 
 ## Getting stated / Use
