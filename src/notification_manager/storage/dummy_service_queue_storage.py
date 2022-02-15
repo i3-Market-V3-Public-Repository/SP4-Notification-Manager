@@ -3,6 +3,7 @@ import os
 
 from loguru import logger
 
+from src.notification_manager.models.service import Service, service_to_object
 from src.notification_manager.storage.services_queue_storage import ServicesQueueStorage
 
 
@@ -17,9 +18,10 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
 
         self.storage = self.__read_dummy_file()
 
-        logger.info('Dummy Storage enabled')
+        logger.info('Dummy Storage enabled at: {}'.format(self.path))
 
     def retrieve_all(self):
+        # return [service_to_object(service).to_json() for service in self.storage]
         return self.storage
 
     ####################################################################################################################
@@ -44,7 +46,7 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
         return None
 
     def update_service(self, service: dict):
-        pass
+        raise NotImplementedError('implement me, please!')
         # for i in list(range(0, len(self.storage))):
         #     existing_service = self.storage[i]
         #     if existing_service.get('id') == service.get('id'):
@@ -135,6 +137,17 @@ class DummyServiceQueueStorage(ServicesQueueStorage):
             for queue in service.get('queues'):
                 if queue.get('name') == queue_name and queue.get("active"):
                     found[service.get('name')] = queue.get('endpoint') or service.get('endpoint')
+
+        return found
+
+    def get_service_endpoint_by_market_id_if_active(self, market_id: str, queue_name: str):
+        found = {}
+
+        for service in self.storage:
+            if service.get("marketId") == market_id:
+                for queue in service.get('queues'):
+                    if queue.get('name') == queue_name and queue.get("active"):
+                        found[service.get('name')] = queue.get('endpoint') or service.get('endpoint')
 
         return found
 
