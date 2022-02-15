@@ -116,7 +116,7 @@ def delete_subscription(user_id: str, subscription_id: str):
     result = __controller.delete_subscription(user_id, subscription_id)
 
     if result is None:
-        return jsonify({'error': 'Not found'}), 400
+        return jsonify({'error': 'Not found'}), 404
 
     return jsonify(result.to_json()), 200
 
@@ -124,29 +124,38 @@ def delete_subscription(user_id: str, subscription_id: str):
 @output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['PATCH'])
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['PATCH'])
-def status_subscription(user_id: str, subscription_id: str):
+def switch_status_subscription(user_id: str, subscription_id: str):
     """
     Activate or deactivate user subscription
-    :param user_id:
-    :param subscription_id:
-    :return:
+
+    :param user_id: string
+    :param subscription_id: string
+    :return: subscription modified
     """
     activated = request.path.split('/')[-1] == 'activate'
 
     result = __controller.switch_status_subscription(user_id, subscription_id, activated)
 
     if result is None:
-        return jsonify({'error': 'Not found'}), 400
+        return jsonify({'error': 'Not found'}), 404
 
     return jsonify(result.to_json()), 200
 
 
-# @output(fields.String(many=True))
+# TODO ¿add /category/<category> to path to distinguish category?
 @output(UsersList)
 @blueprint.route('/users/subscriptions/<category>', methods=['GET'])
 def get_users_list_category(category: str):
+    """
+    Returns a json containing a list of users subscribed to that category
+
+    :param category: string
+    :return: {'users':['user1','user2']}
+    """
     result = __controller.search_users_by_category(category)
     if result:
         return jsonify(result), 200
+    elif not result:
+        return jsonify({'error': 'Not found'}), 404
     else:
         abort(status_code=400, message="Bad Request")
