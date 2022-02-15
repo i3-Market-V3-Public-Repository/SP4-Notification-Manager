@@ -73,5 +73,9 @@ class SubscriptionsController:
         return subscription_to_object(updated_subscription)
 
     def search_users_by_category(self, category: str):
-        return {"users": self.storage.search_users_by_category(category)}
+        result = self.storage.search_users_by_category(category)
+        if len(result) > 0:
+            return {"users": self.storage.search_users_by_category(category)}
+        return None
+
 
