@@ -1,5 +1,5 @@
 from apiflask import APIBlueprint, output, input, abort
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
 from loguru import logger
 
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
@@ -41,18 +41,32 @@ def notification_service(self):
         # return jsonify({"error": "Body has to contain receiver_id and message"}), 400
         abort(400, "Body has to container receiver_id and message {} with content")
 
-    # extract receiver_id to get to which queue send the notification
+    # data extraction
     queue_name = data.get('receiver_id')
     message = data.get('message')
+
     logger.info("Received a notification to service: \n"
                 "queue_name: {}, message: {}".format(queue_name, message))
 
-    queues_endpoints = __queue_controller.search_services_by_queue_if_active(queue_name)
-    # create the notification and send to them
-    __notification_controller.send_notification_service(queue_name, queues_endpoints, message)
+    # request to only one marketplace
+    market_id = message.get('marketId') or message.get('MarketId')
+    if market_id:
+        # if exist a registered service with this market_id, create a notification and send only to this service
+        service = __queue_controller.search_services_by_market_id_if_active(market_id, queue_name)
+        response = __notification_controller.create_service_notification(queue_name, service, message)
 
+    # request to all services subscribed to queue_name
+    else:
+        # get the endpoints_urls for services subscribed to this queue_name
+        queues_endpoints = __queue_controller.search_services_by_queue_if_active(queue_name)
+
+        response = __notification_controller.create_service_notification(queue_name, queues_endpoints, message)
+
+    logger.info("Response obtained: {}".format(response))
+
+    # SPECIAL CASE, WHEN A NEW OFFER IS CREATED, A USER NOTIFICATION IS CREATED TO ALERT USERS WHO ARE SUBSCRIBED TO THE
+    # CATEGORY TO WHICH THE NEW OFFER BELONGS.
     # TODO: Modify downwards when services are separated, replace with requests.
-
     if queue_name == QueueType.NEWOFFERING.value:
         category = message.get('category')
         if category:
@@ -65,7 +79,7 @@ def notification_service(self):
                                                                  True, message)
         else:
             logger.warning('Notification about new offering but no category in message!')
-    return jsonify(), 200
+    return jsonify(response), 200
 
 
 # ----------------------------USER NOTIFICATIONS----------------------------------------
@@ -110,7 +124,7 @@ def get_notifications():
 def get_notification_by_userid(user_id: str):
     result = __notification_controller.get_user_notification(user_id)
     if result:
-        return jsonify(__notification_controller.get_user_notification(user_id)), 200
+        return jsonify(result), 200
     else:
         return jsonify(), 404
 
