@@ -1,0 +1,4 @@
+OK = 200
+NOT_FOUND = 404
+EMPTY_BODY = 400
+BASE_API = '/api/v1'
