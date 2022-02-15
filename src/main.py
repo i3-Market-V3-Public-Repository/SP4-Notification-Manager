@@ -6,7 +6,6 @@ from flask_cors import CORS
 
 from apiflask import APIFlask
 
-
 from loguru import logger
 from uptime import uptime
 
@@ -16,7 +15,7 @@ from src.alert_subscription.api.subscriptions_api import config as subscriptions
 from src.notification_manager.api.service_queue_api import blueprint as service_queue_api
 from src.notification_manager.api.service_queue_api import config as service_queue_config
 
-from src.notification_manager.api.notifications_api import blueprint as notifications_api, notification_service
+from src.notification_manager.api.notifications_api import blueprint as notifications_api
 from src.notification_manager.api.notifications_api import config as notifications_config
 
 # El servicio puede ser configurado por Docker (environment vars) o por un fichero .env
@@ -104,28 +103,27 @@ subscriptions_storage_filepath = os.path.join(base_storage_filepath, 'subscripti
 queue_storage_filepath = os.path.join(base_storage_filepath, 'queue_json_storage.json')
 notifications_storage_filepath = os.path.join(base_storage_filepath, "notifications_storage.json")
 
-
 subscriptions_storage = DummySubscriptionsStorage(subscriptions_storage_filepath)
 queue_storage = DummyServiceQueueStorage(queue_storage_filepath)
 notifications_storage = DummyNotificationsStorage(notifications_storage_filepath)
-
 
 # Configuration APIs
 subs_controller = SubscriptionsController(subscriptions_storage, WEB_UI)
 subscriptions_config(subs_controller)
 service_queue_config(QueueController(queue_storage))
-notifications_config(NotificationsController(notifications_storage, WEB_UI), QueueController(queue_storage), subs_controller)
+notifications_config(NotificationsController(notifications_storage, WEB_UI), QueueController(queue_storage),
+                     subs_controller)
 
 
 # API FLASK
-#@application.errorhandler(400)
-#def bad_request(error):
-    # original_error = error.description
+# @application.errorhandler(400)
+# def bad_request(error):
+# original_error = error.description
 
-    # if isinstance(original_error, ValidationError):
-    #     # custom handling
-    #     logger.error(f'ERROR: {original_error.message}')
-    #     return jsonify({'error': original_error.message}), 400
+# if isinstance(original_error, ValidationError):
+#     # custom handling
+#     logger.error(f'ERROR: {original_error.message}')
+#     return jsonify({'error': original_error.message}), 400
 
 #    logger.error(f'ERROR: {error.description}')
 #    return jsonify({'error': error.description}), 400
@@ -136,7 +134,7 @@ def go_to_swagger():
     return redirect('./swagger')
 
 
-# TODO: Version and Health not working properly
+# TODO: Version and Health not working properly, it returns the server info, not app info
 @application.route('/api/v1/version', methods=['GET'])
 @application.route('/api/v1/health', methods=['GET'])
 def version():
