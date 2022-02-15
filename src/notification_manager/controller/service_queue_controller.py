@@ -12,7 +12,7 @@ class QueueController:
         self.storage = storage
 
     def retrieve_all(self):
-        return self.storage.retrieve_all()
+        return [service_to_object(service).to_json() for service in self.storage.retrieve_all()]
 
     ####################################################################################################################
     # SERVICES API
@@ -21,7 +21,12 @@ class QueueController:
         if 'name' not in data.keys():
             return False
 
-        service = Service(uuid.uuid4().__str__(), data.get('name'), data.get('endpoint'))
+        service = Service(
+            _id=uuid.uuid4().__str__(),
+            market_id=data.get('marketId'),
+            name=data.get('name'),
+            endpoint=data.get('endpoint')
+        )
         stored_service = self.storage.insert_service(service.to_json())
 
         if stored_service:
@@ -29,10 +34,11 @@ class QueueController:
 
     def retrieve_service(self, service_id: str):
         service = self.storage.retrieve_service(service_id)
-        if not service:
-            return None
+        # if not service:
+        #     return None
         if isinstance(service, dict):
             return service_to_object(service)
+        return None
 
     # def update_service(self, service_id: str, data: dict):
     #
@@ -109,3 +115,6 @@ class QueueController:
 
     def search_services_by_queue_if_active(self, queue_name: str):
         return self.storage.get_service_endpoint_by_queue_name_if_active(queue_name)
+
+    def search_services_by_market_id_if_active(self, market_id: str, queue_name: str):
+        return self.storage.get_service_endpoint_by_market_id_if_active(market_id, queue_name)
