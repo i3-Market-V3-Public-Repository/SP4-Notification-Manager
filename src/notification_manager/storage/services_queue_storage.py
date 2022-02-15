@@ -52,3 +52,6 @@ class ServicesQueueStorage(abc.ABC):
     @abc.abstractmethod
     def get_service_endpoint_by_queue_name_if_active(self, queue_name: str):
         raise NotImplementedError('implement me, please!')
+
+    def get_service_endpoint_by_market_id_if_active(self, market_id: str, queue_name: str):
+        raise NotImplementedError('implement me, please!')
