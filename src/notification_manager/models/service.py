@@ -8,8 +8,9 @@ class Service:
     Class defining a service with its queue.
     """
 
-    def __init__(self, _id: str, name: str, endpoint: List[str] = None, queues: List[Queue] = None):
+    def __init__(self, _id: str, market_id: str = None, name: str = '', endpoint: List[str] = None, queues: List[Queue] = None):
         self.id = _id
+        self.marketId = market_id
         self.name = name
         self.endpoint = endpoint
         self.queues = queues or []
@@ -21,12 +22,13 @@ class Service:
             queues.append(cola)
         # queue = list(map(Queue.to_json, self.queues)) if self.queues else []
         # json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "queues": queue}
-        json_out = {"id": self.id, "name": self.name, "endpoint": self.endpoint, "queues": queues}
+        json_out = {"id": self.id, "marketId": self.marketId, "name": self.name, "endpoint": self.endpoint, "queues": queues}
         return json_out
 
 
 def service_to_object(data: dict):
     return Service(data.get('id'),
+                   data.get('marketId'),
                    data.get('name'),
                    data.get('endpoint'),
                    data.get('queues'))
