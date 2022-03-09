@@ -17,7 +17,7 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
 
         self.storage = self.__read_dummy_file()
 
-        logger.info('Dummy Storage enabled')
+        logger.info('Dummy Storage enabled at: {}'.format(self.path))
 
     def retrieve_all(self):
         # return self.storage

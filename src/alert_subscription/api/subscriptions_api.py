@@ -38,15 +38,15 @@ def post_subscriptions(user_id: str):
     :return:
     """
     if not request.json:
-        return jsonify({'error': 'Empty body'}), 400
+        abort(400, 'Empty Body')
 
     result = __controller.create_subscription(user_id, request.json)
 
     if result is False:
-        return jsonify({'error': 'Incomplete body'}), 400
+        abort(400, 'Incomplete Body')
 
     if result is None:
-        return jsonify({'error': 'Already exists subscription to category'}), 400
+        abort(400, 'Already exists subscription to category')
 
     return jsonify(result.to_json()), 200
 
@@ -62,7 +62,8 @@ def post_subscriptions(user_id: str):
 def get_subscriptions_by_userid(user_id: str):
     result = __controller.retrieve_subscription(user_id)
     if result is None:
-        return jsonify({'error': 'Not found'}), 404
+        # return jsonify({'error': 'Not found'}), 404
+        abort(404, "Not Found")
 
     return jsonify([s.to_json() for s in result]), 200
 
@@ -83,7 +84,7 @@ def get_subscriptions(user_id: str, subscription_id: str):
     result = __controller.retrieve_subscription(user_id, subscription_id)
 
     if result is None:
-        return jsonify({'error': 'Not found'}), 404
+        abort(404, "Not Found")
 
     return jsonify(result.to_json()), 200
 
@@ -116,7 +117,7 @@ def delete_subscription(user_id: str, subscription_id: str):
     result = __controller.delete_subscription(user_id, subscription_id)
 
     if result is None:
-        return jsonify({'error': 'Not found'}), 400
+        abort(404, 'Not Found')
 
     return jsonify(result.to_json()), 200
 
@@ -124,29 +125,35 @@ def delete_subscription(user_id: str, subscription_id: str):
 @output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['PATCH'])
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['PATCH'])
-def status_subscription(user_id: str, subscription_id: str):
+def switch_status_subscription(user_id: str, subscription_id: str):
     """
     Activate or deactivate user subscription
-    :param user_id:
-    :param subscription_id:
-    :return:
+
+    :param user_id: string
+    :param subscription_id: string
+    :return: subscription modified
     """
     activated = request.path.split('/')[-1] == 'activate'
 
     result = __controller.switch_status_subscription(user_id, subscription_id, activated)
 
     if result is None:
-        return jsonify({'error': 'Not found'}), 400
+        abort(404, 'Not Found')
 
     return jsonify(result.to_json()), 200
 
 
-# @output(fields.String(many=True))
+# TODO ¿add /category/<category> to path to distinguish category?
 @output(UsersList)
 @blueprint.route('/users/subscriptions/<category>', methods=['GET'])
 def get_users_list_category(category: str):
+    """
+    Returns a json containing a list of users subscribed to that category
+
+    :param category: string
+    :return: {'users':['user1','user2']}
+    """
     result = __controller.search_users_by_category(category)
     if result:
         return jsonify(result), 200
-    else:
-        abort(status_code=400, message="Bad Request")
+    return abort(404, "Not Found")

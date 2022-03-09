@@ -17,7 +17,7 @@ class DummyNotificationsStorage(NotificationsStorage):
 
         self.storage = self.__read_dummy_file()
 
-        logger.info('Dummy Storage enabled')
+        logger.info('Dummy Storage enabled at: {}'.format(self.path))
 
     def retrieve_all(self):
         return self.storage
@@ -42,7 +42,7 @@ class DummyNotificationsStorage(NotificationsStorage):
         for existing_notification in self.storage:
             if existing_notification.get('id') == notification_id:
                 return existing_notification
-        return None
+        return {}
 
     def retrieve_notification_by_user(self, user_id: str):
         return_notifications = []
@@ -86,7 +86,7 @@ class DummyNotificationsStorage(NotificationsStorage):
             self.__write_dummy_file()
             return deleted_service
 
-        return None  # Service Not found
+        return None  # Notification Not found
 
     def __read_dummy_file(self):
         with open(self.path, 'r') as file:
