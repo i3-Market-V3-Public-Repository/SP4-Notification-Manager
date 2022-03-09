@@ -4,7 +4,7 @@ import os
 import pytest
 from loguru import logger
 
-from src.main import application, subscriptions_storage_filepath
+from src.main import application, subscriptions_storage_filepath, queue_storage_filepath, notifications_storage_filepath
 
 
 @pytest.fixture
@@ -27,6 +27,21 @@ def remove_json_storage():
     if not os.path.exists(subscriptions_storage_filepath):
         with open(subscriptions_storage_filepath, 'w') as file:
             json.dump({}, file, indent=2)
-    yield None
+    #yield None
     if os.path.exists(subscriptions_storage_filepath):
         os.remove(subscriptions_storage_filepath)
+    #############################################################
+    if not os.path.exists(queue_storage_filepath):
+        with open(queue_storage_filepath, 'w') as file:
+            json.dump({}, file, indent=2)
+    #yield None
+    if os.path.exists(queue_storage_filepath):
+        os.remove(queue_storage_filepath)
+    #############################################################
+    if not os.path.exists(notifications_storage_filepath):
+        with open(notifications_storage_filepath, 'w') as file:
+            json.dump({}, file, indent=2)
+    yield None
+    if os.path.exists(notifications_storage_filepath):
+        os.remove(notifications_storage_filepath)
+
