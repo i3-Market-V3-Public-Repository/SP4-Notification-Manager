@@ -1,8 +1,9 @@
 import uuid
 
+import body as body
 from _pytest.recwarn import warns
 
-from tests import BASE_API, OK, EMPTY_BODY, NOT_FOUND
+from tests import BASE_API, OK, BODY_ERROR, NOT_FOUND, EMPTY_BODY, INCOMPLETE_BODY, ALREADY_EXIST_BODY, NOT_FOUND_BODY
 
 users = {
     '1':
@@ -26,15 +27,21 @@ def test_retrieve_all_subscriptions_when_missing_subscriptions_return_empty_list
     assert response.json == []
 
 
-def test_create_subscription_with_empty_body_return_400_error(client):
+def test_create_subscription_with_empty_body_return_400_error_no_body(client):
     response = client.post(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions')
 
-    assert response.status_code == EMPTY_BODY
-    assert response.json == {'error': 'Empty body'}
+    assert response.status_code == BODY_ERROR
+    assert response.json == EMPTY_BODY
+
+
+def test_create_subscription_with_empty_body_return_400_error_incomplete(client):
+    response = client.post(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions', json={"a":"b"})
+
+    assert response.status_code == BODY_ERROR
+    assert response.json == INCOMPLETE_BODY
 
 
 def test_create_subscription_with_body_return_created_subscription(client):
-
     response = client.post(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions', json=users.get('1')[0])
 
     response_body = response.json
@@ -42,6 +49,13 @@ def test_create_subscription_with_body_return_created_subscription(client):
 
     assert response.status_code == OK
     assert response_body == users.get('1')[0]
+
+
+def test_create_subscription_with_body_return_created_subscription_400_already_exist(client):
+    response = client.post(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions', json=users.get('1')[0])
+    assert response.status_code == BODY_ERROR
+    # assert response.json == {'error': 'Already exists subscription to category'}
+    assert response.json == ALREADY_EXIST_BODY
 
 
 def test_retrieve_all_subscriptions_return_user_lists(client):
@@ -68,9 +82,16 @@ def test_retrieve_all_subscriptions_return_user_lists(client):
            ]
 
 
-def test_retrieve_missing_subscription_return_404_error(client):
-    response = client.get(f'/users/{list(users.keys())[0]}/subscriptions/{uuid.uuid4().__str__()}')
+def test_retrieve_missing_subscription_return_404_error_sub_not_found(client):
+    response = client.get(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions/{uuid.uuid4().__str__()}')
     assert response.status_code == 404
+    assert response.json == NOT_FOUND_BODY
+
+
+def test_retrieve_missing_subscription_return_404_error_user_not_found(client):
+    response = client.get(f'{BASE_API}/users/a/subscriptions')
+    assert response.status_code == 404
+    assert response.json == NOT_FOUND_BODY
 
 
 def test_retrieve_subscription_return_object(client):
@@ -90,9 +111,10 @@ def test_retrieve_subscription_return_object(client):
 
 
 def test_get_user_list_category_dont_exist_404_error(client):
-    unexisting_category = 'category3'
+    unexisting_category = 'null'
     response = client.get(f'{BASE_API}/users/subscriptions/{unexisting_category}')
     assert response.status_code == NOT_FOUND
+    assert response.json == NOT_FOUND_BODY
 
 
 def test_get_user_list_category_exist(client):
@@ -105,6 +127,7 @@ def test_get_user_list_category_exist(client):
 def test_activate_subscription_dont_exist_404_error(client):
     response = client.patch(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions/{subscription_id}{1}/activate')
     assert response.status_code == NOT_FOUND
+    assert response.json == NOT_FOUND_BODY
 
 
 def test_activate_subscription_exist(client):
@@ -118,6 +141,7 @@ def test_activate_subscription_exist(client):
 def test_deactivate_subscription_dont_exist_404_error(client):
     response = client.patch(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions/{subscription_id}{1}/deactivate')
     assert response.status_code == NOT_FOUND
+    assert response.json == NOT_FOUND_BODY
 
 
 def test_deactivate_subscription_exist(client):
@@ -133,6 +157,7 @@ def test_deactivate_subscription_exist(client):
 def test_delete_subscription_dont_exist_404_error(client):
     response = client.delete(f'{BASE_API}/users/{list(users.keys())[0]}/subscriptions/{subscription_id}{1}')
     assert response.status_code == NOT_FOUND
+    assert response.json == NOT_FOUND_BODY
 
 
 def test_delete_subscription_exist(client):
@@ -143,4 +168,5 @@ def test_delete_subscription_exist(client):
     assert response_body == users.get('1')[0]
 
 
-print(warns)
+
+
