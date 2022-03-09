@@ -41,17 +41,17 @@ class SubscriptionsController:
 
         return subscription_to_object(retrieved_subscription)
 
-    def update_subscription(self, user_id: str, subscription_id: str, data: dict):
-        if not self.storage.retrieve_user_subscription(user_id, subscription_id):
-            return -1  # Not found
-
-        if self.storage.search_user_subscription(user_id, data):
-            return None  # This subscription already exists, consider deleting it
-
-        subscription = Subscription(subscription_id, data.get('category'), data.get('active'))
-        updated_subscription = self.storage.update_user_subscription(user_id, subscription_id, subscription.to_json())
-
-        return subscription_to_object(updated_subscription)
+#    def update_subscription(self, user_id: str, subscription_id: str, data: dict):
+#        if not self.storage.retrieve_user_subscription(user_id, subscription_id):
+#            return -1  # Not found
+#
+#        if self.storage.search_user_subscription(user_id, data):
+#            return None  # This subscription already exists, consider deleting it
+#
+#        subscription = Subscription(subscription_id, data.get('category'), data.get('active'))
+#        updated_subscription = self.storage.update_user_subscription(user_id, subscription_id, subscription.to_json())
+#
+#        return subscription_to_object(updated_subscription)
 
     def delete_subscription(self, user_id: str, subscription_id: str):
         if not self.storage.retrieve_user_subscription(user_id, subscription_id):
@@ -75,7 +75,7 @@ class SubscriptionsController:
     def search_users_by_category(self, category: str):
         result = self.storage.search_users_by_category(category)
         if len(result) > 0:
-            return {"users": self.storage.search_users_by_category(category)}
+            return {"users": result}
         return None
 
 
