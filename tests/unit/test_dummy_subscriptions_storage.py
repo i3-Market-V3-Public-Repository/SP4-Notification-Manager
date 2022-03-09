@@ -34,6 +34,18 @@ def test_create_first_subscription_for_an_user():
     assert storage.insert_user_subscription(user_id, subscription_data) == subscription_data
 
 
+def test_search_non_existing_subscription_for_an_user():
+    user_id = '1'
+    subscription_data = users.get('1')[1]
+    assert storage.search_user_subscription(user_id, subscription_data) is None
+
+
+def test_search_subscription_for_an_non_existing_user():
+    user_id = '2'
+    subscription_data = users.get('1')[1]
+    assert storage.retrieve_user_subscription(user_id, uuid.uuid4().__str__()) is None
+
+
 def test_retrieve_all_subscriptions():
     user_id = '1'
     copy = storage.retrieve_all()
@@ -77,6 +89,12 @@ def test_update_missing_subscription_by_id_for_an_user():
     assert storage.update_user_subscription(user_id, 'non-existing', subscription_data) is None
 
 
+def test_update_subscription_missing_user_id():
+    user_id = '2'
+    subscription_data = users.get('1')[0]
+    assert storage.update_user_subscription(user_id, 'non-existing', subscription_data) is None
+
+
 def test_update_subscription_by_id_for_an_user():
     user_id = '1'
     subscription_data = users.get('1')[0]
@@ -88,6 +106,10 @@ def test_update_subscription_by_id_for_an_user():
 
 def test_remove_missing_subscription_by_id_for_an_user():
     assert storage.delete_user_subscription('1', 'non-existing') is None
+
+
+def test_remove_subscription_by_non_existing_id_for_an_user():
+    assert storage.delete_user_subscription('2', 'non-existing') is None
 
 
 def test_remove_subscription_by_id_for_an_user():
