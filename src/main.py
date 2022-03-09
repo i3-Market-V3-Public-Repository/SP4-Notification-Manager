@@ -18,19 +18,21 @@ from src.notification_manager.api.service_queue_api import config as service_que
 from src.notification_manager.api.notifications_api import blueprint as notifications_api
 from src.notification_manager.api.notifications_api import config as notifications_config
 
-# El servicio puede ser configurado por Docker (environment vars) o por un fichero .env
 from src.alert_subscription.controller.subscriptions_controller import SubscriptionsController
 from src.alert_subscription.storage.dummy_subscriptions_storage import DummySubscriptionsStorage
 from src.notification_manager.controller.notifications_controller import NotificationsController
 from src.notification_manager.controller.service_queue_controller import QueueController
 from src.notification_manager.storage.dummy_notifications_storage import DummyNotificationsStorage
 from src.notification_manager.storage.dummy_service_queue_storage import DummyServiceQueueStorage
+from src.utils.network import get_ip
 
+# El servicio puede ser configurado por Docker (environment vars) o por un fichero .env
 load_dotenv()
+
 
 # Configuracion general
 ENVIRONMENT_MODE = os.getenv('ENVIRONMENT_MODE', 'production')
-VERSION = os.getenv('VERSION', 'v1.0.0')
+VERSION = os.getenv('VERSION', 'v2.1.0')
 FLASK_SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'SUPER-SECRET')
 FLASK_PORT = os.getenv('FLASK_PORT', 5000)
 WEB_UI = os.getenv('WEB_UI', 'http://localhost:3000')
@@ -52,12 +54,12 @@ application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 application.config['OPENAPI_VERSION'] = '3.0.0'
 application.config['SERVERS'] = [
     {
-        'description': 'Production Server Node 2',
-        'url': os.getenv("NM_NODE2", 'localhost:10010')
-    },
-    {
         'description': 'Production Server Node 1',
         'url': os.getenv("NM_NODE1", 'localhost:10010')
+    },
+    {
+        'description': 'Production Server Node 2',
+        'url': os.getenv("NM_NODE2", 'localhost:10010')
     },
     {
         'description': 'Production Server Node 3',
@@ -65,22 +67,24 @@ application.config['SERVERS'] = [
     },
     {
         'description': 'Development Server',
-        'url': 'http://localhost:' + str(FLASK_PORT)
+        'url': f'http://localhost:' + str(FLASK_PORT)
     }
 ]
+
 application.config['INFO'] = {
     'description': 'i3-Market Notification Manager',
     # 'termsOfService': 'http://example.com',
     'contact': {
         'name': 'HOPU NM API Support',
         # 'url': 'http://www.example.com/support',
-        'email': 'eleazar@hopu.eu'
+        'email': 'eleazar@hopu.org'
     },
     'license': {
         'name': 'Apache 2.0',
         'url': 'http://www.apache.org/licenses/LICENSE-2.0.html'
     }
 }
+logger.info(f"Notification Manager Version:{VERSION}")
 logger.info("Working Directory: {}".format(os.getcwd()))
 
 ### static specific ###
