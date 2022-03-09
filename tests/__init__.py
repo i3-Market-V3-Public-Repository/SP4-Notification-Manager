@@ -1,4 +1,10 @@
 OK = 200
 NOT_FOUND = 404
-EMPTY_BODY = 400
+BODY_ERROR = 400
 BASE_API = '/api/v1'
+ALREADY_EXIST_BODY = {'detail': {}, 'message': 'Already exists subscription to category'}
+ALREADY_EXIST_BODY_SERVICE = {'detail': {}, 'message': 'Already exists'}
+NOT_FOUND_BODY = {'detail': {}, 'message': 'Not Found'}
+INCOMPLETE_BODY = {'detail': {}, 'message': 'Incomplete Body'}
+EMPTY_BODY = {'detail': {}, 'message': 'Empty Body'}
+QUEUE_ERROR = {'detail': {}, 'message': 'Queue Type doesn`t exist'}
