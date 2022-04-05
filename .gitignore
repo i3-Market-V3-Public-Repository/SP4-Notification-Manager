@@ -162,3 +162,4 @@ crashlytics-build.properties
 fabric.properties
 
 
+!/data/subscriptions_json_storage.json
