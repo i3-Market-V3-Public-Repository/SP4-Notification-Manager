@@ -5,8 +5,6 @@ offer to which they are subscribed is created, as well as the creation, storage,
 
 More info about API here:
 
-* [Development Documentation](https://docs.google.com/document/d/1cSjnfM6Kq8wKRYvF4mKKo0BakI0yyPaZubcKbsLgH8w/edit?usp=sharing)
-
 * [Mkdocs documentation](https://i3-market.gitlab.io/code/backplane/backplane-api-gateway/backplane-api-specification/)
 
 * [Postman collections](./postman)
@@ -31,7 +29,7 @@ explained in the following section and access the Swagger interface via web brow
 ## Environment variables
 **FLASK_PORT**: This port is specified to test methods locally through Swagger.
 
-**NM_NODE1**: Node 1 where the service is deployed, example:http://localhost:10010
+**NM_NODE1**: Node 1 where the service is deployed, example: http://localhost:10010
 
 **NM_NODE2**: Node 2 where the service is deployed
 
