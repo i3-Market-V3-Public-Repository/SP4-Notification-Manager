@@ -31,26 +31,31 @@ class NotificationsController:
             elif queue_name == QueueType.UPDATEOFFERING.value:
                 notification = Notification.update_offering_notification(receptor_name=receptor_name, data=data)
 
-            # Agreements are currently sent as user notifications
-            # elif queue_name == QueueType.AGREEMENTUPDATE.value:
-            #     pass
-            # elif queue_name == QueueType.AGREEMENTACCEPTED.value:
-            #     pass
-            # elif queue_name == QueueType.AGREEMENTPENDING.value:
-            #     pass
-            # elif queue_name == QueueType.AGREEMENTREJECTED.value:
-            #     pass
-            # elif queue_name == QueueType.AGREEMENTTERMINATION.value:
-            #     pass
-
-            # Only this is used, sent to conflict resolution.
+            elif queue_name == QueueType.AGREEMENTUPDATE.value:
+                notification = Notification.agreement_notification(status="Update", data=data)
+            elif queue_name == QueueType.AGREEMENTACCEPTED.value:
+                notification = Notification.agreement_notification(status="Accepted", data=data)
+            elif queue_name == QueueType.AGREEMENTPENDING.value:
+                notification = Notification.agreement_notification(status="Pending", data=data)
+            elif queue_name == QueueType.AGREEMENTREJECTED.value:
+                notification = Notification.agreement_notification(status="Rejected", data=data)
+            elif queue_name == QueueType.AGREEMENTTERMINATION.value:
+                notification = Notification.agreement_notification(status="Termination", data=data)
             elif queue_name == QueueType.AGREEMENTCLAIM.value:
-                pass
+                notification = Notification.agreement_notification(status="Claim", data=data)
 
             if notification is not None:
-                resp = requests.post(url=endpoint, json=notification.to_json())
-                response.append(
-                        {"destiny": receptor_name, "response": resp.status_code})
+                try:
+
+                    resp = requests.post(url=endpoint, json=notification.to_json())
+                    if resp:
+                        response.append(
+                            {"destiny": receptor_name, "response": resp.status_code})
+                except BaseException as e:
+                    logger.error(f"Error in request, log:\n {e}")
+                    response.append(
+                        {"destiny": receptor_name, "response": 'error'})
+
                 #logger.info("Notification service response: {}".format(resp))
 
         return response
