@@ -126,7 +126,7 @@ def get_notification_by_userid(user_id: str):
     if result:
         return jsonify(result), 200
     else:
-        return jsonify(), 404
+        return abort(404)
 
 
 # @blueprint.route('/notification/unread/', methods=['GET'])
@@ -150,7 +150,7 @@ def get_notification(notification_id: str):
     result = __notification_controller.get_notification(notification_id)
     if result:
         return jsonify(result), 200
-    return jsonify(), 404
+    abort(404, "Notification not found")
 
 
 @output(Notification)
@@ -172,4 +172,4 @@ def delete_notification(notification_id: str):
     if result:
         return jsonify(result), 200
     else:
-        return jsonify(), 404
+        abort(404, "Notification not found")
