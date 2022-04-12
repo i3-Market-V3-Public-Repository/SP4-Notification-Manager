@@ -2,7 +2,7 @@
 docker/data/
 tests/files/invoices_by_year
 /data/*.json
-/data/subscriptions_json_storage.json
+/data/subscriptions_json_storage_bk.json
 /data/queue_json_storage.json
 /data/notifications_storage.json
 
@@ -162,4 +162,4 @@ crashlytics-build.properties
 fabric.properties
 
 
-!/data/subscriptions_json_storage.json
+!/data/subscriptions_json_storage_bk.json
