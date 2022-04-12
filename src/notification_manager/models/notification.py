@@ -41,6 +41,15 @@ class Notification:
                             receptor=receptor_name,
                             data=data)
 
+    @staticmethod
+    def agreement_notification(status, data):
+        return Notification(_id=uuid.uuid4().__str__(),
+                            action="Agreement",
+                            status=status,
+                            origin=data.pop("OriginMarketId", "i3-market"),
+                            receptor=data.pop("marketId", "i3-market"),
+                            data=data)
+
     def to_json(self):
         json_out = {"id": self.id, "action": self.action, "status": self.status, "origin": self.origin,
                     "receptor": self.receptor, "unread": self.unread}
