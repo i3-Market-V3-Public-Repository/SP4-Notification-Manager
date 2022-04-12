@@ -20,7 +20,7 @@ queue = {
         "active": True
 }
 
-notification_id = ''
+service_id = ''
 queue_id = ''
 
 
@@ -49,6 +49,7 @@ def test_create_service_with_body_return_created(client):
     response = client.post(f'{BASE_API}/services', json=services.get('1'))
 
     response_body = response.json
+    service_id = response_body['id']
     del response_body['id']
 
     assert response.status_code == OK
@@ -63,11 +64,12 @@ def test_create_service_with_body_return_created_400_already_exist(client):
 
 # RETRIEVE EXISTING SERVICES
 def test_retrieve_all_services_return_service_lists(client):
-    global notification_id
+    global service_id, service_id
     response = client.get(f'{BASE_API}/services')
 
     response_body = response.json
     for service in response_body:
+        print(f'service id: {service_id}')
         service_id = service['id']
         del service['id']
 
@@ -82,13 +84,7 @@ def test_retrieve_missing_service_return_404_error_not_found(client):
 
 
 def test_retrieve_service_by_id_return_object(client):
-    global notification_id
-    # get all registered services
-    path = f'{BASE_API}/services'
-    response = client.get(path)
-    assert response.status_code == OK
-    # get a service id.
-    service_id = response.json[0].get('id')
+    global service_id
     # get that service
     response = client.get(f'{BASE_API}/services/{service_id}')
     assert response.status_code == OK
@@ -99,7 +95,7 @@ def test_retrieve_service_by_id_return_object(client):
 
 # CREATE QUEUES
 def test_post_queue_to_non_exist_404_error(client):
-    unexisting_service = 'null'
+    unexisting_service = 'null0'
     response = client.get(f'{BASE_API}/services/{unexisting_service}/queues')
     assert response.status_code == NOT_FOUND
     assert response.json == NOT_FOUND_BODY
@@ -110,20 +106,20 @@ def test_post_queue_exist_validation_error(client):
         "name": "offering",
         "endpoint": None
     }
-    response = client.post(f'{BASE_API}/services/{notification_id}/queues', json=bad_queue)
+    response = client.post(f'{BASE_API}/services/{service_id}/queues', json=bad_queue)
     assert response.status_code == BODY_ERROR
     assert response.json == QUEUE_ERROR
 
 
 def test_get_service_queues_empty_list(client):
-    response = client.get(f'{BASE_API}/services/{notification_id}/queues')
+    response = client.get(f'{BASE_API}/services/{service_id}/queues')
     assert  response.status_code == OK
     assert response.json == []
 
 
-def test_post_queue(client):
+def test_post_queue_200_success(client):
     global queue_id
-    response = client.post(f'{BASE_API}/services/{notification_id}/queues', json=queue)
+    response = client.post(f'{BASE_API}/services/{service_id}/queues', json=queue)
     assert response.status_code == OK
     response_body = response.json
     queue_id = response_body['id']
@@ -134,9 +130,9 @@ def test_post_queue(client):
 # GET QUEUE
 def test_get_queue_not_exist(client):
     _uuid = uuid.uuid4().__str__()
-    print(f'service id: {notification_id}')
+    print(f'service id: {service_id}')
     print(f'uuid: {_uuid}')
-    path = f'{BASE_API}/services/{notification_id}/queues/{_uuid}'
+    path = f'{BASE_API}/services/{service_id}/queues/{_uuid}'
     print(path)
     response = client.get(path)
     assert response.status_code == NOT_FOUND
@@ -144,7 +140,7 @@ def test_get_queue_not_exist(client):
 
 
 def test_get_queue_exist(client):
-    response = client.get(f'{BASE_API}/services/{notification_id}/queues/{queue_id}')
+    response = client.get(f'{BASE_API}/services/{service_id}/queues/{queue_id}')
     assert response.status_code == OK
     response_body = response.json
     del response_body['id']
@@ -153,7 +149,7 @@ def test_get_queue_exist(client):
 
 # GET ALL QUEUES
 def test_get_service_queues(client):
-    response = client.get(f'{BASE_API}/services/{notification_id}/queues')
+    response = client.get(f'{BASE_API}/services/{service_id}/queues')
     assert response.status_code == OK
     response_body = response.json
     del response_body[0]['id']
@@ -162,19 +158,19 @@ def test_get_service_queues(client):
 
 # MODIFY QUEUE
 def test_deactivate_queue_dont_exist(client):
-    response = client.patch(f'{BASE_API}/services/{notification_id}/queues/{uuid.uuid4().__str__()}/deactivate')
+    response = client.patch(f'{BASE_API}/services/{service_id}/queues/{uuid.uuid4().__str__()}/deactivate')
     assert response.status_code == NOT_FOUND
     assert response.json == NOT_FOUND_BODY
 
 
 def test_activate_queue_dont_exist(client):
-    response = client.patch(f'{BASE_API}/services/{notification_id}/queues/{uuid.uuid4().__str__()}/activate')
+    response = client.patch(f'{BASE_API}/services/{service_id}/queues/{uuid.uuid4().__str__()}/activate')
     assert response.status_code == NOT_FOUND
     assert response.json == NOT_FOUND_BODY
 
 
 def test_deactivate_queue(client):
-    response = client.patch(f'{BASE_API}/services/{notification_id}/queues/{queue_id}/deactivate')
+    response = client.patch(f'{BASE_API}/services/{service_id}/queues/{queue_id}/deactivate')
     assert response.status_code == OK
     response_body = response.json
     del response_body['id']
@@ -184,7 +180,7 @@ def test_deactivate_queue(client):
 
 
 def test_activate_queue(client):
-    response = client.patch(f'{BASE_API}/services/{notification_id}/queues/{queue_id}/activate')
+    response = client.patch(f'{BASE_API}/services/{service_id}/queues/{queue_id}/activate')
     assert response.status_code == OK
     response_body = response.json
     del response_body['id']
@@ -193,13 +189,13 @@ def test_activate_queue(client):
 
 # DELETE QUEUES
 def test_delete_queue_dont_exist(client):
-    response = client.delete(f'{BASE_API}/services/{notification_id}/queues/{uuid.uuid4().__str__()}')
+    response = client.delete(f'{BASE_API}/services/{service_id}/queues/{uuid.uuid4().__str__()}')
     assert response.status_code == NOT_FOUND
     assert response.json == NOT_FOUND_BODY
 
 
 def test_delete_queue_exist(client):
-    response = client.delete(f'{BASE_API}/services/{notification_id}/queues/{queue_id}')
+    response = client.delete(f'{BASE_API}/services/{service_id}/queues/{queue_id}')
     assert response.status_code == OK
     response_body = response.json
     del response_body['id']
@@ -213,11 +209,10 @@ def test_delete_service_dont_exist(client):
 
 
 def test_delete_service_exist(client):
-    response = client.delete(f'{BASE_API}/services/{notification_id}')
+    response = client.delete(f'{BASE_API}/services/{service_id}')
     assert response.status_code == OK
     response_body = response.json
     del response_body['id']
     assert response_body == services.get('1')
-
 
 
