@@ -58,7 +58,7 @@ class DummyNotificationsStorage(NotificationsStorage):
                 unread_notifications.append(notification)
         return unread_notifications
 
-    def read_notification(self, notification_id, read: bool):
+    def modify_read_notification(self, notification_id, read: bool):
         notif = self.retrieve_notification(notification_id)
         if notif:
             notif["unread"] = not read
