@@ -95,7 +95,7 @@ class NotificationsController:
         return None
 
     def modify_notification(self, notification_id, read):
-        notif = self.storage.read_notification(notification_id, read)
+        notif = self.storage.modify_read_notification(notification_id, read)
         if notif:
             return notification_to_object(notif).to_json()
         return notif
