@@ -65,4 +65,5 @@ def notification_to_object(data: dict):
         data.get('status'),
         data.get('origin'),
         data.get('receptor'),
-        data.get('data'))
+        data.get('data'),
+        data.get('unread', True))

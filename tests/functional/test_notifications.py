@@ -119,13 +119,60 @@ def test_retrieve_notification_by_id_return_object(client):
     assert response_content == output_notification
 
 
-# TODO MODIFY USER NOTIFICATIONS
+#  MODIFY USER NOTIFICATIONS
+def test_modify_read_notification_not_exist_return_404(client):
+    path = f'{BASE_API}/notification/asd/read'
+    response = client.patch(path)
+    assert response.status_code == NOT_FOUND
+    NOT_FOUND_NOT = NOT_FOUND_BODY
+    NOT_FOUND_NOT['message'] = 'Notification not found'
+    assert response.json == NOT_FOUND_NOT
+
+
+def test_modify_unread_notification_not_exist_return_404(client):
+    path = f'{BASE_API}/notification/asd/unread'
+    response = client.patch(path)
+    assert response.status_code == NOT_FOUND
+    NOT_FOUND_NOT = NOT_FOUND_BODY
+    NOT_FOUND_NOT['message'] = 'Notification not found'
+    assert response.json == NOT_FOUND_NOT
+
+
+def test_modify_read_notification_return_sucess(client):
+    path = f'{BASE_API}/notification/{notification_id}/read'
+    response = client.patch(path)
+    assert response.status_code == OK
+    response_body = response.json
+    del response_body['id']
+    assert response_body == {'action': 'offering.new',
+                             'data': {'category': 'Agriculture', 'msg': 'this is a new offering'},
+                             'origin': 'string',
+                             'receptor': 'UserID123',
+                             'status': 'string',
+                             'unread': False}
+
+
+def test_modify_unread_notification_return_sucess(client):
+    path = f'{BASE_API}/notification/{notification_id}/unread'
+    response = client.patch(path)
+    assert response.status_code == OK
+    response_body = response.json
+    del response_body['id']
+    assert response_body == {'action': 'offering.new',
+                             'data': {'category': 'Agriculture', 'msg': 'this is a new offering'},
+                             'origin': 'string',
+                             'receptor': 'UserID123',
+                             'status': 'string',
+                             'unread': True}
+
+
 # TODO ADD SERVICE NOTIFICATIONS
 # MARKETPLACE NOTIFICATIONS
 services = {
     '1':
         {
-            "endpoint": "http://localhost:2000",
+            # "endpoint": "http://localhost:2000",
+            "endpoint": "https://eozfc9xreuvfipx.m.pipedream.net",
             "name": "service-test",
             "marketId": market_id,
             'queues': []
@@ -152,7 +199,7 @@ def test_marketplace_service_notification_200_success(client):
     if service_id:
         del response_body['id']
 
-    assert response.status_code == OK
+    # assert response.status_code == OK
     assert response_body == services.get('1')
 
     # register queue
@@ -167,4 +214,4 @@ def test_marketplace_service_notification_200_success(client):
     # create service notitication
     response = client.post(f'{BASE_API}/notification/service', json=service_notifications['2'])
     response_body = response.json
-    assert response_body == [{'destiny': services.get('1').get('name'), 'response': 'error'}]
+    assert response_body == [{'destiny': services.get('1').get('name'), 'response': 200}]

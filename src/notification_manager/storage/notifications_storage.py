@@ -18,7 +18,7 @@ class NotificationsStorage(abc.ABC):
         raise NotImplementedError('implement me, please!')
 
     @abc.abstractmethod
-    def read_notification(self, notification_id, read: bool):
+    def modify_read_notification(self, notification_id, read: bool):
         raise NotImplementedError('implement me, please!')
 
     @abc.abstractmethod
