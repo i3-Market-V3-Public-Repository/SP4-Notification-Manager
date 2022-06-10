@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 import market as market
 import notification as notification
@@ -12,7 +13,8 @@ output_notification = {'action': 'offering.new',
                        'origin': 'string',
                        'receptor': 'UserID123',
                        'status': 'string',
-                       'unread': True}
+                       'unread': True,
+                       'dateCreated': datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%SZ")}
 user_notifications = {
     '1':
         {
@@ -149,7 +151,8 @@ def test_modify_read_notification_return_sucess(client):
                              'origin': 'string',
                              'receptor': 'UserID123',
                              'status': 'string',
-                             'unread': False}
+                             'unread': False,
+                             'dateCreated': output_notification['dateCreated']}
 
 
 def test_modify_unread_notification_return_sucess(client):
@@ -163,10 +166,10 @@ def test_modify_unread_notification_return_sucess(client):
                              'origin': 'string',
                              'receptor': 'UserID123',
                              'status': 'string',
-                             'unread': True}
+                             'unread': True,
+                             'dateCreated': output_notification['dateCreated']}
 
 
-# TODO ADD SERVICE NOTIFICATIONS
 # MARKETPLACE NOTIFICATIONS
 services = {
     '1':
@@ -215,3 +218,5 @@ def test_marketplace_service_notification_200_success(client):
     response = client.post(f'{BASE_API}/notification/service', json=service_notifications['2'])
     response_body = response.json
     assert response_body == [{'destiny': services.get('1').get('name'), 'response': 200}]
+
+# TODO ADD MORE SERVICE NOTIFICATIONS
