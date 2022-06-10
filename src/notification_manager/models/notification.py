@@ -9,12 +9,14 @@ sendNotification(action, status, origin, receptor, data)
 * Notification (action: Activate Agreement, status: pending, origin: i3-Market, receptor: datamarketplace_consumer)
 * Notification (action: Activate Agreement, status: ok, origin: i3-market, receptor: datamarketplace_provider, datamarketplace_consumer)
 """
+from datetime import datetime, timezone
+
 from loguru import logger
 import uuid
 
 
 class Notification:
-    def __init__(self, _id, action, status, origin, receptor, data=None, unread=True):
+    def __init__(self, _id, action, status, origin, receptor, data=None, unread=True, date_created=None):
         self.id = _id
         self.action = action
         self.status = status
@@ -22,6 +24,10 @@ class Notification:
         self.receptor = receptor
         self.data = data
         self.unread = unread
+        if not date_created:
+            self.dateCreated = datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%SZ")
+        else:
+            self.dateCreated = date_created
 
     @staticmethod
     def new_offering_notification(receptor_name: str, data: dict = None):
@@ -52,7 +58,7 @@ class Notification:
 
     def to_json(self):
         json_out = {"id": self.id, "action": self.action, "status": self.status, "origin": self.origin,
-                    "receptor": self.receptor, "unread": self.unread}
+                    "receptor": self.receptor, "unread": self.unread, "dateCreated": self.dateCreated}
         if hasattr(self, 'data'):
             json_out['data'] = self.data
         return json_out
@@ -66,4 +72,6 @@ def notification_to_object(data: dict):
         data.get('origin'),
         data.get('receptor'),
         data.get('data'),
-        data.get('unread', True))
+        data.get('unread', True),
+        data.get('dateCreated', None)
+    )
