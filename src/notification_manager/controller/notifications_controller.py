@@ -7,6 +7,16 @@ from src.notification_manager.models.notification import Notification, notificat
 from src.notification_manager.models.queue_types import QueueType
 from src.notification_manager.storage.notifications_storage import NotificationsStorage
 from loguru import logger
+from requests.adapters import HTTPAdapter, Retry
+
+retry_strategy = Retry(
+    total=5,
+    status_forcelist=[429, 500, 502, 503, 504],
+    method_whitelist=["HEAD", "GET", "OPTIONS"],
+    backoff_factor=1
+)
+session = requests.Session()
+session.mount('http://', HTTPAdapter(max_retries=retry_strategy))
 
 
 class NotificationsController:
@@ -47,7 +57,7 @@ class NotificationsController:
             if notification is not None:
                 try:
 
-                    resp = requests.post(url=endpoint, json=notification.to_json())
+                    resp = session.post(url=endpoint, json=notification.to_json())
                     if resp:
                         response.append(
                             {"destiny": receptor_name, "response": resp.status_code})
