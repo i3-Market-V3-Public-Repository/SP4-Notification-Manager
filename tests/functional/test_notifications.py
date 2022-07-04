@@ -1,8 +1,5 @@
 import uuid
 from datetime import datetime
-
-import market as market
-import notification as notification
 from _pytest.recwarn import warns
 
 from tests import BASE_API, OK, BODY_ERROR, NOT_FOUND, EMPTY_BODY, INCOMPLETE_BODY, ALREADY_EXIST_BODY_SERVICE, \

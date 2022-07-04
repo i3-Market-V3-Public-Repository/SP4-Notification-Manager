@@ -1,4 +1,4 @@
-from apiflask import APIBlueprint, input, output, doc, abort, fields
+from apiflask import APIBlueprint, abort
 from flask import request, jsonify
 from loguru import logger
 
@@ -16,8 +16,8 @@ def config(controller: SubscriptionsController):
     __controller = controller
 
 
-# @output(Subscription(many=True))
-@output(UserSubscriptionList(many=True))
+# @blueprint.output(Subscription(many=True))
+@blueprint.output(UserSubscriptionList(many=True))
 @blueprint.route('/users/subscriptions', methods=['GET'])
 def get_users():
     """
@@ -28,8 +28,8 @@ def get_users():
     return jsonify(result), 200
 
 
-@input(CreateSubscription)
-@output(Subscription)
+@blueprint.input(CreateSubscription)
+@blueprint.output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions', methods=['POST'])
 def post_subscriptions(user_id: str):
     """
@@ -51,7 +51,7 @@ def post_subscriptions(user_id: str):
     return jsonify(result.to_json()), 200
 
 
-@output(Subscription(many=True), example=[
+@blueprint.output(Subscription(many=True), example=[
     {
         "id": "82bb0248-6ce3-4fe4-9e68-6c30fe0ef41b",
         "category": "Agriculture",
@@ -68,7 +68,7 @@ def get_subscriptions_by_userid(user_id: str):
     return jsonify([s.to_json() for s in result]), 200
 
 
-@output(Subscription, example={
+@blueprint.output(Subscription, example={
     "id": "82bb0248-6ce3-4fe4-9e68-6c30fe0ef41b",
     "category": "Agriculture",
     "active": True
@@ -104,7 +104,7 @@ def get_subscriptions(user_id: str, subscription_id: str):
 #
 #     return jsonify(result.to_json()), 200
 
-@output(Subscription)
+@blueprint.output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['DELETE'])
 def delete_subscription(user_id: str, subscription_id: str):
     """
@@ -122,7 +122,7 @@ def delete_subscription(user_id: str, subscription_id: str):
     return jsonify(result.to_json()), 200
 
 
-@output(Subscription)
+@blueprint.output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['PATCH'])
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['PATCH'])
 def switch_status_subscription(user_id: str, subscription_id: str):
@@ -144,7 +144,7 @@ def switch_status_subscription(user_id: str, subscription_id: str):
 
 
 # TODO ¿add /category/<category> to path to distinguish category?
-@output(UsersList)
+@blueprint.output(UsersList)
 @blueprint.route('/users/subscriptions/<category>', methods=['GET'])
 def get_users_list_category(category: str):
     """
