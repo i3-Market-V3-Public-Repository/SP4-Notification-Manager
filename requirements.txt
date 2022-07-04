@@ -1,4 +1,4 @@
-apiflask==0.10.1
+apiflask==1.1.0
 flask-cors==3.0.10
 loguru==0.5.3
 pip-autoremove==0.10.0
