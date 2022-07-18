@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from flask import jsonify, redirect
 from flask_cors import CORS
 
-from apiflask import APIFlask, doc
+from apiflask import APIFlask
 
 from loguru import logger
 from uptime import uptime
@@ -134,7 +134,7 @@ notifications_config(NotificationsController(notifications_storage, WEB_UI), Que
 
 
 @application.route('/', methods=['GET'])
-@doc(hide=True)
+@application.doc(hide=True)
 def go_to_swagger():
     return redirect('./swagger')
 

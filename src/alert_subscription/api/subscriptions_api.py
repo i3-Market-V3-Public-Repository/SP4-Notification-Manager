@@ -1,4 +1,4 @@
-from apiflask import APIBlueprint, input, output, doc, abort, fields
+from apiflask import APIBlueprint, abort
 from flask import request, jsonify
 from loguru import logger
 
@@ -16,9 +16,8 @@ def config(controller: SubscriptionsController):
     __controller = controller
 
 
-# @output(Subscription(many=True))
-@output(UserSubscriptionList(many=True))
 @blueprint.route('/users/subscriptions', methods=['GET'])
+@blueprint.output(UserSubscriptionList(many=True))
 def get_users():
     """
     Get all users subscriptions
@@ -28,9 +27,9 @@ def get_users():
     return jsonify(result), 200
 
 
-@input(CreateSubscription)
-@output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions', methods=['POST'])
+@blueprint.input(CreateSubscription)
+@blueprint.output(Subscription)
 def post_subscriptions(user_id: str):
     """
     Create subscription to category
@@ -51,14 +50,14 @@ def post_subscriptions(user_id: str):
     return jsonify(result.to_json()), 200
 
 
-@output(Subscription(many=True), example=[
+@blueprint.route('/users/<user_id>/subscriptions', methods=['GET'])
+@blueprint.output(Subscription(many=True), example=[
     {
         "id": "82bb0248-6ce3-4fe4-9e68-6c30fe0ef41b",
         "category": "Agriculture",
         "active": True
     }
 ])
-@blueprint.route('/users/<user_id>/subscriptions', methods=['GET'])
 def get_subscriptions_by_userid(user_id: str):
     result = __controller.retrieve_subscription(user_id)
     if result is None:
@@ -68,12 +67,12 @@ def get_subscriptions_by_userid(user_id: str):
     return jsonify([s.to_json() for s in result]), 200
 
 
-@output(Subscription, example={
+@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['GET'])
+@blueprint.output(Subscription, example={
     "id": "82bb0248-6ce3-4fe4-9e68-6c30fe0ef41b",
     "category": "Agriculture",
     "active": True
 })
-@blueprint.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['GET'])
 def get_subscriptions(user_id: str, subscription_id: str):
     """
     Get user subscription by user_id and subscription_id.
@@ -104,8 +103,8 @@ def get_subscriptions(user_id: str, subscription_id: str):
 #
 #     return jsonify(result.to_json()), 200
 
-@output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['DELETE'])
+@blueprint.output(Subscription)
 def delete_subscription(user_id: str, subscription_id: str):
     """
     Delete subscription by user_id and subscription_id
@@ -122,9 +121,9 @@ def delete_subscription(user_id: str, subscription_id: str):
     return jsonify(result.to_json()), 200
 
 
-@output(Subscription)
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['PATCH'])
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/deactivate', methods=['PATCH'])
+@blueprint.output(Subscription)
 def switch_status_subscription(user_id: str, subscription_id: str):
     """
     Activate or deactivate user subscription
@@ -144,8 +143,8 @@ def switch_status_subscription(user_id: str, subscription_id: str):
 
 
 # TODO ¿add /category/<category> to path to distinguish category?
-@output(UsersList)
 @blueprint.route('/users/subscriptions/<category>', methods=['GET'])
+@blueprint.output(UsersList)
 def get_users_list_category(category: str):
     """
     Returns a json containing a list of users subscribed to that category
