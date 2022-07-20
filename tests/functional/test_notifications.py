@@ -1,9 +1,7 @@
-import uuid
 from datetime import datetime
-from _pytest.recwarn import warns
 
-from tests import BASE_API, OK_CODE, BODY_ERROR_CODE, NOT_FOUND_CODE, INCOMPLETE_BODY, ALREADY_EXIST_SERVICE_BODY, \
-    NOT_FOUND_BODY, QUEUE_ERROR_BODY, ALREADY_EXIST_BODY
+from tests import BASE_API, OK_CODE, BODY_ERROR_CODE, NOT_FOUND_CODE, \
+    NOT_FOUND_BODY
 
 output_notification = {'action': 'offering.new',
                        'data': {'category': 'Agriculture', 'msg': 'this is a new offering'},
@@ -201,7 +199,7 @@ def test_marketplace_service_notification_200_success(client):
     if service_id:
         del response_body['id']
     else:
-        raise Exception("No service ID in response")
+        raise Exception(f"No service ID in response. Input: {expected_input} \nresponse: {response.json}")
     # assert response.status_code == OK
     assert response_body == services.get('1')
 
