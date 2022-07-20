@@ -20,8 +20,8 @@ def config(controller: QueueController):
 def get_services_by_id(service_id: str):
     result = __controller.retrieve_service(service_id)
     if result:
-        return jsonify(result.to_json()), 200
-    return abort(404, 'Not Found')
+        return result.to_json()
+    abort(404, 'Not Found')
 
 
 @blueprint.route('/services', methods=['GET'])
@@ -43,7 +43,7 @@ def get_services_by_id(service_id: str):
 ])
 def get_services():
     result = __controller.retrieve_all()
-    return jsonify(result), 200
+    return result
 
 
 ########################################################################################################################
@@ -51,7 +51,8 @@ def get_services():
 ########################################################################################################################
 
 
-@blueprint.route('/services', methods=['POST'])
+# @blueprint.route('/services', methods=['POST'])
+@blueprint.post('/services')
 @blueprint.output(Service, example={
     "id": "123445-123-1245-12345-12354566773",
     "marketId": None,
@@ -59,12 +60,9 @@ def get_services():
     "endpoint": "https://test-server:1234/endpoint",
     "queues": []
 })
-@blueprint.input(ServiceInput())
-def create_service():
-    if not request.json:
-        abort(400, 'Empty Body')
-
-    result = __controller.create_service(request.json)
+@blueprint.input(ServiceInput)
+def create_service(data):
+    result = __controller.create_service(data)
 
     if result is False:
         abort(400, 'Incomplete Body')
@@ -72,7 +70,7 @@ def create_service():
     if result is None:
         abort(400, 'Already exists')
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 @blueprint.route('/services/<service_id>', methods=['DELETE'])
@@ -83,7 +81,7 @@ def delete_service(service_id: str):
     if result is None:
         abort(404, 'Not Found')
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 ########################################################################################################################
@@ -103,7 +101,7 @@ def get_queues(service_id: str):
     if result is None:
         abort(404, 'Not Found')
     else:
-        return jsonify([s.to_json() for s in result]), 200
+        return [s.to_json() for s in result]
 
 
 @blueprint.route('/services/<service_id>/queues/<queue_id>', methods=['GET'])
@@ -115,9 +113,9 @@ def get_queues_by_id(service_id: str, queue_id: str):
         abort(404, 'Not Found')
 
     if not queue_id:
-        return jsonify([s.to_json() for s in result]), 200
+        return [s.to_json() for s in result]
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 @blueprint.route('/services/<service_id>/queues', methods=['POST'])
@@ -128,11 +126,8 @@ def get_queues_by_id(service_id: str, queue_id: str):
     "endpoint": "https://webhook.site/11798498-a25a-429c-ac11-8d2d9aa26e83",
     "active": True
 })
-def post_queues(service_id: str):
-    if not request.json:
-        abort(400, 'Empty Body')
-
-    result = __controller.create_queue(service_id, request.json)
+def post_queues(service_id: str, data: dict):
+    result = __controller.create_queue(service_id, data)
     # queues are stored by notifications_controller (services_queue_storage)
     if result is False:
         abort(400, 'Incomplete Body')
@@ -140,7 +135,7 @@ def post_queues(service_id: str):
         abort(400, 'Already exists service queue')
     if result == -1:
         abort(400, 'Queue Type doesn`t exist')
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 @blueprint.route('/services/<service_id>/queues/<queue_id>', methods=['DELETE'])
@@ -151,7 +146,7 @@ def delete_queue(service_id: str, queue_id: str):
     if result is None:
         abort(404, 'Not Found')
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 # TODO Implement the update of a service and queue
@@ -175,4 +170,4 @@ def switch_status_queue(service_id: str, queue_id: str):
     if result is None:
         abort(404, 'Not Found')
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
