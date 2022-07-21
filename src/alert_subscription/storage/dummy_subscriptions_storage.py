@@ -110,5 +110,5 @@ class DummySubscriptionsStorage(SubscriptionsStorage):
             return json.load(file)
 
     def __write_dummy_file(self):
-        with open(self.path, 'w') as file:
+        with open(self.path, 'w+') as file:
             return json.dump(self.storage, file, indent=2)

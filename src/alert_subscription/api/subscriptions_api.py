@@ -24,22 +24,20 @@ def get_users():
     :return:
     """
     result = __controller.retrieve_all()
-    return jsonify(result), 200
+    return result
 
 
 @blueprint.route('/users/<user_id>/subscriptions', methods=['POST'])
 @blueprint.input(CreateSubscription)
 @blueprint.output(Subscription)
-def post_subscriptions(user_id: str):
+def post_subscriptions(user_id: str, data):
     """
     Create subscription to category
     :param user_id:
     :return:
     """
-    if not request.json:
-        abort(400, 'Empty Body')
 
-    result = __controller.create_subscription(user_id, request.json)
+    result = __controller.create_subscription(user_id, data)
 
     if result is False:
         abort(400, 'Incomplete Body')
@@ -47,7 +45,7 @@ def post_subscriptions(user_id: str):
     if result is None:
         abort(400, 'Already exists subscription to category')
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 @blueprint.route('/users/<user_id>/subscriptions', methods=['GET'])
@@ -64,7 +62,7 @@ def get_subscriptions_by_userid(user_id: str):
         # return jsonify({'error': 'Not found'}), 404
         abort(404, "Not Found")
 
-    return jsonify([s.to_json() for s in result]), 200
+    return [s.to_json() for s in result]
 
 
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['GET'])
@@ -85,7 +83,7 @@ def get_subscriptions(user_id: str, subscription_id: str):
     if result is None:
         abort(404, "Not Found")
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 # @api.route('/users/<user_id>/subscriptions/<subscription_id>', methods=['PATCH'])
@@ -118,7 +116,7 @@ def delete_subscription(user_id: str, subscription_id: str):
     if result is None:
         abort(404, 'Not Found')
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 @blueprint.route('/users/<user_id>/subscriptions/<subscription_id>/activate', methods=['PATCH'])
@@ -139,7 +137,7 @@ def switch_status_subscription(user_id: str, subscription_id: str):
     if result is None:
         abort(404, 'Not Found')
 
-    return jsonify(result.to_json()), 200
+    return result.to_json()
 
 
 # TODO ¿add /category/<category> to path to distinguish category?
@@ -154,5 +152,5 @@ def get_users_list_category(category: str):
     """
     result = __controller.search_users_by_category(category)
     if result:
-        return jsonify(result), 200
-    return abort(404, "Not Found")
+        return result
+    abort(404, "Not Found")
