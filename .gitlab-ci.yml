@@ -20,33 +20,47 @@ cache:
 
 before_script:
   - python -V  # Print out python version for debugging
-  - pip install virtualenv
+  # - pip install virtualenv
+  - pip install -r requirements.txt
   - virtualenv venv
   - source venv/bin/activate
 
-test:
+run tets:
+  tags:
+    - python3.8
+    - tests
   script:
-    - python setup.py test
-    - pip install tox flake8  # you can also use tox
-    - tox -e py36,flake8
-
-run:
-  script:
-    - python setup.py bdist_wheel
-    # an alternative approach is to install and run:
-    - pip install dist/*
-    # run the command here
+    - python -m pytest
   artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
     paths:
-      - dist/*.whl
+      - /coverage/
+    when: on_success
+    expire_in: 1 week
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+#test:
+#  script:
+#    - python setup.py test
+#    - pip install tox flake8  # you can also use tox
+#    - tox -e py36,flake8
 
-pages:
-  script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd doc ; make html
-    - mv build/html/ ../public/
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#run:
+#  script:
+#    - python setup.py bdist_wheel
+#    # an alternative approach is to install and run:
+#    - pip install dist/*
+#    # run the command here
+#  artifacts:
+#    paths:
+#      - dist/*.whl
+
+#pages:
+#  script:
+#    - pip install sphinx sphinx-rtd-theme
+#    - cd doc ; make html
+#    - mv build/html/ ../public/
+#  artifacts:
+#    paths:
+#      - public
+#  rules:
+#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
