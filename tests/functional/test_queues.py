@@ -79,7 +79,7 @@ def test_retrieve_all_services_return_service_lists(client):
 
     response_body = response.json
     for service in response_body:
-        logger.info(f'service id: {service_id}')
+        #logger.info(f'service id: {service_id}')
         service_id = service['id']
         del service['id']
 
@@ -130,7 +130,7 @@ def test_get_service_queues_empty_list(client):
 def test_post_queue_200_success(client):
     global queue_id
     response = client.post(f'{BASE_API}/services/{service_id}/queues', json=queue)
-    logger.warning(f'response: {response.json}')
+    # logger.warning(f'response: {response.json}')
     assert response.status_code == OK_CODE
     response_body = response.json
     queue_id = response_body.get('id')
@@ -141,10 +141,10 @@ def test_post_queue_200_success(client):
 # GET QUEUE
 def test_get_queue_not_exist(client):
     _uuid = uuid.uuid4().__str__()
-    logger.info(f'service id: {service_id}')
-    logger.info(f'uuid: {_uuid}')
+    # logger.info(f'service id: {service_id}')
+    # logger.info(f'uuid: {_uuid}')
     path = f'{BASE_API}/services/{service_id}/queues/{_uuid}'
-    logger.info(path)
+    # logger.info(path)
     response = client.get(path)
     assert response.status_code == NOT_FOUND_CODE
     assert response.json == NOT_FOUND_BODY
@@ -163,7 +163,10 @@ def test_get_service_queues(client):
     response = client.get(f'{BASE_API}/services/{service_id}/queues')
     assert response.status_code == OK_CODE
     response_body = response.json
-    del response_body[0]['id']
+    if response_body[0].get('id'):
+        del response_body[0]['id']
+    else:
+        raise Exception(f'Not found id in queues: \n service_id:{service_id}\nResponse: {response.json}')
     assert response_body == [queue_output]
 
 
@@ -224,4 +227,5 @@ def test_delete_service_exist(client):
     assert response.status_code == OK_CODE
     response_body = response.json
     del response_body['id']
+    # logger.info(f'Response body: {response_body}')
     assert response_body == services_output
