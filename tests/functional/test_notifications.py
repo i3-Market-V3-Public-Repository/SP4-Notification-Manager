@@ -121,18 +121,15 @@ def test_modify_read_notification_not_exist_return_404(client):
     path = f'{BASE_API}/notification/asd/read'
     response = client.patch(path)
     assert response.status_code == NOT_FOUND_CODE
-    NOT_FOUND_NOT = NOT_FOUND_BODY
-    NOT_FOUND_NOT['message'] = 'Notification not found'
-    assert response.json == NOT_FOUND_NOT
+    assert response.json == NOT_FOUND_BODY
 
 
 def test_modify_unread_notification_not_exist_return_404(client):
     path = f'{BASE_API}/notification/asd/unread'
     response = client.patch(path)
     assert response.status_code == NOT_FOUND_CODE
-    NOT_FOUND_NOT = NOT_FOUND_BODY
-    NOT_FOUND_NOT['message'] = 'Notification not found'
-    assert response.json == NOT_FOUND_NOT
+
+    assert response.json == NOT_FOUND_BODY
 
 
 def test_modify_read_notification_return_sucess(client):
@@ -166,7 +163,7 @@ def test_modify_unread_notification_return_sucess(client):
 
 
 # MARKETPLACE NOTIFICATIONS
-services = {
+market_services_notifications = {
     '1':
         {
             # "endpoint": "http://localhost:2000",
@@ -191,8 +188,9 @@ def test_marketplace_service_notification_200_success(client):
     # register service
     # to terminal ➜ nc -l -p 2000 -k
     global service_id
-    expected_input = services.get('1').copy()
+    expected_input = market_services_notifications.get('1').copy()
     del expected_input['queues']
+
     response = client.post(f'{BASE_API}/services', json=expected_input)
     response_body = response.json
     service_id = response_body.get('id')
@@ -201,7 +199,7 @@ def test_marketplace_service_notification_200_success(client):
     else:
         raise Exception(f"No service ID in response. Input: {expected_input} \nresponse: {response.json}")
     # assert response.status_code == OK
-    assert response_body == services.get('1')
+    assert response_body == market_services_notifications.get('1')
 
     # register queue
     global queue_id
@@ -222,6 +220,11 @@ def test_marketplace_service_notification_200_success(client):
     # create service notitication
     response = client.post(f'{BASE_API}/notification/service', json=service_notifications['2'])
     response_body = response.json
-    assert response_body == [{'destiny': services.get('1').get('name'), 'response': 200}]
+    assert response_body == [{'destiny': market_services_notifications.get('1').get('name'), 'response': 200}]
+
 
 # TODO ADD MORE SERVICE NOTIFICATIONS
+# DELETE LAST SERVICE:
+def test_delete_service_marketplace(client):
+    response = client.delete(f"{BASE_API}/services/{service_id}")
+    assert response.status_code == OK_CODE
