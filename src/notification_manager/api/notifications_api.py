@@ -141,7 +141,7 @@ def get_notification(notification_id: str):
     result = __notification_controller.get_notification(notification_id)
     if result:
         return result
-    abort(404, "Notification not found")
+    abort(404, "Not Found")
 
 
 @blueprint.route('/notification/<notification_id>/read', methods=['PATCH'])
@@ -153,7 +153,7 @@ def modify_notification(notification_id: str):
     if result:
         return result
     # return jsonify(), 404
-    abort(404, "Notification not found")
+    abort(404, "Not Found")
 
 
 @blueprint.route('/notification/<notification_id>', methods=['DELETE'])
@@ -163,4 +163,4 @@ def delete_notification(notification_id: str):
     if result:
         return result
     else:
-        abort(404, "Notification not found")
+        abort(404, "Not Found")
