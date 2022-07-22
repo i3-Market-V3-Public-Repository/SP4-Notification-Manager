@@ -119,4 +119,3 @@ def test_remove_subscription_by_id_for_an_user():
     stored_subscription = storage.delete_user_subscription(user_id, subscription_id=subscription_data.get('id'))
     assert stored_subscription == subscription_data
 
-

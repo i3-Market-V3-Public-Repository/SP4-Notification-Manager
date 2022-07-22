@@ -1,4 +1,4 @@
-from apiflask import APIBlueprint, output, input, abort
+from apiflask import APIBlueprint, abort
 from flask import request, jsonify
 from loguru import logger
 
@@ -29,16 +29,11 @@ def config(notification_controller: NotificationsController,
 
 # ----------------------------SERVICE NOTIFICATIONS----------------------------------------
 @blueprint.route('/notification/service', methods=['POST'])
-@input(ServiceNotification)
-def notification_service(self):
-    data = request.json
+@blueprint.input(ServiceNotification)
+def notification_service(data):
     # {"receiver_id": "offering.new", "message": {"whatever"}"}
-    if not data:
-        # return jsonify({'error': 'Empty body'}), 400
-        abort(400, "Empty body")
 
     if not data.get("receiver_id") or not isinstance(data.get("message"), dict):
-        # return jsonify({"error": "Body has to contain receiver_id and message"}), 400
         abort(400, "Body has to container receiver_id and message {} with content")
 
     # data extraction
@@ -79,24 +74,20 @@ def notification_service(self):
                                                                  True, message)
         else:
             logger.warning('Notification about new offering but no category in message!')
-    return jsonify(response), 200
+    return response
 
 
 # ----------------------------USER NOTIFICATIONS----------------------------------------
 # @blueprint.route('/notification/user', methods=['POST'])
-@input(UserNotification)
-@output(Notification)
 @blueprint.route('/notification', methods=['POST'])
-def notification_user():
-    if not request.json:
-        # return jsonify({'error': 'Empty body'}), 400
-        abort(400, 'Empty body')
+@blueprint.input(UserNotification)
+@blueprint.output(Notification)
+def notification_user(data):
 
-    if not request.json.get('receiver_id') or not request.json.get("message"):
+    if not data.get('receiver_id') or not data.get("message"):
         # return jsonify({"error": "Body has to contain receiver_id and message"}), 400
         abort(400, 'Body has to contain data')
 
-    data = request.json
     destiny_user_id = data.get("receiver_id")
     origin = data.get("origin")
     status = data.get('status')
@@ -109,67 +100,67 @@ def notification_user():
                                                                            predefined, message)
     # logger.info("Stored Notification: {}".format(stored_notification))
 
-    return jsonify(stored_notification), 200
+    return stored_notification
 
 
 # @blueprint.route('/notification/', methods=['GET'])
-@output(Notification(many=True))
 @blueprint.route('/notification', methods=['GET'])
+@blueprint.output(Notification(many=True))
 def get_notifications():
-    return jsonify(__notification_controller.get_all_notifications()), 200
+    return __notification_controller.get_all_notifications()
 
 
-@output(Notification(many=True))
 @blueprint.route('/notification/user/<user_id>', methods=['GET'])
+@blueprint.output(Notification(many=True))
 def get_notification_by_userid(user_id: str):
     result = __notification_controller.get_user_notification(user_id)
     if result:
-        return jsonify(result), 200
+        return result
     else:
-        return abort(404)
+        abort(404)
 
 
 # @blueprint.route('/notification/unread/', methods=['GET'])
-@output(Notification(many=True))
 @blueprint.route('/notification/unread', methods=['GET'])
+@blueprint.output(Notification(many=True))
 def get_unread_notifications():
-    return jsonify(__notification_controller.get_all_unread_notifications()), 200
+    return __notification_controller.get_all_unread_notifications()
 
 
 # @blueprint.route('/notification/user/<user_id>/unread/', methods=['GET'])
-@output(Notification(many=True))
 @blueprint.route('/notification/user/<user_id>/unread', methods=['GET'])
+@blueprint.output(Notification(many=True))
 def get_unread_notifications_by_id(user_id: str):
-    return jsonify(__notification_controller.get_unread_user_notification(user_id)), 200
+    return __notification_controller.get_unread_user_notification(user_id)
 
 
 # @blueprint.route('/notification/<notification_id>/', methods=['GET'])
-@output(Notification)
 @blueprint.route('/notification/<notification_id>', methods=['GET'])
+@blueprint.output(Notification)
 def get_notification(notification_id: str):
     result = __notification_controller.get_notification(notification_id)
     if result:
-        return jsonify(result), 200
-    abort(404, "Notification not found")
+        return result
+    abort(404, "Not Found")
 
 
-@output(Notification)
 @blueprint.route('/notification/<notification_id>/read', methods=['PATCH'])
 @blueprint.route('/notification/<notification_id>/unread', methods=['PATCH'])
+@blueprint.output(Notification)
 def modify_notification(notification_id: str):
     read = request.path.split('/')[-1] == 'read'
     result = __notification_controller.modify_notification(notification_id, read)
     if result:
-        return jsonify(result), 200
+        return result
     # return jsonify(), 404
-    abort(404, "Notification not found")
+    abort(404, "Not Found")
 
 
-@output(Notification)
 @blueprint.route('/notification/<notification_id>', methods=['DELETE'])
+@blueprint.output(Notification)
 def delete_notification(notification_id: str):
     result = __notification_controller.delete_notification(notification_id)
     if result:
-        return jsonify(result), 200
+        return result
     else:
-        abort(404, "Notification not found")
+        abort(404, "Not Found")
