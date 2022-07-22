@@ -78,8 +78,7 @@ Tests are not available yet
 
 ## Credits
 
-- [eleazar](mailto:eleazar@hopu.eu) - Software engineer
-- [diego.s](mailto:diego.s@hopu.org) - Software engineer and Data scientist
+- [eleazar](mailto:eleazar@hopu.org) - Software engineer
 
 ## Contributing
 
