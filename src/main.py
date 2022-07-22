@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from flask import jsonify, redirect
 from flask_cors import CORS
 
-from apiflask import APIFlask, doc
+from apiflask import APIFlask
 
 from loguru import logger
 from uptime import uptime
@@ -32,7 +32,7 @@ load_dotenv()
 
 # Configuracion general
 ENVIRONMENT_MODE = os.getenv('ENVIRONMENT_MODE', 'production')
-VERSION = os.getenv('VERSION', 'v2.1.0')
+VERSION = os.getenv('VERSION', 'v2.2.1')
 FLASK_SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'SUPER-SECRET')
 FLASK_PORT = os.getenv('FLASK_PORT', 5000)
 WEB_UI = os.getenv('WEB_UI', 'http://localhost:3000')
@@ -134,7 +134,7 @@ notifications_config(NotificationsController(notifications_storage, WEB_UI), Que
 
 
 @application.route('/', methods=['GET'])
-@doc(hide=True)
+@application.doc(hide=True)
 def go_to_swagger():
     return redirect('./swagger')
 

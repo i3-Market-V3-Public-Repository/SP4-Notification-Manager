@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   notification-manager:
-    image: registry.hopu.eu/i3-market/notification-manager:v1.2.0
+    image: registry.hopu.eu/i3-market/notification-manager:v2.2.1
     ports:
       - "10010:10010"
     environment:
