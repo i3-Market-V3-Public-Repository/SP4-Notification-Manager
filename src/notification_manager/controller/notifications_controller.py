@@ -30,29 +30,48 @@ class NotificationsController:
         return self.send_notification_service(queue_name, queues, message)
 
     @staticmethod
-    def send_notification_service(queue_name, destiny: dict, data: dict = None):
+    def create_specific_service_notification(queue_name, receptor_name, data) -> Notification:
+        notification = None
+        if queue_name == QueueType.NEWOFFERING.value:
+            notification = Notification.new_offering_notification(receptor_name=receptor_name, data=data)
+
+        elif queue_name == QueueType.UPDATEOFFERING.value:
+            notification = Notification.update_offering_notification(receptor_name=receptor_name, data=data)
+
+        elif queue_name == QueueType.AGREEMENTUPDATE.value:
+            notification = Notification.agreement_notification(status="Update", data=data)
+
+        elif queue_name == QueueType.AGREEMENTACCEPTED.value:
+            notification = Notification.agreement_notification(status="Accepted", data=data)
+
+        elif queue_name == QueueType.AGREEMENTPENDING.value:
+            notification = Notification.agreement_notification(status="Pending", data=data)
+
+        elif queue_name == QueueType.AGREEMENTREJECTED.value:
+            notification = Notification.agreement_notification(status="Rejected", data=data)
+
+        elif queue_name == QueueType.AGREEMENTTERMINATION.value:
+            notification = Notification.agreement_notification(status="Termination", data=data)
+
+        elif queue_name == QueueType.AGREEMENTCLAIM.value:
+            notification = Notification.agreement_notification(status="Claim", data=data)
+
+        elif queue_name == QueueType.AGREEMENTPENALTYCHOICES.value:
+            notification = Notification.agreement_notification(status="PenaltyChoices", data=data)
+
+        elif queue_name == QueueType.AGREEMENTAGREEONPENALTY.value:
+            notification = Notification.agreement_notification(status="AgreeOnPenalty", data=data)
+
+        elif queue_name == QueueType.AGREEMENTREJECTPENALTY.value:
+            notification = Notification.agreement_notification(status="RejectPenalty", data=data)
+
+        return notification
+
+    def send_notification_service(self, queue_name, destiny: dict, data: dict = None):
         response = []
         for receptor_name, endpoint in destiny.items():
             logger.info("Creating a notification to {} endpoint {}".format(receptor_name, endpoint))
-            notification = None
-            if queue_name == QueueType.NEWOFFERING.value:
-                notification = Notification.new_offering_notification(receptor_name=receptor_name, data=data)
-
-            elif queue_name == QueueType.UPDATEOFFERING.value:
-                notification = Notification.update_offering_notification(receptor_name=receptor_name, data=data)
-
-            elif queue_name == QueueType.AGREEMENTUPDATE.value:
-                notification = Notification.agreement_notification(status="Update", data=data)
-            elif queue_name == QueueType.AGREEMENTACCEPTED.value:
-                notification = Notification.agreement_notification(status="Accepted", data=data)
-            elif queue_name == QueueType.AGREEMENTPENDING.value:
-                notification = Notification.agreement_notification(status="Pending", data=data)
-            elif queue_name == QueueType.AGREEMENTREJECTED.value:
-                notification = Notification.agreement_notification(status="Rejected", data=data)
-            elif queue_name == QueueType.AGREEMENTTERMINATION.value:
-                notification = Notification.agreement_notification(status="Termination", data=data)
-            elif queue_name == QueueType.AGREEMENTCLAIM.value:
-                notification = Notification.agreement_notification(status="Claim", data=data)
+            notification = self.create_specific_service_notification(queue_name, receptor_name, data)
 
             if notification is not None:
                 try:
@@ -61,12 +80,13 @@ class NotificationsController:
                     if resp:
                         response.append(
                             {"destiny": receptor_name, "response": resp.status_code})
+
                 except BaseException as e:
                     logger.error(f"Error in request, log:\n {e}")
                     response.append(
                         {"destiny": receptor_name, "response": 'error'})
 
-                #logger.info("Notification service response: {}".format(resp))
+                # logger.debug("Notification service response: {}".format(resp))
 
         return response
 
