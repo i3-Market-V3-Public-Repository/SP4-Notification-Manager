@@ -18,6 +18,9 @@ channels = {
             "pending",
             "termination",
             "claim",
+            "penaltyChoices",
+            "agreeOnPenalty",
+            "rejectPenalty"
         },
     }
 }
@@ -33,6 +36,9 @@ class QueueType(Enum):
     AGREEMENTPENDING = 'agreement.pending'
     AGREEMENTTERMINATION = 'agreement.termination'
     AGREEMENTCLAIM = 'agreement.claim'
+    AGREEMENTPENALTYCHOICES= 'agreement.penaltychoices'
+    AGREEMENTAGREEONPENALTY = 'agreement.agreeonpenalty'
+    AGREEMENTREJECTPENALTY = 'agreement.rejectpenalty'
 
     @classmethod
     def is_valid(cls, name):
