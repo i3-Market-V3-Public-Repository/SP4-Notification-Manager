@@ -1,4 +1,3 @@
-import json
 from enum import Enum
 from apiflask import Schema
 from apiflask.fields import String, Integer, List
