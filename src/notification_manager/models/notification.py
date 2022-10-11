@@ -48,7 +48,7 @@ class Notification:
                             data=data)
 
     @staticmethod
-    def agreement_notification(status, data):
+    def agreement_notification(status, data: dict):
         return Notification(_id=uuid.uuid4().__str__(),
                             action="Agreement",
                             status=status,
