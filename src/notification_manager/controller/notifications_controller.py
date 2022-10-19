@@ -59,6 +59,9 @@ class NotificationsController:
         elif queue_name == QueueType.AGREEMENTPENALTYCHOICES.value:
             notification = Notification.agreement_notification(status="PenaltyChoices", data=data)
 
+        elif queue_name == QueueType.AGREEMENTPROPOSEPENALTY.value:
+            notification = Notification.agreement_notification(status="ProposePenalty", data=data)
+
         elif queue_name == QueueType.AGREEMENTAGREEONPENALTY.value:
             notification = Notification.agreement_notification(status="AgreeOnPenalty", data=data)
 
