@@ -36,6 +36,7 @@ class QueueType(Enum):
     AGREEMENTTERMINATION = 'agreement.termination'
     AGREEMENTCLAIM = 'agreement.claim'
     AGREEMENTPENALTYCHOICES= 'agreement.penaltychoices'
+    AGREEMENTPROPOSEPENALTY= 'agreement.proposepenalty'
     AGREEMENTAGREEONPENALTY = 'agreement.agreeonpenalty'
     AGREEMENTREJECTPENALTY = 'agreement.rejectpenalty'
 
