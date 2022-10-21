@@ -39,6 +39,8 @@ class QueueType(Enum):
     AGREEMENTPROPOSEPENALTY= 'agreement.proposepenalty'
     AGREEMENTAGREEONPENALTY = 'agreement.agreeonpenalty'
     AGREEMENTREJECTPENALTY = 'agreement.rejectpenalty'
+    AGREEMENTTERMINATIONPROPOSAL = 'agreement.terminationproposal'
+    AGREEMENTTERMINATIONREJECTION = 'agreement.terminationrejection'
 
     @classmethod
     def is_valid(cls, name):
