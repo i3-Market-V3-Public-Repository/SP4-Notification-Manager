@@ -19,8 +19,14 @@ channels = {
             "claim",
             "penaltyChoices",
             "agreeOnPenalty",
-            "rejectPenalty"
+            "rejectPenalty",
+            'terminationproposal',
+            'terminationrejection'
         },
+        "consent": {
+            'given',
+            'revoked'
+        }
     }
 }
 
@@ -42,6 +48,8 @@ class QueueType(Enum):
     AGREEMENTTERMINATIONPROPOSAL = 'agreement.terminationproposal'
     AGREEMENTTERMINATIONREJECTION = 'agreement.terminationrejection'
 
+    CONSENTGIVEN = 'consent.given'
+    CONSENTREVOKED = 'consent.revoked'
     @classmethod
     def is_valid(cls, name):
         return name in cls._value2member_map_

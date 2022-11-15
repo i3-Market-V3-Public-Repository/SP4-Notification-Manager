@@ -56,6 +56,15 @@ class Notification:
                             receptor=data.pop("marketId", "i3-market"),
                             data=data)
 
+    @staticmethod
+    def consent_notification(status, data: dict):
+        return Notification(_id=uuid.uuid4().__str__(),
+                            action="Consent",
+                            status=status,
+                            origin=data.pop("OriginMarketId", "i3-market"),
+                            receptor=data.pop("marketId", "i3-market"),
+                            data=data)
+
     def to_json(self):
         json_out = {"id": self.id, "action": self.action, "status": self.status, "origin": self.origin,
                     "receptor": self.receptor, "unread": self.unread, "dateCreated": self.dateCreated}
