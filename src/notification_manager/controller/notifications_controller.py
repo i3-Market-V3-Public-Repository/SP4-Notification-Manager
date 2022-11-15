@@ -74,6 +74,12 @@ class NotificationsController:
         elif queue_name == QueueType.AGREEMENTTERMINATIONREJECTION.value:
             notification = Notification.agreement_notification(status="TerminationRejection", data=data)
 
+        elif queue_name == QueueType.CONSENTGIVEN.value:
+            notification = Notification.consent_notification(status='Given', data=data)
+
+        elif queue_name == QueueType.CONSENTREVOKED.value:
+            notification = Notification.consent_notification(status='Revoked', data=data)
+
         return notification
 
     def send_notification_service(self, queue_name, destiny: dict, data: dict = None):
