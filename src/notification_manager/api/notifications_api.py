@@ -45,6 +45,7 @@ def notification_service(data):
 
     # request to only one marketplace
     market_id = message.get('marketId') or message.get('MarketId')
+
     if market_id:
         # if exist a registered service with this market_id, create a notification and send only to this service
         service = __queue_controller.search_services_by_market_id_if_active(market_id, queue_name)
