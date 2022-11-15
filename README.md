@@ -72,6 +72,10 @@ services:
 
 Tests are under *Test* folder, you can also execute the run_tests.sh file to run all the tests.
 
+## Known Issues
+The execution of the tests sometimes fails, in case of failure run again.
+
+The cause is currently unknown but we are aware of it.
 
 ## Credits
 
