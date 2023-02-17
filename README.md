@@ -1,7 +1,7 @@
 # [i3-market] Notification Manager & Alert Subscription
 
-This service integrates both the service of subscribing users to categories to receive alerts (notifications) when an 
-offer to which they are subscribed is created, as well as the creation, storage, modification and deletion of notifications.
+This service integrates both the service of subscribing users to i3m offering categories to receive alerts (notifications) when an 
+offer to which they are subscribed is created, also the creation, storage, modification and deletion of notifications.
 
 More info about API here:
 
@@ -68,16 +68,16 @@ services:
 
 ## Testing
 
-Tests are not available yet
+Tests are under *Test* folder, you can also execute the run_tests.sh file to run all the tests.
 
-## Tutorial
+## Known Issues
+The execution of the tests sometimes fails, in case of failure run again.
 
-
+The cause is currently unknown but we are aware of it.
 
 ## Credits
 
-- [eleazar](mailto:eleazar@hopu.eu) - Software engineer
-- [diego.s](mailto:diego.s@hopu.org) - Software engineer and Data scientist
+- [eleazar](mailto:j.eleazar@libelium.com) - Software engineer
 
 ## Contributing
 

@@ -7,6 +7,16 @@ from src.notification_manager.models.notification import Notification, notificat
 from src.notification_manager.models.queue_types import QueueType
 from src.notification_manager.storage.notifications_storage import NotificationsStorage
 from loguru import logger
+from requests.adapters import HTTPAdapter, Retry
+
+retry_strategy = Retry(
+    total=5,
+    status_forcelist=[429, 500, 502, 503, 504],
+    method_whitelist=["HEAD", "GET", "OPTIONS"],
+    backoff_factor=1
+)
+session = requests.Session()
+session.mount('http://', HTTPAdapter(max_retries=retry_strategy))
 
 
 class NotificationsController:
@@ -20,43 +30,78 @@ class NotificationsController:
         return self.send_notification_service(queue_name, queues, message)
 
     @staticmethod
-    def send_notification_service(queue_name, destiny: dict, data: dict = None):
+    def create_specific_service_notification(queue_name, receptor_name, data) -> Notification:
+        notification = None
+        if queue_name == QueueType.NEWOFFERING.value:
+            notification = Notification.new_offering_notification(receptor_name=receptor_name, data=data)
+
+        elif queue_name == QueueType.UPDATEOFFERING.value:
+            notification = Notification.update_offering_notification(receptor_name=receptor_name, data=data)
+
+        elif queue_name == QueueType.AGREEMENTUPDATE.value:
+            notification = Notification.agreement_notification(status="Update", data=data)
+
+        elif queue_name == QueueType.AGREEMENTACCEPTED.value:
+            notification = Notification.agreement_notification(status="Accepted", data=data)
+
+        elif queue_name == QueueType.AGREEMENTPENDING.value:
+            notification = Notification.agreement_notification(status="Pending", data=data)
+
+        elif queue_name == QueueType.AGREEMENTREJECTED.value:
+            notification = Notification.agreement_notification(status="Rejected", data=data)
+
+        elif queue_name == QueueType.AGREEMENTTERMINATION.value:
+            notification = Notification.agreement_notification(status="Termination", data=data)
+
+        elif queue_name == QueueType.AGREEMENTCLAIM.value:
+            notification = Notification.agreement_notification(status="Claim", data=data)
+
+        elif queue_name == QueueType.AGREEMENTPENALTYCHOICES.value:
+            notification = Notification.agreement_notification(status="PenaltyChoices", data=data)
+
+        elif queue_name == QueueType.AGREEMENTPROPOSEPENALTY.value:
+            notification = Notification.agreement_notification(status="ProposePenalty", data=data)
+
+        elif queue_name == QueueType.AGREEMENTAGREEONPENALTY.value:
+            notification = Notification.agreement_notification(status="AgreeOnPenalty", data=data)
+
+        elif queue_name == QueueType.AGREEMENTREJECTPENALTY.value:
+            notification = Notification.agreement_notification(status="RejectPenalty", data=data)
+
+        elif queue_name == QueueType.AGREEMENTTERMINATIONPROPOSAL.value:
+            notification = Notification.agreement_notification(status="TerminationProposal", data=data)
+
+        elif queue_name == QueueType.AGREEMENTTERMINATIONREJECTION.value:
+            notification = Notification.agreement_notification(status="TerminationRejection", data=data)
+
+        elif queue_name == QueueType.CONSENTGIVEN.value:
+            notification = Notification.consent_notification(status='Given', data=data)
+
+        elif queue_name == QueueType.CONSENTREVOKED.value:
+            notification = Notification.consent_notification(status='Revoked', data=data)
+
+        return notification
+
+    def send_notification_service(self, queue_name, destiny: dict, data: dict = None):
         response = []
         for receptor_name, endpoint in destiny.items():
             logger.info("Creating a notification to {} endpoint {}".format(receptor_name, endpoint))
-            notification = None
-            if queue_name == QueueType.NEWOFFERING.value:
-                notification = Notification.new_offering_notification(receptor_name=receptor_name, data=data)
-
-            elif queue_name == QueueType.UPDATEOFFERING.value:
-                notification = Notification.update_offering_notification(receptor_name=receptor_name, data=data)
-
-            elif queue_name == QueueType.AGREEMENTUPDATE.value:
-                notification = Notification.agreement_notification(status="Update", data=data)
-            elif queue_name == QueueType.AGREEMENTACCEPTED.value:
-                notification = Notification.agreement_notification(status="Accepted", data=data)
-            elif queue_name == QueueType.AGREEMENTPENDING.value:
-                notification = Notification.agreement_notification(status="Pending", data=data)
-            elif queue_name == QueueType.AGREEMENTREJECTED.value:
-                notification = Notification.agreement_notification(status="Rejected", data=data)
-            elif queue_name == QueueType.AGREEMENTTERMINATION.value:
-                notification = Notification.agreement_notification(status="Termination", data=data)
-            elif queue_name == QueueType.AGREEMENTCLAIM.value:
-                notification = Notification.agreement_notification(status="Claim", data=data)
+            notification = self.create_specific_service_notification(queue_name, receptor_name, data)
 
             if notification is not None:
                 try:
 
-                    resp = requests.post(url=endpoint, json=notification.to_json())
+                    resp = session.post(url=endpoint, json=notification.to_json())
                     if resp:
                         response.append(
                             {"destiny": receptor_name, "response": resp.status_code})
+
                 except BaseException as e:
                     logger.error(f"Error in request, log:\n {e}")
                     response.append(
                         {"destiny": receptor_name, "response": 'error'})
 
-                #logger.info("Notification service response: {}".format(resp))
+                # logger.debug("Notification service response: {}".format(resp))
 
         return response
 
