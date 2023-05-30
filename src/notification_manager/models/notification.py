@@ -48,9 +48,18 @@ class Notification:
                             data=data)
 
     @staticmethod
-    def agreement_notification(status, data):
+    def agreement_notification(status, data: dict):
         return Notification(_id=uuid.uuid4().__str__(),
                             action="Agreement",
+                            status=status,
+                            origin=data.pop("OriginMarketId", "i3-market"),
+                            receptor=data.pop("marketId", "i3-market"),
+                            data=data)
+
+    @staticmethod
+    def consent_notification(status, data: dict):
+        return Notification(_id=uuid.uuid4().__str__(),
+                            action="Consent",
                             status=status,
                             origin=data.pop("OriginMarketId", "i3-market"),
                             receptor=data.pop("marketId", "i3-market"),
