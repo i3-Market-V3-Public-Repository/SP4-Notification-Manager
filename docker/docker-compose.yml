@@ -2,15 +2,14 @@ version: "3.2"
 
 services:
   notification-manager:
-    image: registry.hopu.eu/i3-market/notification-manager:v2.5.1
+    image: registry.hopu.eu/i3-market/notification-manager:v3.1.1
     ports:
       - "10010:10010"
     environment:
-      - WEB_UI=http://192.168.1.48:10010
       - FLASK_PORT=10010
       - NM_NODE1=http://localhost:10010
       - NM_NODE2=http://localhost:10010
       - NM_NODE3=http://localhost:10010
-      - VERSION=2.5.0
+      - VERSION=3.1.1
     volumes:
       - ../data/:/app/data
